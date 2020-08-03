@@ -14,18 +14,18 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "board")
 public class Board {
 
     @Id
     @GeneratedValue
+    @Column(name = "board_id")
     private Long id;
 
     //@Column(name = "channel_id")
     private String channelId;
 
     @OneToMany(mappedBy = "board")
-    List<Postit> postits = new ArrayList<>();
+    private List<Postit> postitList = new ArrayList<>();
 
     //@Lob
     //@Column(nullable = true)

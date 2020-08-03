@@ -12,17 +12,18 @@ import javax.persistence.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "postit")
 public class Postit {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column
+    @Column(name = "postit_id")
     private Long id;
 
     private String title;
     private String contents;
+    @Column(name = "\"left\"")
     private String left;
+    @Column(name = "top")
     private String top;
 
     @ManyToOne(fetch = FetchType.EAGER)

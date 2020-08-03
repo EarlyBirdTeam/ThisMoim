@@ -44,7 +44,7 @@ public class BoardController {
         Board board = new Board()
                 .builder()
                 .channelId(message.getChannelId())
-                .postits(message.getPostits())
+                .postitList(message.getPostits())
                 .build();
         dbSyncService.boardDBSync(board);
     }

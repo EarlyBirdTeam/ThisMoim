@@ -17,7 +17,7 @@ public class DBSyncServiceImpl implements DBSyncService {
         // need refactoring :-(
         board.setId(boardRepository.findByChannelId(board.getChannelId()).getId());
 
-        if(boardRepository.save(board) != null) {
+        if (boardRepository.save(board) != null) {
             return true;
         }
         return false;
