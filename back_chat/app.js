@@ -35,12 +35,12 @@ io.on('connection', function(socket) {
         // socket에 클라이언트 정보를 저장한다
         socket.name = data.name;
         socket.userid = data.userid;
-        
+
 
         // socket.id = data.name;
         data.socketid = socket.id;
-        
-        
+
+
         // room 조인
         var room = socket.room = data.name;
         console.log('('+socket.name+')'+ 'room : '+room);
@@ -56,6 +56,9 @@ io.on('connection', function(socket) {
         console.log('Message from %s, 내용 : %s', socket.name, data.msg);
 
         var msg = {
+            to: {
+                name: '',
+            },
             from: {
                 name: socket.name,
                 userid: socket.userid
@@ -91,6 +94,9 @@ io.on('connection', function(socket) {
         // socket.join(data.id);  // 상대 socket.id에 내 id를 조인시킴으로써 같은 room 입장. 이 경우 조인 경우가 꼬일 수 있음.
 
         var msg = {
+            to:{
+                name: data.id,
+            },
             from: {
                 name: socket.name,
                 userid: socket.userid
@@ -169,17 +175,13 @@ io.on('connection', function(socket) {
 
     if (numClients === 0) {
       socket.join(room);
+
       log('Client ID ' + socket.id + ' created room ' + room);
       console.log('Client ID ' + socket.id + ' created room ' + room);
-      socket.emit('created', room, socket.id);
 
+      socket.emit('created', room, socket.id);
+      console.log('첫번째 if문');
     } else if (numClients === 1) {
-      log('Client ID ' + socket.id + ' joined room ' + room);
-      io.sockets.in(room).emit('join', room);
-      socket.join(room);
-      socket.emit('joined', room, socket.id);
-      io.sockets.in(room).emit('ready');
-    } else if (numClients === 2) {
       log('Client ID ' + socket.id + ' joined room ' + room);
       io.sockets.in(room).emit('join', room);
       socket.join(room);
