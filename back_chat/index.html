@@ -10,10 +10,22 @@
     <form class="form-inline">
         <div class="form-group">
             <label for="msgForm">Message: </label>
-            <input type="text" placeholder="메시지를 입력해주세요 :)" class="form-control" id="msgForm">
+            <input type="text" placeholder="메시지를 입 력해주세요 :)" class="form-control" id="msgForm">
             <input type="text" placeholder="귓말 대상(name)" class="form-control" id="other">
+
+            
+        
         </div>
         <button type="submit" class="btn btn-primary">Send</button>
+
+        <!--화상채팅방 이동-->
+        <div id="ex1" class="modal">
+            <p>안녕하세요. 모달창안의 내용부분입니다.</p>
+            <a href="#" rel="modal:close">닫기</a>
+        </div>
+           
+        <a class="btn btn-danger" href="#ex1" rel="modal:open">화상채팅</a>
+
     </form>
     <div id="chatLogs"></div>
 </div>
@@ -24,12 +36,13 @@
         
         // socket.io 서버에 접속한다
         var socket = io();
-        var cnt = 0;
+        
         // 서버로 자신의 정보를 전송한다.
         var Myname = makeRandomName();
+
         socket.emit("login", {
             name: Myname,
-
+            socketid: '',
             // name: "Dongryul3",
             userid: "ungmo2@gmail.com"
         });
@@ -38,8 +51,11 @@
 
         // 서버로부터의 메시지가 수신되면
         socket.on("login", function(data) {
-            $("#chatLogs").append("<div><strong>" + data + "</strong> has joined</div>");
+            $("#chatLogs").append("<div><strong>" + data.name + "</strong> has joined</div>");
+            //$("#chatLogs").append("<div><strong>" + data.socketid + "</strong></div>");
+        
         });
+        
 
         // 서버로부터의 메시지가 수신되면
 
@@ -100,9 +116,23 @@
         }
     });
     
+
+    function CamChat(){
+        location.href = "cam";
+   }
     
 </script>
 
 
 </body>
+
+
+<!--(화상채팅) 모달 부분-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
+<link rel="stylesheet" href="//unpkg.com/bootstrap@4/dist/css/bootstrap.min.css">
+<script src='//unpkg.com/jquery@3/dist/jquery.min.js'></script>
+<script src='//unpkg.com/popper.js@1/dist/umd/popper.min.js'></script>
+<script src='//unpkg.com/bootstrap@4/dist/js/bootstrap.min.js'></script>
 </html>
