@@ -3,6 +3,18 @@
 <head>
     <meta charset="utf-8">
     <title>Socket.io Chat Example</title>
+    <style>
+        .modal {
+            border: 1px solid;
+            display: none;
+            z-index: 1000;
+            left: 250px;
+            height: 150px;
+            background-color: #fff;
+        }
+
+
+    </style>
 </head>
 <body>
 <div class="container">
@@ -19,25 +31,50 @@
         <button type="submit" class="btn btn-primary">Send</button>
 
         <!--화상채팅방 이동-->
-        <div id="ex1" class="modal">
+        <div id="ex1" class="modal" style="text-align:center";>
             <label for="roomName">방 이름</label>
             <input type="text" placeholder="입력해주세요 :)" class="form-control" id="roomName">
             <button class="btn btn-primary" rel="modal:close" onclick="camPage()">생성</button>
             <button href="#" class="btn btn-danger" rel="modal:close">닫기</button>
         </div>
 
-        <a class="btn btn-danger" href="#ex1" rel="modal:open">화상채팅</a>
+        <!--접속자 목록-->
+        <div id="ex2" class="modal" style="text-align:center";>
+            <label for="roomName">접속자</label>
+            <br>
+            
+            <div id=USERS></div>
+            
+            <br>
+            <button href="#" class="btn btn-danger" rel="modal:close">닫기</button>
+        </div>
 
+        <a class="btn btn-danger" href="#ex1" rel="modal:open">화상채팅</a>
+        <a class="btn btn-success" href="#ex2" rel="modal:open" onclick="getUser()">접속자</a>
+        <a id="now_user_cnt">접속자 수</a>
     </form>
     <div id="chatLogs"></div>
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 <script src="/socket.io/socket.io.js"></script>
 <script>
+
+
+            
     $(function(){
+
+
+        // userList.push("김동률");
+        // console.log(userList);
+        // userList.splice(userList.indexOf("김동률"));
+        // console.log(userList);
 
         // socket.io 서버에 접속한다
         var socket = io();
+
+       socket.on("sendList", function(data){
+            console.log(data);
+       });
 
         // 서버로 자신의 정보를 전송한다.
         var Myname = makeRandomName();
@@ -55,6 +92,8 @@
         socket.on("login", function(data) {
             $("#chatLogs").append("<div><strong>" + data.name + "</strong> has joined</div>");
             //$("#chatLogs").append("<div><strong>" + data.socketid + "</strong></div>");
+
+            // 유저리스트 추가
 
         });
 
@@ -126,6 +165,13 @@
         var $RoomName = $("#roomName");
         var RN = $RoomName.val();
         location.href = "cam?roomName="+RN;
+   }
+
+   function getUser(){
+       console.log("getUser() : "+userList);
+       var users = document.getElementById("USERS");
+       users.innerText = userList;
+
    }
 
 </script>

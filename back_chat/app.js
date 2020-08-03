@@ -5,6 +5,8 @@ var server = require('http').createServer(app);
 // http server를 socket.io server로 upgrade한다
 var io = require('socket.io')(server);
 
+var client_list = [];
+
 
 // localhost:3000으로 서버에 접속하면 클라이언트로 index.html을 전송한다
 app.get('/', function(req, res) {
@@ -31,6 +33,25 @@ io.on('connection', function(socket) {
     // 접속한 클라이언트의 정보가 수신되면
     socket.on('login', function(data) {
         console.log('Client logged-in:\n name: ' + data.name + '\n userid: ' + data.userid);
+
+        // client_List 부분
+        var obj = {    
+          sockect_id : socket.id,
+          nickname : data.name,
+          email : data.userid
+        };
+
+        client_list.push(obj);
+        for(var i in client_list){
+          console.log(i+')'+client_list[i].nickname+" ");
+        }
+
+        socket.emit('sendList', client_list);
+
+
+        // 현재 접속된 유저를 전달, JSON형식으로 보냄 -> userList를 갖고오기 위함
+        // socket.emit('userCnt', JSON.stringify(socket.id));
+        // socket.emit('userList', )
 
         // socket에 클라이언트 정보를 저장한다
         socket.name = data.name;
@@ -145,6 +166,15 @@ io.on('connection', function(socket) {
         };
 
         io.emit('out', msg);
+
+        // 연결이 끊긴 client_list 삭제 후 다시 조회
+        for(var i in client_list){
+          if(client_list[i].sockect_id == socket.id){
+            client_list.splice(i, 1);
+          }
+        }
+
+        io.emit('sendList', client_list);
     });
 
     /////////////////////////////// Cam
