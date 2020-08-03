@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Socket.io Chat Example</title>
+</head>
+<body>
+<div class="container">
+    <h3>Socket.io Chat Example</h3>
+    <form class="form-inline">
+        <div class="form-group">
+            <label for="msgForm">Message: </label>
+            <input type="text" placeholder="메시지를 입력해주세요 :)" class="form-control" id="msgForm">
+            <input type="text" placeholder="귓말 대상(name)" class="form-control" id="other">
+        </div>
+        <button type="submit" class="btn btn-primary">Send</button>
+    </form>
+    <div id="chatLogs"></div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    $(function(){
+        
+        // socket.io 서버에 접속한다
+        var socket = io();
+        var cnt = 0;
+        // 서버로 자신의 정보를 전송한다.
+        var Myname = makeRandomName();
+        socket.emit("login", {
+            name: Myname,
+
+            // name: "Dongryul3",
+            userid: "ungmo2@gmail.com"
+        });
+
+
+
+        // 서버로부터의 메시지가 수신되면
+        socket.on("login", function(data) {
+            $("#chatLogs").append("<div><strong>" + data + "</strong> has joined</div>");
+        });
+
+        // 서버로부터의 메시지가 수신되면
+
+        socket.on("s2c chat", function(data) {
+
+            //$("#chatLogs").append("<div>" + data.msg + " : from <strong>" + data.from.name + "</strong></div>");
+            console.log("data.id : "+data.id);
+            console.log("data.myid : "+data.myid);
+            console.log("data.from.name : "+data.from.name);
+            console.log("myName : "+Myname);
+            console.log("yourname : "+data.yourname);
+
+            if(data.id == '') {
+                $("#chatLogs").append("<div>" + data.from.name + " : " + data.msg + "</div>");
+            }
+            else if(Myname == data.from.name) $("#chatLogs").append("<div style='color:#0000ff'>(" + Myname + "님에게) " + data.msg + "</div>");
+            else  $("#chatLogs").append("<div style='color:blue'>(" + data.from.name + "님으로부터) " + data.msg + "</div>");
+
+        });
+
+
+        socket.on("out", function(data) {
+            //$("#chatLogs").append("<div>" + data.msg + " : from <strong>" + data.from.name + "</strong></div>");
+
+            $("#chatLogs").append("<div>"+data.from.name+"님이 나가셨습니다.</div>");
+
+        });
+
+
+        // Send 버튼이 클릭되면
+        $("form").submit(function(e) {
+            e.preventDefault();
+            var $msgForm = $("#msgForm");
+            var $other = $("#other");
+
+
+            if($other.val() == ''){
+                // 서버로 메시지를 전송한다.
+                socket.emit("chat", { msg: $msgForm.val() });
+                $msgForm.val("");
+            }
+            else{
+                console.log('귓속말 대상 : '+$other.val());
+                socket.emit("chatto", { msg: $msgForm.val(), id: $other.val() });
+                $msgForm.val("");
+            }
+        });
+
+        function makeRandomName(){
+            var name = "";
+            var possible = "abcdefghijklmnopqrstuvwxyz";
+            for( var i = 0; i < 3; i++ ) {
+                name += possible.charAt(Math.floor(Math.random() * possible.length));
+            }
+            return name;
+            // var name = 1;
+            // return name + Math.random()*10;
+        }
+    });
+    
+    
+</script>
+
+
+</body>
+</html>
