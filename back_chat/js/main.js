@@ -31,6 +31,7 @@ var room = 'foo';
 
 var socket = io.connect();
 
+
 if (room !== '') {
   socket.emit('create or join', room);
   console.log('Attempted to create or  join room', room);

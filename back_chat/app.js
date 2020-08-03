@@ -158,14 +158,19 @@ io.on('connection', function(socket) {
 
   socket.on('create or join', function(room) {
     log('Received request to create or join room ' + room);
+    console.log('_______________________________________\n'+
+    'Received request to create or join room ' + room);
+
 
     var clientsInRoom = io.sockets.adapter.rooms[room];
     var numClients = clientsInRoom ? Object.keys(clientsInRoom.sockets).length : 0;
     log('Room ' + room + ' now has ' + numClients + ' client(s)');
+    console.log('Room ' + room + ' now has ' + numClients + ' client(s)');
 
     if (numClients === 0) {
       socket.join(room);
       log('Client ID ' + socket.id + ' created room ' + room);
+      console.log('Client ID ' + socket.id + ' created room ' + room);
       socket.emit('created', room, socket.id);
 
     } else if (numClients === 1) {

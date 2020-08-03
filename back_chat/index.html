@@ -20,8 +20,10 @@
 
         <!--화상채팅방 이동-->
         <div id="ex1" class="modal">
-            <p>안녕하세요. 모달창안의 내용부분입니다.</p>
-            <a href="#" rel="modal:close">닫기</a>
+            <label for="roomName">방 이름</label>
+            <input type="text" placeholder="입력해주세요 :)" class="form-control" id="roomName">
+            <button class="btn btn-primary" rel="modal:close" onclick="camPage()">생성</button>
+            <button href="#" class="btn btn-danger" rel="modal:close">닫기</button>
         </div>
            
         <a class="btn btn-danger" href="#ex1" rel="modal:open">화상채팅</a>
@@ -85,6 +87,19 @@
         });
 
 
+        
+
+        function makeRandomName(){
+            var name = "";
+            var possible = "abcdefghijklmnopqrstuvwxyz";
+            for( var i = 0; i < 3; i++ ) {
+                name += possible.charAt(Math.floor(Math.random() * possible.length));
+            }
+            return name;
+            // var name = 1;
+            // return name + Math.random()*10;
+        }
+
         // Send 버튼이 클릭되면
         $("form").submit(function(e) {
             e.preventDefault();
@@ -103,22 +118,13 @@
                 $msgForm.val("");
             }
         });
-
-        function makeRandomName(){
-            var name = "";
-            var possible = "abcdefghijklmnopqrstuvwxyz";
-            for( var i = 0; i < 3; i++ ) {
-                name += possible.charAt(Math.floor(Math.random() * possible.length));
-            }
-            return name;
-            // var name = 1;
-            // return name + Math.random()*10;
-        }
     });
     
 
-    function CamChat(){
-        location.href = "cam";
+    function camPage(){
+        var $RoomName = $("#roomName");
+        var RN = $RoomName.val();
+        location.href = "cam?roomName="+RN;
    }
     
 </script>

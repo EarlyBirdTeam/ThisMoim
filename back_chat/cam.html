@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <title>Realtime communication with WebRTC</title>
-  <link rel="stylesheet" type="text/css" href="/css/main.css" />
+  <!-- <link rel="stylesheet" type="text/css" href="/css/main.css" /> -->
   
 </head>
 
@@ -28,7 +28,13 @@
 </body>
 <!-- <script src="js/main.js"></script> -->
 <script>
-  'use strict';
+   'use strict';
+  
+   // room 정보 가져오기
+   var RN = location.search.substr(location.search.indexOf("=") + 1);
+  console.log(RN);
+
+ 
   
   var isChannelReady = false;
   var isInitiator = false;
@@ -55,7 +61,10 @@
   
   /////////////////////////////////////////////
   
-  var room = 'foo';
+  var room = RN;// 이부분을 입력받아오면 되는 부분?
+
+
+
   // Could prompt for room name:
   // room = prompt('Enter room name:');
   
@@ -268,11 +277,11 @@
     remoteStream = event.stream;
   //  remoteVideo.srcObject = remoteStream;
     remoteVideo.srcObject = remoteStream;
-    if(cnt2 == 1) cnt2 = 2;
+    // if(cnt2 == 1) cnt2 = 2;
   
-    if(cnt2 == 2){
-      remoteVideo1.srcObject = remoteStream;
-    }
+    // if(cnt2 == 2){
+    //   remoteVideo1.srcObject = remoteStream;
+    // }
   
     // if(Aa===false) {
     //   remoteVideo.srcObject = remoteStream;
