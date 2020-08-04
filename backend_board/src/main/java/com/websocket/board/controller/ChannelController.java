@@ -44,9 +44,8 @@ public class ChannelController {
     public Channel createChannel(@RequestParam("channelName") String channelName) {
         System.out.println(channelName);
         // save channel in mariadb
-        Channel channel = new Channel().builder()
-                .channelName(channelName)
-                .build();
+        Channel channel = new Channel();
+        channel.setChannelName(channelName);
         Channel savedChannel = channelRepository.save(channel);
         // save channel in redis
         channelRedisRepository.createChannel(savedChannel);

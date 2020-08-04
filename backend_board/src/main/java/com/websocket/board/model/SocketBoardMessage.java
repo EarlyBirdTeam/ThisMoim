@@ -13,20 +13,21 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class SocketBoardMessage implements Serializable {
+public class SocketBoardMessage {
 
-//    @Builder
-//    public SocketBoardMessage(String channelId, List<Postit> postitList, Long idCount) {
-//        this.channelId = channelId;
-//        //this.channelName = channelName;
-//        this.postitList = postitList;
-//        this.idCount = idCount;
-//        //this.numOfFixtures = 0;
-//        //this.overMaxMembers = false;
-//        //this.overMaxFixtures = false;
-//        //this.liveChat = false;
-//        //this.videoChat = false;
-//    }
+    //public SocketBoardMessage() {}
+
+    public SocketBoardMessage(String channelId, List<Postit> postitList, Long idCount) {
+        this.channelId = channelId;
+        //this.channelName = channelName;
+        this.postitList = postitList;
+        this.idCount = idCount;
+        //this.numOfFixtures = 0;
+        //this.overMaxMembers = false;
+        //this.overMaxFixtures = false;
+        //this.liveChat = false;
+        //this.videoChat = false;
+    }
 
     // 채널 자체 정보
     private String channelId;

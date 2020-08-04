@@ -16,9 +16,9 @@ import java.util.UUID;
 @NoArgsConstructor
 public class Channel implements Serializable {
 
-    private static final long serialVersionUID = 6494678977089006639L;
+    //private static final long serialVersionUID = 6494678977089006639L;
 
-   @Id
+    @Id
     @GeneratedValue(generator="system-uuid")
     @GenericGenerator(name="system-uuid", strategy = "uuid")
     @Column(length = 36)
@@ -28,5 +28,15 @@ public class Channel implements Serializable {
 
     @OneToMany(mappedBy = "channel")
     private List<Postit> postitList = new ArrayList<>();
+
+    public Channel(String channelName) {
+        this.channelName = channelName;
+    }
+
+    public Channel(String channelId, String channelName, List<Postit> postitList) {
+        this.channelId = channelId;
+        this.channelName = channelName;
+        this.postitList = postitList;
+    }
 
 }

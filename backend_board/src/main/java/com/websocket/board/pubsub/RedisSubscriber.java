@@ -24,8 +24,8 @@ public class RedisSubscriber {
         try {
             // Board 객채로 맵핑
             //SocketBoardMessage board = objectMapper.readValue(publishMessage, SocketBoardMessage.class);
-            objectMapper.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
-            SocketBoardMessage board = objectMapper.convertValue(publishMessage, SocketBoardMessage.class);
+            //objectMapper.enable(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT);
+            SocketBoardMessage board = objectMapper.readValue(publishMessage, SocketBoardMessage.class);
             // 채널을 구독한 클라이언트에게 메시지 발송
             messagingTemplate.convertAndSend("/sub/board/channel/" + board.getChannelId(), board);
             //log.debug(board.toString());
