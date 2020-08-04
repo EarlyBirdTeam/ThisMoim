@@ -62,9 +62,9 @@
           class="moveable3">
             <Canvas />
           </div>
-
+         
         </div>
-
+        
     </div>
 </template>
 

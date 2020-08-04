@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-main id="bg">
-      <Header :isHeader="isHeader"/>
+      <Header style="height:60px" :isHeader="isHeader"/>
       
       <div v-if="isBoard"><Baseboard/></div>
 

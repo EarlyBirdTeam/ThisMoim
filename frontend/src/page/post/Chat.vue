@@ -25,17 +25,19 @@ export default {
         // this.$socket.on('chat', (data)=> {
         //     this.textarea += data.message + "\n"
         //     })
+        var myname = this.makeRandomName();
 
-        console.log(this.$socket.id)
 
         this.$socket.emit("login", {
-            name: this.$store.state.email,
-            userid: this.$store.state.email
+            //name: this.$store.state.name,
+            name: myname
+            ,userid: this.$store.state.email,
+            
         });
 
         this.$socket.on("login", (data)=> {
 
-            $("#chatLogs").append("<div><strong>" + data + "</strong>님이 입장하셨습니다</div>");
+            $("#chatLogs").append("<div><strong>" + data.name + "</strong>님이 입장하셨습니다</div>");
         });
 
         this.$socket.on("s2c chat", (data)=> {
@@ -69,7 +71,17 @@ export default {
                 $msgForm.val("");
             }
             
+        },
+        makeRandomName(){
+            var name = "";
+            var possible = "abcdefghijklmnopqrstuvwxyz";
+            for( var i = 0; i < 3; i++ ) {
+                name += possible.charAt(Math.floor(Math.random() * possible.length));
             }
+            return name;
+            // var name = 1;
+            // return name + Math.random()*10;
+        }
         }
     }
 

@@ -1,5 +1,5 @@
 <template>
-  <div :id="counter">
+  <div :id="counter" class="canvas MoveableBox">
     <button @click="clicked">button</button>
   </div>
 </template>
@@ -38,5 +38,7 @@ export default {
 </script>
 
 <style>
-
+.canvas{
+  height: 250px;
+}
 </style>

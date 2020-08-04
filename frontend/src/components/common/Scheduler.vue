@@ -1,5 +1,5 @@
 <template>
-  <div class="scheduler">
+  <div class="scheduler MoveableBox" >
     <JqxScheduler
       ref="myScheduler"
       @appointmentChange="onAppointmentChange($event)"
@@ -91,7 +91,8 @@ export default {
 
 <style scoped>
 .scheduler {
-  width: 800;
-  height: 600;
+  width: 830px;
+  height: 630px;
+  padding: 1%;
 }
 </style>

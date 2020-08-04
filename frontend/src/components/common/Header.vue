@@ -1,5 +1,6 @@
 <template>
-    <div id="header" v-if="isHeader">
+    <div id="header" style="height:80px  align-items:center;" v-if="isHeader">
+       
             <div style="float:right width:300px; padding-bottom:0px">
             <div style="margin-right:30px" v-if="this.$store.state.email == ''">
                 <LoginModal/>
@@ -18,11 +19,12 @@
                 
             </div>
             </div>
-        <h1 style="width:200px float:left ">
+        <h3 style="width:200px float:left  ">
             <router-link class="white--text" v-bind:to="{name:constants.URL_TYPE.POST.MAIN}" style="textDecoration:none">
                 이거모임?
             </router-link>
-        </h1>
+        </h3>
+  
 <!--         
             <div v-if="this.$store.state.email == ''">
                 <LoginModal/>
