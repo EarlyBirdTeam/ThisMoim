@@ -51,14 +51,14 @@ export default {
 <style scoped>
  .tag-list-wrap{
      background-color: white;
-     width: 5vw;
+     width: 35px;
      /* top: auto; */
      border-right: 3px solid rgb(223, 223, 223);
      text-align: center;
      
-     height: 30%;
-     top: 7.5%;
-     left: 1%;
+     height: 290px;
+     top: 85px;
+     left: 5px;
  }
  
  .tag-list{
@@ -67,7 +67,8 @@ export default {
  }
 
  img{
-     height: 3vh;
-     width: 3vw;
+     margin-left: 3px;
+     height: 25px;
+     width: 25px;
  }
 </style>

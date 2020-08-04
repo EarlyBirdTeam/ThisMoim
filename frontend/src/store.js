@@ -13,69 +13,103 @@ Vue.use(Vuex);
 export const store = new Vuex.Store({
     plugins: [createPersistedState({
         storage: {
-          getItem: key => Cookies.get(key),
-          setItem: (key, value) => Cookies.set(key, value, { expires: 3, secure: true }),
-          removeItem: key => Cookies.remove(key)
+            getItem: key => Cookies.get(key),
+            setItem: (key, value) => Cookies.set(key, value, { expires: 3, secure: true }),
+            removeItem: key => Cookies.remove(key)
         }
-      })],
-    state:{
+    })],
+    state: {
         host: 'http://127.0.0.1:3000',
         token: '',
-        role:'',
-        email:'',
-        name:'',
-        password:'',
-        nickname:'',
-        errorcode:'',
-        modal:false,
-        channelData:{
-            board:{
-                idCounter: 0, 
-                postits: [],
-                polls: [],
+        role: '',
+        email: '',
+        name: '',
+        password: '',
+        nickname: '',
+        errorcode: '',
+        modal: false,
+        // 캘린더
+        calendar: {
+            event: {
+                startDate: '',
+                startTime: '',
+                endDate: '',
+                endTime: '',
+                hasTime: '',
+                content: '',
+                title: '',
             },
-            channelId: '',
-            channelName: '',
-        }
+            events: [],
+            dialog: false,
+            eventDetail: false,
+        },
     },
-    actions:{
-        [constants.METHODS.DELETE_USER] : (store, payload) =>{
+    actions: {
+        async REQUEST_ADD_EVENT(context, calendar) {
+            try {
+                // const response = await requestAddEvent(calendar);
+                // const addedEvent = makeEvent(response.data);
+                const addedEvent = makeEvent(calendar.event);
+                context.commit('ADD_EVENT', addedEvent);
+                // store.commit('SET_SNACKBAR', setSnackBarInfo('일정이 추가 되었습니다.', 'info', 'top'))
+            } catch (e) {
+                console.log('일정 추가 에러' + e);
+            }
+
+            function makeEvent(event) {
+                // const start = new Date(`${event.startDate}T${event.startTime}:00`);
+                // const end = new Date(`${event.endDate}T${event.endTime}:00`);
+                const start = `${event.startDate}T${event.startTime}:00`;
+                const end = `${event.endDate}T${event.endTime}:00`;
+                return {
+                    name: event.title,
+                    start: start,
+                    end: end,
+                    // start: event.startDate + getTime(event.startTime),
+                    // end: event.endDate + getTime(event.endTime),
+                    // color: colors[Math.floor(Math.random() * 6)]
+                }
+            }
+        },
+
+        
+        [constants.METHODS.DELETE_USER]: (store, payload) => {
             alert(email.value + " and " + password.value);
             http.put('/account/delete',
-                    {
-                        email: payload.email,
-                        password: payload.password,
-                        nickname: payload.nickName,
-                        name: payload.realName
-                    }
-                )
-            .then(() => {
-                console.log("delete req success");
-                cookies.delete('Logged');
-                store.commit(constants.METHODS.DELETE_USER);
-                alert("탈퇴되었습니다. 메인 화면으로 돌아갑니다.");
-                router.push('/');
+                {
+                    email: payload.email,
+                    password: payload.password,
+                    nickname: payload.nickName,
+                    name: payload.realName
+                }
+            )
+                .then(() => {
+                    console.log("delete req success");
+                    cookies.delete('Logged');
+                    store.commit(constants.METHODS.DELETE_USER);
+                    alert("탈퇴되었습니다. 메인 화면으로 돌아갑니다.");
+                    router.push('/');
                 })
-            .catch(exp => {
-                router.push('/error');
-                store.commit(constants.METHODS.ERROR, exp)
-                console.log(exp);
-            });
+                .catch(exp => {
+                    router.push('/error');
+                    store.commit(constants.METHODS.ERROR, exp)
+                    console.log(exp);
+                });
 
         },
-        [constants.METHODS.UPDATE_USER] : (store, payload) =>{
-                axios.put('http://localhost:8080/account',
-                    {
-                        email: payload.email,
-                        password: payload.password,
-                        nickname: payload.nickName,
-                        name: payload.realName
-                    }
-                )
+        [constants.METHODS.UPDATE_USER]: (store, payload) => {
+            axios.put('http://localhost:8080/account',
+                {
+                    email: payload.email,
+                    password: payload.password,
+                    nickname: payload.nickName,
+                    name: payload.realName
+                }
+            )
                 .then(() => {
                     console.log("update req success");
                     alert("수정되었습니다.");
-            })
+                })
                 .catch(exp => {
                     router.push('/error');
                     console.log("error is");
@@ -83,14 +117,14 @@ export const store = new Vuex.Store({
                     store.commit(constants.METHODS.ERROR, exp)
                 });
         },
-        [constants.METHODS.LOGIN_USER] : (_store, payload) =>{
-                
-                http
+        [constants.METHODS.LOGIN_USER]: (_store, payload) => {
+
+            http
                 .get("/account/login", {
-                params: {
-                    email: payload.email,
-                    password: payload.password
-                }
+                    params: {
+                        email: payload.email,
+                        password: payload.password
+                    }
                 })
                 .then(res => {
                     console.log(res);
@@ -101,18 +135,18 @@ export const store = new Vuex.Store({
                     }
                 })
                 .catch(err => {
-                     alert("로그인 정보가 잘못되었습니다.");
+                    alert("로그인 정보가 잘못되었습니다.");
                     return false;
                 });
-                
-                return false;
+
+            return false;
         },
-        [constants.METHODS.LOGOUT_USER] : (store) =>{
+        [constants.METHODS.LOGOUT_USER]: (store) => {
             cookies.delete('Logged');
             store.commit(constants.METHODS.LOGOUT_USER);
-               
+
         },
-        [constants.METHODS.CREATE_USER] : (_store, payload) =>{
+        [constants.METHODS.CREATE_USER]: (_store, payload) => {
             const url = '/account/signup';
             const data = {
                 "email": payload.email.value,
@@ -121,26 +155,26 @@ export const store = new Vuex.Store({
                 "password": payload.password.value,
             };
             console.log(data);
-           
+
             http.post(url, data
             )
-            .then(() => console.log("create req success"))
-            .catch(exp => {
-                router.push('/error');
-                store.commit(constants.METHODS.ERROR, exp)
-                console.log(exp);
-            });
+                .then(() => console.log("create req success"))
+                .catch(exp => {
+                    router.push('/error');
+                    store.commit(constants.METHODS.ERROR, exp)
+                    console.log(exp);
+                });
         },
-        [constants.METHODS.GET_USER] : (store, payload) =>{
+        [constants.METHODS.GET_USER]: (store, payload) => {
             console.log("data : " + payload.userEmail);
-            
+
             const url = '/account';
             // const data = {
             //     email: payload.userEmail
             // };
             const data2 = "test@test.com";
             http.post('http://localhost:8080/account', payload.userEmail)
-            // http.post(url, data)
+                // http.post(url, data)
                 .then(res => {
                     const dataWhatINeed = res.data;
                     console.log(dataWhatINeed);
@@ -156,31 +190,81 @@ export const store = new Vuex.Store({
         },
 
     },
-    mutations:{
-        [constants.METHODS.LOGIN_USER] : (state, payload) =>{
+    mutations: {
+        OPEN_CALENDAR_DIALOG(state, payload) {
+            state.calendar.event.startDate = payload.date;
+            state.calendar.event.endDate = payload.date;
+            state.calendar.event.startTime = payload.time;
+            state.calendar.hasTime = payload.hasTime;
+            state.calendar.dialog = true;
+        },
+        CLOSE_CALENDAR_DIALOG(state) {
+            console.log("CLOSE_DIALOG");
+            state.calendar.dialog = false;
+        },
+        ADD_EVENT(state, getEvent) {
+            console.log("ADD_EVENT");
+            state.calendar.events.push(getEvent);
+            state.calendar.dialog = false;
+            state.calendar.event = {
+                startDate: '',
+                startTime: '',
+                endDate: '',
+                endTime: '',
+                hasTime: '',
+                content: '',
+                title: '',
+            };
+        },
+        OPEN_CALENDAR_EVENT(state, payload) { 
+            state.calendar.event = {
+                startDate: payload.eventParsed.start.date,
+                startTime: payload.eventParsed.start.time,
+                endDate: payload.eventParsed.end.date,
+                endTime: payload.eventParsed.end.time,
+                content: '',
+                title: payload.event.name,
+            }
+            state.calendar.eventDetail = true;
+        },
+        CLOSE_CALENDAR_EVENT(state) {
+            state.calendar.event = {
+                startDate: '',
+                startTime: '',
+                endDate: '',
+                endTime: '',
+                hasTime: '',
+                content: '',
+                title: '',
+            };
+            state.calendar.eventDetail = false;
+            
+        },
+        [constants.METHODS.LOGIN_USER]: (state, payload) => {
             state.email = payload.email;
             state.password = payload.password;
             state.modal = !state.modal;
         },
-        [constants.METHODS.LOGOUT_USER] : (state) =>{
+        [constants.METHODS.LOGOUT_USER]: (state) => {
             state.email = '';
             state.password = '';
         },
-        [constants.METHODS.GET_USER] : (state, payload) =>{
+        [constants.METHODS.GET_USER]: (state, payload) => {
             console.log(payload);
             state.email = payload.dataWhatINeed.email;
             state.password = payload.dataWhatINeed.password;
             state.nickname = payload.dataWhatINeed.nickname;
             state.name = payload.dataWhatINeed.name;
         },
-        [constants.METHODS.DELETE_USER] : (state) =>{
+        [constants.METHODS.DELETE_USER]: (state) => {
             state.email = "";
             state.password = "";
             state.nickname = "";
             state.name = "";
         },
-        [constants.METHODS.ERROR] : (state, exp) =>{
+        [constants.METHODS.ERROR]: (state, exp) => {
             state.errorcode = exp;
-        }
-    }
+        },
+
+    },
 });

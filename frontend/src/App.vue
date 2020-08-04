@@ -67,12 +67,12 @@ export default {
 <style >
   #container{
     width: 90vw;
-    float: right;
     /* border: solid gray 1px; */
     background-color: white;
     border-radius: 2%;
     height: 90%;
     margin: 2.5vh 2vw;
+    margin-left: 50px;
   }
   #bg{
     background-color: rgba(180, 179, 179, 0.26);

@@ -38,10 +38,7 @@
             <v-btn icon color="orange" @click="createMap">
               <v-icon>mdi-map</v-icon>
             </v-btn>
-            
-            <v-btn icon color="orange" @click="createScheduler">
-              <v-icon>mdi-calendar</v-icon>
-            </v-btn>
+
           </v-toolbar>
 
 
@@ -67,13 +64,6 @@
           :content="board.postits[a].contents"
           v-on:setTitle="changePITitle"
           v-on:setContent="changePIContent"/> 
-
-          <Scheduler @mousedown.stop
-          @dblclick="changeTargetAction"
-          @click.right="deleteTargetAction"
-          v-for="(a, idx) in counter.schedulerC"
-          :key="idx"
-          class="moveable2" />
 
             <Canvas @dblclick="focusAction"
           @click="changeTargetAction"
@@ -109,7 +99,6 @@ import SockJS from 'sockjs-client';
 import Stomp from 'stomp-websocket';
 import http from '../../http-common.js';
 
-import Scheduler from "../../components/common/Scheduler";
 import Canvas from "../../components/common/Canvas";
 import Moveable from 'vue-moveable';
 import Postit from '../../components/common/Postit';
@@ -129,7 +118,6 @@ export default {
   name: "app",
   components: {
     Moveable,
-    Scheduler,
     Canvas,
     Postit,
     Poll,
@@ -166,7 +154,6 @@ export default {
     text: "",
     counter: {
       textC: [],
-      schedulerC: [],
       canvasC: [],
       mapC: [],
       pollC: [],
@@ -349,10 +336,6 @@ export default {
         "point":null,
       });
       this.test3();
-    },
-    createScheduler() {
-      event.stopPropagation();
-      this.counter.schedulerC.push(this.counter.schedulerC.length);
     },
     createCanvas() {
       event.stopPropagation();

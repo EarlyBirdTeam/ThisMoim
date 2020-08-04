@@ -10,12 +10,12 @@
   "dependencies": {
     "axios": "^0.17.1",
     "core-js": "^3.6.5",
-    "jqwidgets-scripts": "^10.0.2",
     "js-cookie": "^2.2.1",
     "sockjs-client": "^1.1.2",
     "stomp-websocket": "^2.3.4-next",
     "vue": "^2.5.16",
     "vue-cookie": "^1.1.4",
+    "vue-moment": "^4.1.0",
     "vue-moveable": "^1.8.9",
     "vue-router": "^3.3.4",
     "vuetify": "^2.2.11",

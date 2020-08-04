@@ -1,6 +1,6 @@
 <template>
-  <div class="container" id="app" v-cloak @change="sendMessage()" @click="test2">
-    <!-- {{ postitList }}   {{ idCount}} -->
+  <div class="container" id="app" v-cloak>
+    {{ postitList }}   {{ idCount}}
         <div class="row">
             <div class="col-md-6">
                 <h4>{{channelName}} <span class="badge badge-info badge-pill">{{userCount}}</span></h4>
@@ -31,9 +31,9 @@
           >
           </Moveable> 
 
-          <div v-for="(pi, idx) in this.postitList" :key="idx" class="pIBox">
+          <div v-for="(pi, idx) in this.postitList" :key="idx">
             <!-- <Postit :id="pi.id" :postit="pi" style="position: relative; display: inline-block"/> -->
-            <Postit :id="pi.id" :postit="pi" 
+            <Postit :id="pi.frontPostitid" :postit="pi" 
             :style="{left: pi.left, top: pi.top}"/>
           </div>
         </div>
@@ -59,13 +59,7 @@ export default {
       postit: {title: 'title!!!!', contents: ''},
       dummyTitle: '',
       dummyContents: '',
-      postitList: [{
-        id: 0,
-        left: '0px',
-        top: '0px',
-        title: 'sample',
-        contents: 'sample',
-      }],
+      postitList: [],
       board:'',
       boards: [],
       token: '',
@@ -91,7 +85,8 @@ export default {
   },
    methods: {
     init() {
-      var BASE_URL =  "http://i3a510.p.ssafy.io/api"
+      // var BASE_URL =  "http://i3a510.p.ssafy.io/api"
+      var BASE_URL =  "http://localhost:8080"
       var sock = new SockJS(BASE_URL + "/ws-stomp");
       var ws = Stomp.over(sock);
       this.ws = ws;
@@ -125,7 +120,8 @@ export default {
       this.dummy = '';
     },
     recvMessage: function(recv) {
-      this.userCount   = recv.userCount;
+      console.log(recv);
+      this.userCount = recv.userCount;
       this.idCount = recv.idCount;
       // this.postitList.unshift({"sender":recv.sender,"postitList":recv.postitList})
       this.postitList = recv.postitList;
@@ -133,12 +129,15 @@ export default {
     createText(event) {
       event.stopPropagation();
       const idc = this.idCount++;
+      // postitList에 새로운 포스트잇 더하기
       this.postitList.unshift({
-        id: idc,
+        frontPostitId: idc,
         left: '0px',
         top: '0px',
         title: '', 
-        contents: ''})
+        contents: '',
+        channel: this.channelId,
+      })
       this.sendMessage();
     },    
     handleDrag({ target, left, top }) {
@@ -226,8 +225,4 @@ export default {
   letter-spacing: 1px;
   /* background-color: yellow; */
 }
-.pIBox{
-  display: inline-block;
-}
-
 </style>
