@@ -56,7 +56,7 @@ import java.util.Optional;
 @Controller
 @RequestMapping("/api/auth")
 @Api(value = "Authorization Rest API", description = "Defines endpoints that can be hit only when the user is not logged in. It's not secured by default.")
-@CrossOrigin(origins = "http://localhost:8081")
+@CrossOrigin(origins = "http://localhost:3000")
 public class AuthController {
 
     private static final Logger logger = Logger.getLogger(AuthController.class);
