@@ -30,6 +30,21 @@ app.get('/cam', function(req, res) {
 // connection이 수립되면 event handler function의 인자로 socket인 들어온다
 io.on('connection', function(socket) {
 
+    // socket.on('enter', function(data){
+
+    //   var obj2 = {    
+    //     sockect_id : socket.id,
+    //     nickname : data.name,
+    //     email : data.userid
+    //   };
+
+    //   client_list.push(obj2);
+    //     for(var i in client_list){
+    //       console.log(i+')'+client_list[i].nickname+" ");
+    //     }
+    //     socket.emit('sendList', client_list);
+    // });
+
     // 접속한 클라이언트의 정보가 수신되면
     socket.on('login', function(data) {
         console.log('Client logged-in:\n name: ' + data.name + '\n userid: ' + data.userid);
@@ -170,11 +185,12 @@ io.on('connection', function(socket) {
         // 연결이 끊긴 client_list 삭제 후 다시 조회
         for(var i in client_list){
           if(client_list[i].sockect_id == socket.id){
-            client_list.splice(i, 1);
+            io.emit('deleteUser', client_list[i].nickname);
+            console.log('client_list[i] : '+client_list[i].nickname);
           }
         }
 
-        io.emit('sendList', client_list);
+//        io.emit('sendList', client_list);
     });
 
     /////////////////////////////// Cam

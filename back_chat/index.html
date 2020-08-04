@@ -50,20 +50,38 @@
         </div>
 
         <a class="btn btn-danger" href="#ex1" rel="modal:open">화상채팅</a>
-        <a class="btn btn-success" href="#ex2" rel="modal:open" onclick="getUser()">접속자</a>
-        <a id="now_user_cnt">접속자 수</a>
+        <!-- <a class="btn btn-success" href="#ex2" rel="modal:open" onclick="getUser()">접속자</a>
+        <a id="now_user_cnt">접속자 수</a> -->
     </form>
     <div id="chatLogs"></div>
-</div>
+
+        <div style="border:1px solid; left:230px">
+            <div>접속자</div>
+            <span id="AAA"></span>
+        </div>
+    </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 <script src="/socket.io/socket.io.js"></script>
 <script>
+    var str = "";
+
+    setInterval(function(){
+        var list = str.split(" ");
+        var listStr = "";
+        console.log(list);
+        for(var i=0; i<list.length-1; i++){
+           if(list[i] == list[i+1]) continue;
+           listStr += list[i]+" ";
+        }
+        document.getElementById("AAA").innerHTML=listStr;
+    
+    },1000);
 
 
-            
+
     $(function(){
 
-
+    
         // userList.push("김동률");
         // console.log(userList);
         // userList.splice(userList.indexOf("김동률"));
@@ -74,6 +92,28 @@
 
        socket.on("sendList", function(data){
             console.log(data);
+            // var ab = document.getElementById("clientList");
+            
+            
+            for(var i in data){
+                str += data[i].nickname+" ";
+            }
+            console.log("str : "+str);
+
+            // document.getElementById("AAA").innerHTML=str;
+       });
+       socket.on("deleteUser", function(data){
+        console.log("deleteUser : "+data);
+        var temp = str.split(" ");
+        str = "";
+        for(var i in temp){
+            // if(temp[i] === data) {
+            //     temp.splice(i, 1);   
+            //     console.log(temp);
+            // }
+            if(temp[i] === data) continue;
+            str += temp[i] + " ";
+        }
        });
 
         // 서버로 자신의 정보를 전송한다.
@@ -92,9 +132,14 @@
         socket.on("login", function(data) {
             $("#chatLogs").append("<div><strong>" + data.name + "</strong> has joined</div>");
             //$("#chatLogs").append("<div><strong>" + data.socketid + "</strong></div>");
+            // // 유저리스트 추가
+            str += data.name+" ";
 
-            // 유저리스트 추가
-
+            // socket.emit('enter', {
+            //     name: data.name,
+            //     socketid: '',
+            //     userid: "ruylruyl@naver.com"
+            // });
         });
 
 
