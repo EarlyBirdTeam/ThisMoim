@@ -11,10 +11,15 @@
                     </div>
 
                     <div class="input-wrap">
-                        <input v-model="email" 
+                        <input v-model.lazy="email" 
                             id="email"
                             placeholder="이메일을 입력해주세요"
-                            type="text"/>
+                            type="text"
+                            @change="emailCheck"/>
+                        <!-- {{stateMessage}} -->
+                        {{this.$store.getters.canIUseIt}}
+                        
+                        <!-- {{canIUseIt}} -->
                     </div>
 
                     <div class="input-wrap">
@@ -77,11 +82,9 @@
     export default {
         components: {
         },
+        watch:{
+        },
         created(){
-
-
-
-
         },
         methods: {
             createUserRequest: function(){
@@ -113,11 +116,14 @@
                      });
                 this.$router.push(constants.URL_TYPE.USER.JOINDONE);
                 }
-
-
-
-                  
+            },
+            emailCheck: function(){
+                this.$store.dispatch(constants.METHODS.EMAILCHECK, email.value);
+            },
+            test1: function(){
+                console.log(this.email);
             }
+
         },
         watch: {
         },

@@ -27,6 +27,8 @@ export default {
         CREATE_USER: 'createUser',
         GET_USER: 'getUser',
         ERROR:'error',
+
+        EMAILCHECK: 'emailCheck',
     }
 }
 

@@ -21,7 +21,6 @@
                         {{this.$store.state.userData.email}}
                     </router-link> 
 
-                
                     <button @click="logout">
                         로그아웃
                     </button>
@@ -43,7 +42,7 @@
                     <div class="input-wrap">
                         <input v-model="password" type="password"
                         id="password"
-                        placeholder="영문, 숫자 혼용 8자 이상"/>
+                        placeholder="비밀번호를 입력해주세요"/>
                     </div>
                 
                 
@@ -89,6 +88,9 @@
             // if(document.cookie.split(";")[0].split('=')[0])
             // console.log();
 
+            
+        },
+        computed: {
             
         },
         methods : {

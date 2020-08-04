@@ -31,6 +31,10 @@ export const store = new Vuex.Store({
         errorcode:'',
         accessToken:'',
         modal:false,
+        
+        joining:{
+            canIUseIt:"",
+        }
     },
     actions:{
         [constants.METHODS.DELETE_USER] : (store, payload) =>{
@@ -115,13 +119,8 @@ export const store = new Vuex.Store({
                
         },
         [constants.METHODS.CREATE_USER] : (_store, payload) =>{
+            store.commit(constants.METHODS.EMAILCHECK, "reset");
             const url = 'api/auth/register';
-            // const data = {
-            //     "email": payload.email.value,
-            //     "name": payload.realName.value,
-            //     "nickname": payload.nickName.value,
-            //     "password": payload.password.value,
-            // };
             const data = {
                 "email": payload.email.value,
                 "password": payload.password.value,
@@ -131,8 +130,7 @@ export const store = new Vuex.Store({
             };
             console.log(data);
            
-            http.post(url, data
-            )
+            http.post(url, data)
             .then(() => console.log("create req success"))
             .catch(exp => {
                 router.push('/error');
@@ -161,12 +159,40 @@ export const store = new Vuex.Store({
                     console.log(exp);
                 });
         },
+        [constants.METHODS.EMAILCHECK] : (store, payload) =>{
+            const checkEmail = payload;
+            if(checkEmail==""){         
+                store.commit(constants.METHODS.EMAILCHECK, "nothing");
+                return;
+            }
+            var exptext = /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-Za-z0-9\-]+/;
+            if(exptext.test(checkEmail)==false){
+                //이메일 형식이 알파벳+숫자@알파벳+숫자.알파벳+숫자 형식이 아닐경우            
+                store.commit(constants.METHODS.EMAILCHECK, "invaild");
+                return;
+            }
+
+
+
+            const url = `/api/auth/checkEmailInUse?email=${checkEmail}`;
+            http.get(url)
+                .then(res => {
+                    console.log(res.data.data);
+                    store.commit(constants.METHODS.EMAILCHECK, res.data.data);
+                })
+                .catch(exp => {
+                    router.push('/error');
+                    store.commit(constants.METHODS.ERROR, exp)
+                    console.log(exp);
+                    store.commit(constants.METHODS.EMAILCHECK, 0);
+                })
+        },
 
     },
     mutations:{
         [constants.METHODS.LOGIN_USER] : (state, payload) =>{
             // state.password = payload.password;
-            console.log("payload is : ", payload);
+            console.log("In Store, payload is : ", payload);
             state.userData.email = payload[0].email  ;
             state.accessToken = payload[1];
             state.modal = !state.modal;
@@ -190,6 +216,35 @@ export const store = new Vuex.Store({
         },
         [constants.METHODS.ERROR] : (state, exp) =>{
             state.errorcode = exp;
+        },
+        [constants.METHODS.EMAILCHECK] : (state, result) =>{
+            console.log("In store, result is : ", result);
+            switch(result){
+                case "true":
+                    state.joining.canIUseIt = "사용할 수 없는 이메일입니다.";
+                    break;
+                case "false":
+                    state.joining.canIUseIt = "사용할 수 있는 이메일입니다.";
+                    break;
+                case "invaild":
+                    state.joining.canIUseIt = "이메일형식이 올바르지 않습니다.";
+                    break;
+                default:
+                    state.joining.canIUseIt = "";
+                    break;
+            }
+            console.log("In store, canIUseIt is : ", state.joining.canIUseIt);
+        }
+    },
+    getters:{
+        userData: function(state){
+            return state.userData;
+        },
+        accessToken: function(state){
+            return state.accessToken;
+        },
+        canIUseIt: function(state){
+            return state.joining.canIUseIt;
         }
     }
 });
