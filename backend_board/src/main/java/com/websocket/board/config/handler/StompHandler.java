@@ -1,7 +1,7 @@
 package com.websocket.board.config.handler;
 
 import com.websocket.board.config.JwtTokenProvider;
-import com.websocket.board.repo.ChannelRepository;
+import com.websocket.board.repo.ChannelRedisRepository;
 import com.websocket.board.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +21,7 @@ import java.util.Optional;
 public class StompHandler implements ChannelInterceptor {
 
     private final JwtTokenProvider jwtTokenProvider;
-    private final ChannelRepository channelRepository;
+    private final ChannelRedisRepository channelRedisRepository;
     private final BoardService boardService;
 
     // websocket을 통해 들어온 요청이 처리 되기전 실행된다.
@@ -38,9 +38,9 @@ public class StompHandler implements ChannelInterceptor {
             String channelId = boardService.getChannelId(Optional.ofNullable((String) message.getHeaders().get("simpDestination")).orElse("InvalidChannelId"));
             // 채널에 들어온 클라이언트 sessionId를 channelId와 맵핑해 놓는다.(나중에 특정 세션이 어떤 채널에 들어가 있는지 알기 위함)
             String sessionId = (String) message.getHeaders().get("simpSessionId");
-            channelRepository.setUserEnterInfo(sessionId, channelId);
+            channelRedisRepository.setUserEnterInfo(sessionId, channelId);
             // 채널의 인원수를 +1한다.
-            channelRepository.plusUserCount(channelId);
+            channelRedisRepository.plusUserCount(channelId);
             // 클라이언트 입장 메시지를 채널에 발송한다.(redis publish)
             String name = Optional.ofNullable((Principal) message.getHeaders().get("simpUser")).map(Principal::getName).orElse("UnknownUser");
             //boardService.syncBoardStatus(Board.builder().type(ChatMessage.MessageType.ENTER).roomId(roomId).sender(name).build());
@@ -48,14 +48,14 @@ public class StompHandler implements ChannelInterceptor {
         } else if (StompCommand.DISCONNECT == accessor.getCommand()) { // Websocket 연결 종료
             // 연결이 종료된 클라이언트 sesssionId로 채널 id를 얻는다.
             String sessionId = (String) message.getHeaders().get("simpSessionId");
-            String channelId = channelRepository.getUserEnterChannelId(sessionId);
+            String channelId = channelRedisRepository.getUserEnterChannelId(sessionId);
             // 채널의 인원수를 -1한다.
-            channelRepository.minusUserCount(channelId);
+            channelRedisRepository.minusUserCount(channelId);
             // 클라이언트 퇴장 메시지를 채팅방에 발송한다.(redis publish)
             String name = Optional.ofNullable((Principal) message.getHeaders().get("simpUser")).map(Principal::getName).orElse("UnknownUser");
             //boardService.syncBoardStatus(ChatMessage.builder().type(ChatMessage.MessageType.QUIT).roomId(roomId).sender(name).build());
             // 퇴장한 클라이언트의 roomId 맵핑 정보를 삭제한다.
-            channelRepository.removeUserEnterInfo(sessionId);
+            channelRedisRepository.removeUserEnterInfo(sessionId);
             log.info("DISCONNECTED {}, {}", sessionId, channelId);
         }
         return message;

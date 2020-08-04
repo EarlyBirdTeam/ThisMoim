@@ -1,7 +1,7 @@
 package com.websocket.board.service;
 
-import com.websocket.board.model.SocketBoard;
-import com.websocket.board.repo.ChannelRepository;
+import com.websocket.board.model.SocketBoardMessage;
+import com.websocket.board.repo.ChannelRedisRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.listener.ChannelTopic;
@@ -13,7 +13,7 @@ public class BoardService {
 
     private final ChannelTopic channelTopic;
     private final RedisTemplate redisTemplate;
-    private final ChannelRepository channelRepository;
+    private final ChannelRedisRepository channelRedisRepository;
 
     /**
      * destination정보에서 channelId 추출
@@ -28,9 +28,10 @@ public class BoardService {
 
     /**
      * 보드 상태 동기화
+     * Client 로 부터 받은 메시지를 Redis로 보내는 코드
      */
-    public void syncBoardStatus(SocketBoard board) {
-        board.setUserCount(channelRepository.getUserCount(board.getChannelId()));
+    public void syncSocketBoardStatus(SocketBoardMessage board) {
+        board.setIdCount(channelRedisRepository.getUserCount(board.getChannelId()));
 //        if (ChatMessage.MessageType.ENTER.equals(chatMessage.getType())) {
 //            chatMessage.setMessage(chatMessage.getSender() + "님이 방에 입장했습니다.");
 //            chatMessage.setSender("[알림]");
@@ -39,7 +40,6 @@ public class BoardService {
 //            chatMessage.setSender("[알림]");
 //        }
         redisTemplate.convertAndSend(channelTopic.getTopic(), board);
-        //redisTemplate.convertAndSend();
     }
 
 }

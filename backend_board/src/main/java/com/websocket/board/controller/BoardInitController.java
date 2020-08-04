@@ -1,7 +1,8 @@
 package com.websocket.board.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.websocket.board.dto.Board;
+import com.websocket.board.model.Board;
+import com.websocket.board.model.SocketBoardMessage;
 import com.websocket.board.service.InitService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;

@@ -1,44 +1,41 @@
 package com.websocket.board.model;
 
 import com.websocket.board.dto.Postit;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Data
-public class SocketBoard {
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class SocketBoardMessage implements Serializable {
 
-    // postits : Array[
-    //   Object{
-    //      pid : Integer
-    //      content : String,
-    //      title : String
-    //   }
-    //],
-    //channelId : String,
-    //channelName : String
-
-    @Builder
-    public SocketBoard(String channelId, List<Postit> postits) {
-        this.channelId = channelId;
-        //this.channelName = channelName;
-        this.postits = postits;
-        //this.numOfFixtures = 0;
-        //this.overMaxMembers = false;
-        //this.overMaxFixtures = false;
-        //this.liveChat = false;
-        //this.videoChat = false;
-    }
+//    @Builder
+//    public SocketBoardMessage(String channelId, List<Postit> postitList, Long idCount) {
+//        this.channelId = channelId;
+//        //this.channelName = channelName;
+//        this.postitList = postitList;
+//        this.idCount = idCount;
+//        //this.numOfFixtures = 0;
+//        //this.overMaxMembers = false;
+//        //this.overMaxFixtures = false;
+//        //this.liveChat = false;
+//        //this.videoChat = false;
+//    }
 
     // 채널 자체 정보
     private String channelId;
     //private String channelName;
-    private long userCount;
+    private long idCount;
     //private String sender;
 
     // 전달 모듈 관련 인자
-    private List<Postit> postits; // 포스트잇 리스트
+    private List<Postit> postitList; // 포스트잇 리스트
     // List<Calendar> calendarList; // 캘린더 리스트
     // List<Canvas> canvas; // 캔버스 리스트
     // List<Map> mapList; // 맵 리스트

@@ -1,8 +1,7 @@
 package com.websocket.board.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.websocket.board.dto.Board;
-import com.websocket.board.repo.BoardRepository;
+import com.websocket.board.model.Board;
+import com.websocket.board.repo.PostitRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
@@ -12,18 +11,23 @@ import org.springframework.stereotype.Service;
 public class InitServiceImpl implements InitService {
 
     @Autowired
-    BoardRepository boardRepository;
-    @Autowired
     RedisTemplate redisTemplate;
+    @Autowired
+    PostitRepository postitRepository;
 
     @Override
-    public Board getBoard(String channelId) throws JsonProcessingException {
+    public Board getBoard(String channelId) {
+        // 현재는 레디스에서 간헐적으로 DB에 저장되는 방식이 아니므로 레디스에서 받아오는 것은 보류
         ValueOperations vop = redisTemplate.opsForValue();
-        Board board = (Board) vop.get(channelId);
-        if (board == null) {
-            board = boardRepository.findByChannelId(channelId);
-            vop.set(channelId, board);
-        }
+//        SocketBoardMessage board = (SocketBoardMessage) vop.get(channelId);
+//        if (board == null) {
+//            Channel channel = channelRepository.findByChannelId(channelId);
+//            vop.set(channelId, board);
+//        }
+        Board board = new Board()
+                .builder()
+                .postitList(postitRepository.findAllByChannel(channelId))
+                .build();
         System.out.println(board);
         return board;
     }

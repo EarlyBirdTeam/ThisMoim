@@ -1,10 +1,12 @@
 package com.websocket.board.controller;
 
 import com.websocket.board.config.JwtTokenProvider;
-import com.websocket.board.model.Channel;
-import com.websocket.board.repo.ChannelRepository;
+import com.websocket.board.dto.Channel;
+import com.websocket.board.repo.ChannelRedisRepository;
 import com.websocket.board.model.LoginInfo;
+import com.websocket.board.repo.ChannelRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -18,8 +20,11 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:8081")
 public class ChannelController {
 
-    private final ChannelRepository channelRepository;
+    private final ChannelRedisRepository channelRedisRepository;
     private final JwtTokenProvider jwtTokenProvider;
+
+    @Autowired
+    ChannelRepository channelRepository;
 
     @GetMapping("/channel")
     public String channels() {
@@ -29,8 +34,8 @@ public class ChannelController {
     @GetMapping("/channels")
     @ResponseBody
     public List<Channel> channel() {
-        List<Channel> channels = channelRepository.findAllChannel();
-        channels.stream().forEach(room -> room.setUserCount(channelRepository.getUserCount(room.getChannelId())));
+        List<Channel> channels = channelRedisRepository.findAllChannel();
+        channels.stream().forEach(room -> room.setIdCount(channelRedisRepository.getUserCount(room.getChannelId())));
         return channels;
     }
 
@@ -38,7 +43,15 @@ public class ChannelController {
     @ResponseBody
     public Channel createChannel(@RequestParam("channelName") String channelName) {
         System.out.println(channelName);
-        return channelRepository.createChannel(channelName);
+        // save channel in mariadb
+        Channel channel = new Channel().builder()
+                .channelName(channelName)
+                .build();
+        Channel savedChannel = channelRepository.save(channel);
+        // save channel in redis
+        channelRedisRepository.createChannel(savedChannel);
+
+        return savedChannel;
     }
 
 //    @GetMapping("/channel/enter/{channelId}")
@@ -50,7 +63,7 @@ public class ChannelController {
     @GetMapping("/channel/{channelId}")
     @ResponseBody
     public Channel channelInfo(@PathVariable String channelId) {
-        return channelRepository.findChannelById(channelId);
+        return channelRedisRepository.findChannelById(channelId);
     }
 
     @GetMapping("/user")

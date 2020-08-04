@@ -6,17 +6,18 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Postit {
+public class Postit implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "postit_id")
+    @Column(nullable = false, name = "postit_id")
     private Long id;
 
     private String title;
@@ -25,8 +26,10 @@ public class Postit {
     private String left;
     @Column(name = "top")
     private String top;
+    @Column(name = "front_postit_id")
+    private Long frontPostitId;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "board_id")
-    private Board board;
+    @JoinColumn(name = "channel_id")
+    private Channel channel;
 }
