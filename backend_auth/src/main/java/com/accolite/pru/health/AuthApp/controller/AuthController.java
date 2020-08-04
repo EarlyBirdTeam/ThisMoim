@@ -44,6 +44,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -51,7 +52,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 import javax.validation.Valid;
 import java.util.Optional;
 
-@RestController
+//@RestController
+@Controller
 @RequestMapping("/api/auth")
 @Api(value = "Authorization Rest API", description = "Defines endpoints that can be hit only when the user is not logged in. It's not secured by default.")
 @CrossOrigin(origins = "http://localhost:8081")
@@ -158,11 +160,12 @@ public class AuthController {
 
     @GetMapping("/registrationConfirmation")
     @ApiOperation(value = "Confirms the email verification token that has been generated for the user during registration")
-    public ResponseEntity confirmRegistration(@ApiParam(value = "the token that was sent to the user email") @RequestParam("token") String token) {
-
-        return authService.confirmEmailRegistration(token)
-                .map(user -> ResponseEntity.ok(new ApiResponse(true, "User verified successfully")))
-                .orElseThrow(() -> new InvalidTokenRequestException("Email Verification Token", token, "Failed to confirm. Please generate a new email verification request"));
+    public String confirmRegistration(@ApiParam(value = "the token that was sent to the user email") @RequestParam("token") String token) {
+        if(authService.confirmEmailRegistration(token)!=null){
+            return "redirect:http://i3a510.p.ssafy.io/";
+        }else{
+            return "redirect:http://i3a510.p.ssafy.io/";
+        }
     }
 
 
