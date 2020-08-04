@@ -22,11 +22,14 @@ export const store = new Vuex.Store({
         host: 'http://127.0.0.1:3000',
         token: '',
         role:'',
-        email:'',
-        name:'',
-        password:'',
-        nickname:'',
+        userData:{
+            email:'',
+            name:'',
+            password:'',
+            nickname:'',
+        },
         errorcode:'',
+        accessToken:'',
         modal:false,
     },
     actions:{
@@ -83,15 +86,17 @@ export const store = new Vuex.Store({
                 "email": payload.email,
                 "password": payload.password
             }   
-
-
                 http
                 .post(url, data)
                 .then(res => {
                     console.log(res);
                     if (res.status == 200) {
                         cookies.set('AccessToken', res.data.accessToken);
-                        store.commit(constants.METHODS.LOGIN_USER, payload);
+                        cookies.set('AcesssData', res.data.userData);
+                        store.commit(constants.METHODS.LOGIN_USER, [data, res.data.accessToken]);
+                        // back_auth 에서는 get_user 아직 미구현
+                        // store.dispatch(constants.METHODS.GET_USER, data.email);
+                        console.log(store.state);
                         return true;
                     }
                 })
@@ -105,6 +110,7 @@ export const store = new Vuex.Store({
         },
         [constants.METHODS.LOGOUT_USER] : (store) =>{
             cookies.delete('AccessToken');
+            cookies.delete('AccessData');
             store.commit(constants.METHODS.LOGOUT_USER);
                
         },
@@ -159,26 +165,28 @@ export const store = new Vuex.Store({
     },
     mutations:{
         [constants.METHODS.LOGIN_USER] : (state, payload) =>{
-            state.email = payload.email;
-            state.password = payload.password;
+            // state.password = payload.password;
+            console.log("payload is : ", payload);
+            state.userData.email = payload[0].email  ;
+            state.accessToken = payload[1];
             state.modal = !state.modal;
         },
         [constants.METHODS.LOGOUT_USER] : (state) =>{
-            state.email = '';
-            state.password = '';
+            state.userData.email = '';
+            state.userData.password = '';
         },
         [constants.METHODS.GET_USER] : (state, payload) =>{
             console.log(payload);
-            state.email = payload.dataWhatINeed.email;
-            state.password = payload.dataWhatINeed.password;
-            state.nickname = payload.dataWhatINeed.nickname;
-            state.name = payload.dataWhatINeed.name;
+            state.userData.email = payload.dataWhatINeed.email;
+            state.userData.password = payload.dataWhatINeed.password;
+            state.userData.nickname = payload.dataWhatINeed.nickname;
+            state.userData.name = payload.dataWhatINeed.name;
         },
         [constants.METHODS.DELETE_USER] : (state) =>{
-            state.email = "";
-            state.password = "";
-            state.nickname = "";
-            state.name = "";
+            state.userData.email = "";
+            state.userData.password = "";
+            state.userData.nickname = "";
+            state.userData.name = "";
         },
         [constants.METHODS.ERROR] : (state, exp) =>{
             state.errorcode = exp;

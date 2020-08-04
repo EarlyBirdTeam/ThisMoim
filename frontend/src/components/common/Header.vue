@@ -7,7 +7,7 @@
         </h1>
         <div class="right">
             <!-- <template v-if="this.$store.state.email == ''"> -->
-            <template v-if="cookies.get('AccessToken') == ''">
+            <template v-if="this.$store.state.accessToken == ''">
                 <div class="headBox">
                     <button @click="openModal">
                         로그인
@@ -18,7 +18,7 @@
             <template v-else>
                 <div class="headBox">
                     <router-link v-bind:to="{name:constants.URL_TYPE.USER.MYPAGE}" class="btn--text">
-                        {{userData}}
+                        {{this.$store.state.userData.email}}
                     </router-link> 
 
                 
@@ -70,39 +70,21 @@
             loginModal
         },
         props: ['isHeader'],
-        computed:{
-            userData(){
-                return this.$store.state.email;
-            }
-            // userinfo:{
-            //     get() {
-            //         const arr = document.cookie.split(";");
-            //         console.log("asdfasdfasdf");
-
-            //         arr.forEach(element => {
-            //             if(element.split('=')[0] == 'Logged'){
-            //                 userinfo = element.split('=')[1];
-            //             }
-            //         });
-            //     }
-            // },
-
-        },
         watch: {
             modal: function(val) {
                 console.log(val);
             }
         },
         created() {
-            // console.log("arr is ");
+            console.log("arr is ");
             // console.log(arr);
-            // const arr = document.cookie.split(";");
+            const arr = document.cookie.split(";");
 
-            // arr.forEach(element => {
-            //     if(element.split('=')[0] == 'Logged'){
-            //         this.userinfo = element.split('=')[1];
-            //     }
-            // });
+            arr.forEach(element => {
+                if(element.split('=')[0] == 'AccessToken'){
+                    this.userinfo = element.split('=')[1];
+                }
+            });
 
             // if(document.cookie.split(";")[0].split('=')[0])
             // console.log();
@@ -161,7 +143,8 @@
                constants,
                keyword : "",
                modal:this.$store.state.modal,
-               userinfo:this.$store.state.email,
+            //    userinfo:this.$store.state.email,
+                userinfo: '',
            }
         },
 
