@@ -90,12 +90,13 @@ export const store = new Vuex.Store({
                 .then(res => {
                     console.log(res);
                     if (res.status == 200) {
-                        cookies.set('Logged', res.data.email);
+                        cookies.set('AccessToken', res.data.accessToken);
                         store.commit(constants.METHODS.LOGIN_USER, payload);
                         return true;
                     }
                 })
                 .catch(err => {
+                    console.log(err.message);
                      alert("로그인 정보가 잘못되었습니다.");
                     return false;
                 });
@@ -103,7 +104,7 @@ export const store = new Vuex.Store({
                 return false;
         },
         [constants.METHODS.LOGOUT_USER] : (store) =>{
-            cookies.delete('Logged');
+            cookies.delete('AccessToken');
             store.commit(constants.METHODS.LOGOUT_USER);
                
         },
@@ -137,12 +138,10 @@ export const store = new Vuex.Store({
             console.log("data : " + payload.userEmail);
             
             const url = '/account';
-            // const data = {
-            //     email: payload.userEmail
-            // };
+            const data = payload.userEmail;
             const data2 = "test@test.com";
-            http.post('http://localhost:8080/account', payload.userEmail)
-            // http.post(url, data)
+            // http.post('http://localhost:8080/account', payload.userEmail)
+            http.post(url, data)
                 .then(res => {
                     const dataWhatINeed = res.data;
                     console.log(dataWhatINeed);

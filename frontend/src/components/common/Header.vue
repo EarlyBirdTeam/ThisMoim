@@ -6,7 +6,8 @@
             </router-link>
         </h1>
         <div class="right">
-            <template v-if="this.$store.state.email == ''">
+            <!-- <template v-if="this.$store.state.email == ''"> -->
+            <template v-if="cookies.get('AccessToken') == ''">
                 <div class="headBox">
                     <button @click="openModal">
                         로그인
@@ -14,7 +15,7 @@
                 </div>
             </template>
 
-            <template v-if="this.$store.state.email != ''">
+            <template v-else>
                 <div class="headBox">
                     <router-link v-bind:to="{name:constants.URL_TYPE.USER.MYPAGE}" class="btn--text">
                         {{userData}}

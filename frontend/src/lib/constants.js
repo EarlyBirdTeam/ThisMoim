@@ -12,6 +12,7 @@ export default {
             LOGIN: 'login',
             JOIN: 'join', 
             JOINDONE: 'joinDone',
+            CONFIRMDONE: 'confirmDone',
             MYPAGE: 'myPage'
         },
         POST: {

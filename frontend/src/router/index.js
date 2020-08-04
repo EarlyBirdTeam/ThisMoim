@@ -10,6 +10,7 @@ import Login from '../page/user/Login.vue'
 import Join from '../page/user/Join.vue'
 import JoinDone from '../page/user/JoinDone.vue'
 import MyPage from '../page/user/MyPage.vue'
+import ConfirmDone from '../page/user/ConfirmationCheck.vue'
 
 // 포스트
 import List from '../page/post/List.vue'
@@ -41,6 +42,11 @@ export default new Router({
       name: constants.URL_TYPE.USER.MYPAGE,
       component: MyPage
     },
+    { 
+      path: '/api/auth/registrationConfirmation',
+      name: constants.URL_TYPE.USER.CONFIRMDONE,
+      component: ConfirmDone
+    },
     // 포스트
     { 
       path: '/',
@@ -53,6 +59,7 @@ export default new Router({
       name: constants.ERROR.FRONT_ERROR,
       component: () => import('../page/etc/error.vue'),
     },
+    
 
     // 그 외 페이지 (404, ERROR)
     {
