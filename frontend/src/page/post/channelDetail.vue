@@ -1,5 +1,5 @@
 <template>
-  <div class="container" id="app" v-cloak>
+  <div class="container" id="app" v-cloak @click="test2">
     {{ postitList }}   {{ idCount}}
         <div class="row">
             <div class="col-md-6">
@@ -13,9 +13,9 @@
             </v-btn>
         </v-toolbar> 
         
-        <div class="bodyBox " ref="whiteBoard" @dblclick="focusAction"
-          @click="changeTargetAction"
-          @click.right="test4">
+        <div class="bodyBox " ref="whiteBoard" 
+        @dblclick="focusAction"
+        @click="changeTargetAction">
 
           <Moveable
           ref="moveable"
@@ -31,10 +31,14 @@
           >
           </Moveable> 
 
-          <div v-for="(pi, idx) in this.postitList" :key="idx">
+          <div v-for="(pi, idx) in this.postitList" :key="idx"
+          @click.right="deleteTargetAction(idx, $event)">
             <!-- <Postit :id="pi.id" :postit="pi" style="position: relative; display: inline-block"/> -->
-            <Postit :id="pi.frontPostitid" :postit="pi" 
-            :style="{left: pi.left, top: pi.top}"/>
+            <Postit 
+            :id="pi.frontPostitid" 
+            :postit="pi" 
+            :style="{left: pi.left, top: pi.top}"
+            />
           </div>
         </div>
         
@@ -82,6 +86,9 @@ export default {
   },
   created() {
     this.init();
+    window.oncontextmenu = function() { // 우클릭 default이벤트 차단
+      return false;
+    };
   },
    methods: {
     init() {
@@ -113,14 +120,11 @@ export default {
       this.ws.send("/pub/board/message", {"token":this.token}, JSON.stringify({channelId:this.channelId}));
     },
     sendMessage: function(type) {
-      console.log("send@@@@@@ ");
-      console.log(this.postitList);
       // var tempPostitList = this.postitList.unshift({title: this.dummyTitle, contents: this.dummyContents});
       this.ws.send("/pub/board/message", {"token":this.token}, JSON.stringify({channelId:this.channelId, idCount:this.idCount, postitList:this.postitList}));
       this.dummy = '';
     },
     recvMessage: function(recv) {
-      console.log(recv);
       this.userCount = recv.userCount;
       this.idCount = recv.idCount;
       // this.postitList.unshift({"sender":recv.sender,"postitList":recv.postitList})
@@ -143,8 +147,9 @@ export default {
     handleDrag({ target, left, top }) {
       target.style.left = `${left}px`;
       target.style.top = `${top}px`;
+      console.log(target),
       this.postitList.map(postit => {
-        if(postit.id == target.id) {
+        if(postit.frontPostitId == target.frontPostitId) {
           postit.left = `${left}px`,
           postit.top = `${top}px`
         }
@@ -185,6 +190,15 @@ export default {
             this.$refs.moveable.moveable.target = target;
           }
         }
+      }
+    },
+    deleteTargetAction(idx ,{target}){
+      console.log("delete TARGET!!!!!!")
+      console.log(idx, target)
+      if(confirm("요소를 삭제하시겠습니까?") === true) {
+        this.postitList.splice(idx, 1);
+        target.remove();
+        // target이 뒤에 있는 두 개가 삭제되는 문제가 있다. 
       }
     },
     test(){

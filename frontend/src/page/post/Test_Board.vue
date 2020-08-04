@@ -129,13 +129,13 @@ export default {
     window.oncontextmenu = function() {
       return false;
     };
-    const BASE_URL = "http://localhost:8080"
-    // websocket & stomp initialize
-    var sock = new SockJS(BASE_URL + "/ws-stomp");
-    var ws = Stomp.over(sock);
+    // const BASE_URL = "http://localhost:8080"
+    // // websocket & stomp initialize
+    // var sock = new SockJS(BASE_URL + "/ws-stomp");
+    // var ws = Stomp.over(sock);
 
     
-    this.init();
+    // this.init();
   },
   data: () => ({
     moveable: {
