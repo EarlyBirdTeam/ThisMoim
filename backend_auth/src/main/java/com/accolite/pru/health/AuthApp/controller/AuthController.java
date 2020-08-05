@@ -79,7 +79,6 @@ public class AuthController {
         return ResponseEntity.ok(new ApiResponse(true, emailExists.toString()));
     }
 
-
     @ApiOperation(value = "Checks if the given username is in use")
     @GetMapping("/checkUsernameInUse")
     public ResponseEntity checkUsernameInUse(@ApiParam(value = "Username to check against") @RequestParam(
@@ -164,7 +163,7 @@ public class AuthController {
         if(authService.confirmEmailRegistration(token)!=null){
             return "redirect:http://i3a510.p.ssafy.io/";
         }else{
-            return "redirect:http://i3a510.p.ssafy.io/";
+            return "redirect:http://i3a510.p.ssafy.io/error";
         }
     }
 
