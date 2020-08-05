@@ -7,7 +7,7 @@
         </h1>
         <div class="right">
             <!-- <template v-if="this.$store.state.email == ''"> -->
-            <template v-if="this.$store.state.accessToken == ''">
+            <template v-if="this.$store.getters.accessToken == ''">
                 <div class="headBox">
                     <button @click="openModal">
                         로그인
@@ -101,7 +101,7 @@
                 this.modal = false;
             },
             async logout(){
-                this.$store.dispatch(constants.METHODS.LOGOUT_USER);
+                this.$store.commit(constants.METHODS.LOGOUT_USER);
                 try{
                    await this.$router.push('/');
                 } catch(error) {
@@ -131,12 +131,12 @@
 
                     const result = this.$store.dispatch(constants.METHODS.LOGIN_USER, {email, password});
                     console.log(this.userData);this.modal = !this.modal;
-                  
+                    this.email = '';
                 };
 
                     
-                // this.email = '';
-                // this.password = '';
+                    this.password = '';
+                
             },
             
         },
@@ -147,6 +147,8 @@
                modal:this.$store.state.modal,
             //    userinfo:this.$store.state.email,
                 userinfo: '',
+                email:"",
+                password:"",
            }
         },
 

@@ -113,8 +113,6 @@ export const store = new Vuex.Store({
                 return false;
         },
         [constants.METHODS.LOGOUT_USER] : (store) =>{
-            cookies.delete('AccessToken');
-            cookies.delete('AccessData');
             store.commit(constants.METHODS.LOGOUT_USER);
                
         },
@@ -200,6 +198,10 @@ export const store = new Vuex.Store({
         [constants.METHODS.LOGOUT_USER] : (state) =>{
             state.userData.email = '';
             state.userData.password = '';
+            state.accessToken = '';
+            
+            cookies.delete('AccessToken');
+            cookies.delete('AccessData');
         },
         [constants.METHODS.GET_USER] : (state, payload) =>{
             console.log(payload);
