@@ -11,6 +11,8 @@ import Join from '../page/user/Join.vue'
 import JoinDone from '../page/user/JoinDone.vue'
 import MyPage from '../page/user/MyPage.vue'
 import ConfirmDone from '../page/user/ConfirmationCheck.vue'
+import PasswordFind from '../page/user/PasswordFind.vue'
+import PasswordReset from '../page/user/PasswordReset.vue'
 
 // 포스트
 import List from '../page/post/List.vue'
@@ -46,6 +48,16 @@ export default new Router({
       path: '/api/auth/registrationConfirmation',
       name: constants.URL_TYPE.USER.CONFIRMDONE,
       component: ConfirmDone
+    },
+    { 
+      path: '/user/PasswordFind',
+      name: constants.URL_TYPE.USER.PASSWORDFIND,
+      component: PasswordFind
+    },
+    { 
+      path: '/user/PasswordReset',
+      name: constants.URL_TYPE.USER.PASSWORDRESET,
+      component: PasswordReset
     },
     // 포스트
     { 

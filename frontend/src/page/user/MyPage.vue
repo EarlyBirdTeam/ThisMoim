@@ -91,13 +91,6 @@
 
             //     alert(this.$store.state.name)
             // );
-                
-                
-            
-            
-            
-            
-
             
             // const userEmail = this.email;
             // this.$store.dispatch(constants.METHODS.GET_USER, {userEmail});
