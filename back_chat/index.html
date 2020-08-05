@@ -214,7 +214,11 @@
                     $msgForm.val("");
                 }
 
-                divdiv.scrollTop = divdiv.scrollHeight;
+                //$('#chatLogs').scrollTop($('#chatLogs').prop('scrollHeight'));
+
+                setTimeout(function(){
+                    $('#chatLogs').scrollTop($('#chatLogs').prop('scrollHeight'));
+                }, 300);
             });
         });
 
