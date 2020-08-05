@@ -1,6 +1,7 @@
 package com.websocket.board.service;
 
 import com.websocket.board.model.Board;
+import com.websocket.board.model.SocketBoardMessage;
 import com.websocket.board.repo.PostitRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;

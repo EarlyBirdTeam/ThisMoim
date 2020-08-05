@@ -15,8 +15,9 @@ import java.util.List;
 public class Board implements Serializable {
 
     @Builder
-    public Board(String channelId, List<Postit> postitList) {
+    public Board(String channelId, List<Postit> postitList, long userCount) {
         this.channelId = channelId;
+        this.userCount = userCount;
         //this.channelName = channelName;
         this.postitList = postitList;
         //this.numOfFixtures = 0;

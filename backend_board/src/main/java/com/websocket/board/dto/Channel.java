@@ -10,7 +10,8 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Data
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -24,7 +25,7 @@ public class Channel implements Serializable {
     @Column(length = 36)
     private String channelId;
     private String channelName;
-    private long idCount; // 채팅방 인원수
+    private long userCount; // 채팅방 인원수
 
     @OneToMany(mappedBy = "channel")
     private List<Postit> postitList = new ArrayList<>();

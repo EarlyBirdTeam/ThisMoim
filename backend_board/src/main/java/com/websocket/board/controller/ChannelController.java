@@ -35,7 +35,7 @@ public class ChannelController {
     @ResponseBody
     public List<Channel> channel() {
         List<Channel> channels = channelRedisRepository.findAllChannel();
-        channels.stream().forEach(room -> room.setIdCount(channelRedisRepository.getUserCount(room.getChannelId())));
+        channels.stream().forEach(room -> room.setUserCount(channelRedisRepository.getUserCount(room.getChannelId())));
         return channels;
     }
 

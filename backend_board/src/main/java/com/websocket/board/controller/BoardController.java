@@ -36,7 +36,7 @@ public class BoardController {
         // 로그인 회원 정보로 대화명 설정
         //message.setSender(nickname);
         // 채널 인원수 세팅
-        message.setIdCount(channelRedisRepository.getUserCount(message.getChannelId()));
+        message.setUserCount(channelRedisRepository.getUserCount(message.getChannelId()));
 
         // Websocket에 발행된 메시지(클라이언트로 부터 받은 메시지)를 redis로 발행(publish)
         boardService.syncSocketBoardStatus(message);

@@ -17,11 +17,12 @@ public class SocketBoardMessage {
 
     //public SocketBoardMessage() {}
 
-    public SocketBoardMessage(String channelId, List<Postit> postitList, Long idCount) {
+    public SocketBoardMessage(String channelId, List<Postit> postitList,long userCount,long idCount) {
         this.channelId = channelId;
+        this.userCount = userCount;
         //this.channelName = channelName;
-        this.postitList = postitList;
         this.idCount = idCount;
+        this.postitList = postitList;
         //this.numOfFixtures = 0;
         //this.overMaxMembers = false;
         //this.overMaxFixtures = false;
@@ -31,11 +32,12 @@ public class SocketBoardMessage {
 
     // 채널 자체 정보
     private String channelId;
+    private long userCount;
     //private String channelName;
-    private long idCount;
     //private String sender;
 
     // 전달 모듈 관련 인자
+    private long idCount;
     private List<Postit> postitList; // 포스트잇 리스트
     // List<Calendar> calendarList; // 캘린더 리스트
     // List<Canvas> canvas; // 캔버스 리스트

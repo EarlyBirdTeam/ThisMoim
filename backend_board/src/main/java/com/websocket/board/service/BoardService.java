@@ -31,7 +31,7 @@ public class BoardService {
      * Client 로 부터 받은 메시지를 Redis로 보내는 코드
      */
     public void syncSocketBoardStatus(SocketBoardMessage board) {
-        board.setIdCount(channelRedisRepository.getUserCount(board.getChannelId()));
+        board.setUserCount(channelRedisRepository.getUserCount(board.getChannelId()));
 //        if (ChatMessage.MessageType.ENTER.equals(chatMessage.getType())) {
 //            chatMessage.setMessage(chatMessage.getSender() + "님이 방에 입장했습니다.");
 //            chatMessage.setSender("[알림]");

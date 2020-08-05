@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ChannelRepository extends CrudRepository<Channel, Long> {
-    //Channel findByChannelId(String channelId);
+    Channel findByChannelId(String channelId);
 }
