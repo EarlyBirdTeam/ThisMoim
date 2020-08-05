@@ -1,5 +1,37 @@
 <template>
-    <div id="header" style="height:80px  align-items:center;" v-if="isHeader">
+
+  <div  >
+    <v-toolbar dense id="header" style="height:60px align-items:center;" >
+
+        <router-link class="white--text" v-bind:to="{name:constants.URL_TYPE.POST.MAIN}" style="textDecoration:none">
+            이거모임
+        </router-link>
+
+        <v-spacer></v-spacer>
+        
+         <div style="margin-right:30px" class="white--text" v-if="this.$store.state.email == ''">
+                <LoginModal/>
+            </div>
+   <div style="float:right" v-if="this.$store.state.email != ''">
+
+                    <CreateModal style="width:10px"/>
+                    <router-link v-bind:to="{name:constants.URL_TYPE.USER.MYPAGE}" class="btn--text white--text" style="textDecoration:none">
+                        {{userData}}
+                    </router-link> 
+
+                
+                    <button @click="logout" class="white--text">
+                        로그아웃
+                    </button>
+                
+            </div>
+
+    </v-toolbar>
+  </div>
+
+
+
+    <!-- <div id="header" style="height:80px  align-items:center;" v-if="isHeader">
        
             <div style="float:right width:300px; padding-bottom:0px">
             <div style="margin-right:30px" v-if="this.$store.state.email == ''">
@@ -24,6 +56,7 @@
                 이거모임?
             </router-link>
         </h3>
+    </div> -->
   
 <!--         
             <div v-if="this.$store.state.email == ''">
@@ -51,32 +84,8 @@
         
         
             
-            <!-- <loginModal @close="closeModal" v-if="modal">
-                
-                
-                <div class="input-wrap">
-                        <input v-model="email"
-                        id="email" 
-                        placeholder="이메일을 입력해주세요"
-                        type="text"/>
-                    </div>
-                    <div class="input-wrap">
-                        <input v-model="password" type="password"
-                        id="password"
-                        placeholder="영문, 숫자 혼용 8자 이상"/>
-                    </div>
-                
-                
-                <template slot="footer">
-                                <button class="btn btn--back btn--login" v-on:click="testMethod(email, password)">
-                                    로그인 하기
-                                </button>
-                                
-                </template>
+          
 
-            </loginModal> -->
-        
-    </div>
 </template>   
 
 <script> 
@@ -198,7 +207,7 @@
 <style>
     #header{
         border-bottom: 3px solid rgb(255, 235, 221);
-
+ 
         background-color: rgb(255,157,91);
     };
     #header header_name{

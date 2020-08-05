@@ -46,22 +46,22 @@
           
     </v-tabs>
 <!--  -->
-
+<!-- 
 <div class="my-2">
           <v-btn color="success" style="right:0; bottom:0; position:absolute;" fab x-large dark @click="chatonoff()">
             <v-icon>mdi-message-bulleted</v-icon>
           </v-btn>
         </div>
         <div style="">
-     <Chat v-if="ischat"/>
-        </div>
+     <Chat v-if="!ischat"/>
+        </div> -->
 
 
 
-<!-- <v-dialog v-model="dialog" width="600px">
+<v-dialog v-model="dialog" width="600px">
       <template v-slot:activator="{ on, attrs }">
         <v-btn
-          v-btn color="success" style="right:0; bottom:0; position:absolute;"
+          v-btn color="success" style="right:10px; bottom:30px; position:fixed; display:flex"
           dark fab x-large
           v-bind="attrs"
           v-on="on"
@@ -71,19 +71,15 @@
       </template>
       <v-card>
         <v-card-title>
-          <span class="headline">Use Google's location service?</span>
+          <span class="headline">채팅</span>
         </v-card-title>
-        <v-card-text>
+        <v-card-text  style="top:0">
           <Chat/>
 
         </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="green darken-1" text @click="dialog = false">Disagree</v-btn>
-          <v-btn color="green darken-1" text @click="dialog = false">Agree</v-btn>
-        </v-card-actions>
+      
       </v-card>
-    </v-dialog> -->
+    </v-dialog>
 
 <!-- <div class="my-2">
           <v-btn color="success" style="right:0; bottom:0; position:absolute;" fab x-large dark>
