@@ -36,6 +36,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.Optional;
 
@@ -79,6 +80,17 @@ public class UserController {
     @ApiOperation(value = "Returns the current user profile")
     public ResponseEntity getUserInfo(@RequestParam String email) {
         return new ResponseEntity<>(userService.findByEmail(email), HttpStatus.OK);
+    }
+
+    @Transactional
+    @ApiOperation(value = "Delete", response = String.class)
+    @DeleteMapping("/delete")
+    public ResponseEntity deleteBoard(@RequestParam String email, @RequestParam String password) {
+        logger.debug("delete - 호출");
+        if (userService.deleteByEamil(email,password)==1) {
+            return new ResponseEntity<>("success", HttpStatus.OK);
+        }
+        return new ResponseEntity<>("fail", HttpStatus.NO_CONTENT);
     }
 
 
