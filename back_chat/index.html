@@ -18,15 +18,13 @@
 </head>
 <body>
 <div class="container">
-    <h3>Socket.io Chat Example</h3>
+    <h3>Socket.io Chat</h3>
+    <div id="chatLogs"></div>
     <form class="form-inline">
         <div class="form-group">
             <label for="msgForm">Message: </label>
-            <input type="text" placeholder="메시지를 입 력해주세요 :)" class="form-control" id="msgForm">
+            <input type="tet" placeholder="메시지를 입력해주세요 :)" class="form-control" id="msgForm">
             <input type="text" placeholder="귓말 대상(name)" class="form-control" id="other">
-
-
-
         </div>
         <button type="submit" class="btn btn-primary">Send</button>
 
@@ -53,7 +51,7 @@
         <!-- <a class="btn btn-success" href="#ex2" rel="modal:open" onclick="getUser()">접속자</a>
         <a id="now_user_cnt">접속자 수</a> -->
     </form>
-    <div id="chatLogs"></div>
+   
 
         <div style="border:1px solid; left:230px">
             <div>접속자</div>
@@ -63,6 +61,9 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 <script src="/socket.io/socket.io.js"></script>
 <script>
+    console.log(getParameterByName('userName'));
+    // var userName = getParameterByName('userName');
+
     var str = "";
 
     setInterval(function(){
@@ -117,7 +118,7 @@
        });
 
         // 서버로 자신의 정보를 전송한다.
-        var Myname = makeRandomName();
+        var Myname = getParameterByName('userName');
 
         socket.emit("login", {
             name: Myname,
@@ -218,6 +219,16 @@
        users.innerText = userList;
 
    }
+
+   function getParameterByName(name) {
+        name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+        var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+                results = regex.exec(location.search);
+        return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+    }
+
+
+
 
 </script>
 
