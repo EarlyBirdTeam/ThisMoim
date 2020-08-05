@@ -17,6 +17,10 @@ app.get('/cam', function(req, res) {
     res.sendFile(__dirname + '/cam.html');
 });
 
+app.get('/useTest', function(req, res) {
+  res.sendFile(__dirname + '/NameForm.html');
+});
+
 // NameSpace 사용. 경로할당
 // Server-side
 // var nsp = io.of('/space');
