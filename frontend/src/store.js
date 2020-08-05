@@ -47,7 +47,7 @@ export const store = new Vuex.Store({
     actions: {
         async REQUEST_ADD_EVENT(context, event) {
             try {
-                console.log(event);
+                console.log('context : '+context+", event : " + event);
                 // const response = await requestAddEvent(calendar);
                 // const addedEvent = makeEvent(response.data);
                 const addedEvent = makeEvent(event);

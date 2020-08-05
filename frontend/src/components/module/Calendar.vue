@@ -8,13 +8,13 @@
               ref="dateOpen"
               v-model="dateOpen"
               :close-on-content-click="false"
-              :return-value.sync="start"
+              :return-value.sync="start" 
               offset-y
             >
               <template v-slot:activator="{ on }">
                 <v-text-field
                   v-model="start"
-                  label="Start Date"
+                  label="날짜"
                   prepend-icon="mdi-calendar"
                   dense
                   readonly
@@ -35,7 +35,7 @@
             <v-select
               v-model="type"
               :items="typeOptions"
-              label="Type"
+              label="달, 주, 일"
               class="my-auto"
               hide-details
               outlined
