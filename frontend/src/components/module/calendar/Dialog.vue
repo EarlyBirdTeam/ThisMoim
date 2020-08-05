@@ -115,7 +115,7 @@ export default {
   methods: {
     submit() {
       if (this.$refs.form.validate()) {
-          this.$store.dispatch('REQUEST_ADD_EVENT',this.calendar);
+          this.$store.dispatch('REQUEST_ADD_EVENT', this.calendar.event);
       }
     },
     // submit() {

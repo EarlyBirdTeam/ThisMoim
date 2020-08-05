@@ -1,6 +1,5 @@
 <template>
-  <div class="container" id="app" v-cloak @click="test2">
-    {{ postitList }}   {{ idCount}}
+  <div id="app" v-cloak @click="test2">
         <div class="row">
             <div class="col-md-6">
                 <h4>{{channelName}} <span class="badge badge-info badge-pill">{{userCount}}</span></h4>
@@ -31,16 +30,15 @@
           >
           </Moveable> 
 
-          <div 
-            class="d-inline-flex">
+          
             <!-- <Postit :id="pi.id" :postit="pi" style="position: relative; display: inline-block"/> -->
-            <Postit
-            v-for="(pi, idx) in this.postitList" :key="idx"
-            :id="pi.frontPostitId" 
-            :postit="pi" 
-            :style="{left: pi.left, top: pi.top}"
-            />
-          </div>
+          <Postit
+          v-for="(pi, idx) in this.postitList" :key="idx"
+          :id="pi.frontPostitId" 
+          :postit="pi" 
+          :style="{left: pi.left, top: pi.top}"
+          />
+          {{ idCount }} {{ postitList }} 
         </div>
         
     </div>
@@ -118,6 +116,7 @@ export default {
     },
     initRecv() {
       // 접속시 처음 값을 받아오도록 하기
+      console.log('접속@@@@')
       http.get(`/board/${this.channelId}`)
         .then(response => {
           this.postitList = response.data.postitList
@@ -143,8 +142,8 @@ export default {
       // postitList에 새로운 포스트잇 더하기
       this.postitList.unshift({
         frontPostitId: idc,
-        left: '0px',
-        top: '0px',
+        left: '500px',
+        top: '170px',
         title: '', 
         contents: '',
         channel: this.channelId,
@@ -212,6 +211,7 @@ export default {
     test2(){
       console.log("click body!");
       document.querySelector('.moveable-control-box').style.display = 'none';
+      
     },
     test3({target}){
       console.log("click target!");

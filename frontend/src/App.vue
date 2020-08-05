@@ -66,12 +66,12 @@ export default {
 
 <style >
   #container{
-    width: 90vw;
+    /* width: 90vw; */
     /* border: solid gray 1px; */
     background-color: white;
     border-radius: 2%;
     height: 90%;
-    margin: 2.5vh 2vw;
+    margin: 25px;
     margin-left: 50px;
   }
   #bg{

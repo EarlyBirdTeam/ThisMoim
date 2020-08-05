@@ -45,11 +45,12 @@ export const store = new Vuex.Store({
         },
     },
     actions: {
-        async REQUEST_ADD_EVENT(context, calendar) {
+        async REQUEST_ADD_EVENT(context, event) {
             try {
+                console.log(event);
                 // const response = await requestAddEvent(calendar);
                 // const addedEvent = makeEvent(response.data);
-                const addedEvent = makeEvent(calendar.event);
+                const addedEvent = makeEvent(event);
                 context.commit('ADD_EVENT', addedEvent);
                 // store.commit('SET_SNACKBAR', setSnackBarInfo('일정이 추가 되었습니다.', 'info', 'top'))
             } catch (e) {

@@ -46,12 +46,12 @@ export default {
   background-size: 100% 100%;
   width: 300px;
   height: 300px;
-  position: relative;
+  position: absolute;
   text-align: center;
   margin: 0 auto;
   font-weight: 100;
   letter-spacing: 1px;
-  display: inline-block
+  display: inline-block;
 }
 
 #paperTitle{
