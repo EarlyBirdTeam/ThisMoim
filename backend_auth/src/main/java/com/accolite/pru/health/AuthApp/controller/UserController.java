@@ -81,6 +81,16 @@ public class UserController {
         return new ResponseEntity<>(userService.findByEmail(email), HttpStatus.OK);
     }
 
+    @ApiOperation(value = "Delete", response = String.class)
+    @DeleteMapping("/delete")
+    public ResponseEntity<String> deleteBoard(@RequestParam String email, @RequestParam String password) {
+        logger.debug("delete - 호출");
+        if (userService.deleteByEamil(email,password)) {
+            return new ResponseEntity<String>("success", HttpStatus.OK);
+        }
+        return new ResponseEntity<String>("fail", HttpStatus.NO_CONTENT);
+    }
+
 
     /**
      * Returns all admins in the system. Requires Admin access
