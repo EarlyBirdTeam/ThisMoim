@@ -98,8 +98,7 @@ export const store = new Vuex.Store({
                         cookies.set('AccessToken', res.data.accessToken);
                         cookies.set('AcesssData', res.data.userData);
                         store.commit(constants.METHODS.LOGIN_USER, [data, res.data.accessToken]);
-                        // back_auth 에서는 get_user 아직 미구현
-                        // store.dispatch(constants.METHODS.GET_USER, data.email);
+                        store.dispatch(constants.METHODS.GET_USER, data.email);
                         console.log(store.state);
                         return true;
                     }
@@ -124,7 +123,7 @@ export const store = new Vuex.Store({
                 "password": payload.password.value,
                 "registerAsAdmin": false,
                 "username": payload.realName.value,
-                //     "nickname": payload.nickName.value,
+                    "nickname": payload.nickName.value,
             };
             console.log(data);
            
@@ -137,19 +136,21 @@ export const store = new Vuex.Store({
             });
         },
         [constants.METHODS.GET_USER] : (store, payload) =>{
-            console.log("data : " + payload.userEmail);
-            
-            const url = '/account';
-            const data = payload.userEmail;
-            const data2 = "test@test.com";
-            // http.post('http://localhost:8080/account', payload.userEmail)
-            http.post(url, data)
+            console.log("data : " + payload);
+
+            const data = payload;
+            const url = `/api/user/userInfo?email=${data}`;
+            http.get(url, {
+                headers: {
+                    Authorization: 'Bearer ' + store.getters.accessToken
+                }
+            })
                 .then(res => {
-                    const dataWhatINeed = res.data;
-                    console.log(dataWhatINeed);
+                    const dataWhatINeed = res.data  ;
+                    console.log("In store, dataWhatINeed is : ", dataWhatINeed);
                     store.commit(constants.METHODS.GET_USER, {
                         dataWhatINeed
-                    })
+                    });
                 })
                 .catch(exp => {
                     router.push('/error');
@@ -204,11 +205,11 @@ export const store = new Vuex.Store({
             cookies.delete('AccessData');
         },
         [constants.METHODS.GET_USER] : (state, payload) =>{
-            console.log(payload);
+            console.log(payload.dataWhatINeed);
             state.userData.email = payload.dataWhatINeed.email;
             state.userData.password = payload.dataWhatINeed.password;
             state.userData.nickname = payload.dataWhatINeed.nickname;
-            state.userData.name = payload.dataWhatINeed.name;
+            state.userData.name = payload.dataWhatINeed.username;
         },
         [constants.METHODS.DELETE_USER] : (state) =>{
             state.userData.email = "";
