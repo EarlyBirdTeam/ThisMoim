@@ -10,15 +10,15 @@ var client_list = [];
 
 // localhost:3000으로 서버에 접속하면 클라이언트로 index.html을 전송한다
 app.get('/', function(req, res) {
-    res.sendFile(__dirname + '/index.html');
+    res.sendFile(__dirname + '/useTest.html');
+});
+
+app.get('/index', function(req, res) {
+  res.sendFile(__dirname + '/index.html');
 });
 
 app.get('/cam', function(req, res) {
     res.sendFile(__dirname + '/cam.html');
-});
-
-app.get('/useTest', function(req, res) {
-  res.sendFile(__dirname + '/NameForm.html');
 });
 
 // NameSpace 사용. 경로할당
@@ -268,5 +268,10 @@ io.on('connection', function(socket) {
 
 
 server.listen(3030, function() {
+<<<<<<< HEAD
     console.log('Socket IO server listening on port 3000');
 });
+=======
+    console.log('Socket IO server listening on port 3030');
+});
+>>>>>>> 5be23892ef014f4a0abc437aa740ac4205e0f47a

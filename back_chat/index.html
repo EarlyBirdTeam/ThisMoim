@@ -19,6 +19,7 @@
 <body>
 <div class="container">
     <h3>Socket.io Chat</h3>
+    <div id="chatLogs"></div>
     <form class="form-inline">
         <div class="form-group">
             <label for="msgForm">Message: </label>
@@ -50,7 +51,7 @@
         <!-- <a class="btn btn-success" href="#ex2" rel="modal:open" onclick="getUser()">접속자</a>
         <a id="now_user_cnt">접속자 수</a> -->
     </form>
-    <div id="chatLogs"></div>
+   
 
         <div style="border:1px solid; left:230px">
             <div>접속자</div>
@@ -61,7 +62,7 @@
 <script src="/socket.io/socket.io.js"></script>
 <script>
     console.log(getParameterByName('userName'));
-    //var userName = getParameterByName('userName');
+    // var userName = getParameterByName('userName');
 
     var str = "";
 

@@ -868,3 +868,29 @@ npm ERR! This is probably not a problem with npm. There is likely additional log
 
 npm ERR! A complete log of this run can be found in:
 npm ERR!     /home/ubuntu/.npm/_logs/2020-08-05T01_43_06_291Z-debug.log
+
+> backend_Chat@1.0.0 start /home/ubuntu/testServer/backend_chat/s03p13a510/back_chat
+> node app.js
+
+/home/ubuntu/testServer/backend_chat/s03p13a510/back_chat/app.js:271
+<<<<<<< HEAD
+^^
+
+SyntaxError: Unexpected token '<<'
+    at wrapSafe (internal/modules/cjs/loader.js:1053:16)
+    at Module._compile (internal/modules/cjs/loader.js:1101:27)
+    at Object.Module._extensions..js (internal/modules/cjs/loader.js:1157:10)
+    at Module.load (internal/modules/cjs/loader.js:985:32)
+    at Function.Module._load (internal/modules/cjs/loader.js:878:14)
+    at Function.executeUserEntryPoint [as runMain] (internal/modules/run_main.js:71:12)
+    at internal/main/run_main_module.js:17:47
+npm ERR! code ELIFECYCLE
+npm ERR! errno 1
+npm ERR! backend_Chat@1.0.0 start: `node app.js`
+npm ERR! Exit status 1
+npm ERR! 
+npm ERR! Failed at the backend_Chat@1.0.0 start script.
+npm ERR! This is probably not a problem with npm. There is likely additional logging output above.
+
+npm ERR! A complete log of this run can be found in:
+npm ERR!     /home/ubuntu/.npm/_logs/2020-08-05T01_48_26_012Z-debug.log
