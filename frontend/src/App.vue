@@ -72,6 +72,7 @@ export default {
     border-radius: 2%;
     height: 90%;
     margin: 25px;
+    padding: 10px;
     margin-left: 50px;
   }
   #bg{

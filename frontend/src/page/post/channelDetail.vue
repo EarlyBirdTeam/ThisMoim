@@ -1,47 +1,54 @@
 <template>
   <div id="app" v-cloak @click="test2">
-        <div class="row">
-            <div class="col-md-6">
-                <h4>{{channelName}} <span class="badge badge-info badge-pill">{{userCount}}</span></h4>
-        <v-btn @click="sendMessage()">보내기</v-btn><br>
-            </div>
-        </div>
-        <v-toolbar class="toolBox">
-            <v-btn icon color="orange" @click="createText">
-              <v-icon>mdi-message</v-icon>
-            </v-btn>
-        </v-toolbar> 
-        
-        <div class="bodyBox " ref="whiteBoard" 
-        @dblclick="focusAction"
-        @click="changeTargetAction">
-
-          <Moveable
-          ref="moveable"
-          class="moveable"
-          v-bind="moveable"
-          @drag="handleDrag"
-          @dragEnd="handleDragEnd"
-          @resize="handleResize"
-          @scale="handleScale"
-          @rotate="handleRotate"
-          @warp="handleWarp"
-          style="display: none;"
-          >
-          </Moveable> 
-
-          
-            <!-- <Postit :id="pi.id" :postit="pi" style="position: relative; display: inline-block"/> -->
-          <Postit
-          v-for="(pi, idx) in this.postitList" :key="idx"
-          :id="pi.frontPostitId" 
-          :postit="pi" 
-          :style="{left: pi.left, top: pi.top}"
-          />
-          {{ idCount }} {{ postitList }} 
-        </div>
-        
+    <div class="row">
+      <v-snackbar
+        app
+        top 
+        v-model="snackbar.is"
+        :timeout="snackbar.timeout"
+        :color="snackbar.color"
+      > {{ snackbar.text }}
+      </v-snackbar>
+      <div class="col-md-6">
+        <h4>
+          {{channelName}}
+          <span class="badge badge-info badge-pill">{{userCount}}</span>
+          <v-btn @click="sendMessage()">보내기</v-btn>
+        </h4>
+        <br />
+      </div>
     </div>
+    <v-toolbar class="toolBox">
+      <v-btn icon color="orange" @click="createText">
+        <v-icon>mdi-message</v-icon>
+      </v-btn>
+    </v-toolbar>
+
+    <div class="bodyBox" ref="whiteBoard" @dblclick="focusAction" @click="changeTargetAction">
+      <Moveable
+        ref="moveable"
+        class="moveable"
+        v-bind="moveable"
+        @drag="handleDrag"
+        @dragEnd="handleDragEnd"
+        @resize="handleResize"
+        @scale="handleScale"
+        @rotate="handleRotate"
+        @warp="handleWarp"
+        style="display: none;"
+      ></Moveable>
+
+      <!-- <Postit :id="pi.id" :postit="pi" style="position: relative; display: inline-block"/> -->
+      <Postit
+        v-for="(pi, idx) in this.postitList"
+        :key="idx"
+        :id="pi.frontPostitId"
+        :postit="pi"
+        :style="{left: pi.left, top: pi.top}"
+      />
+      {{ idCount }} {{ postitList }}
+    </div>
+  </div>
 </template>
 
 <script>
@@ -60,8 +67,6 @@ export default {
       channelName: '',
       sender: '',
       postit: {title: 'title!!!!', contents: ''},
-      dummyTitle: '',
-      dummyContents: '',
       postitList: [],
       board:'',
       boards: [],
@@ -81,6 +86,11 @@ export default {
         origin: false,
       },
       idCount: 1,
+      snackbar: {
+        is: false,
+        text: '수정되었습니다!',
+        timeout: 1000,
+      },
     }
   },
   created() {
@@ -116,7 +126,6 @@ export default {
     },
     initRecv() {
       // 접속시 처음 값을 받아오도록 하기
-      console.log('접속@@@@')
       http.get(`/board/${this.channelId}`)
         .then(response => {
           this.postitList = response.data.postitList
@@ -124,11 +133,11 @@ export default {
         }).catch(e => {
           console.log(e)
         })
+      this.createSnackbar(`${this.channelName}에 입장하였습니다!`, 3000, 'info');
     },
     sendMessage: function(type) {
-      // var tempPostitList = this.postitList.unshift({title: this.dummyTitle, contents: this.dummyContents});
       this.ws.send("/pub/board/message", {"token":this.token}, JSON.stringify({channelId:this.channelId, idCount:this.idCount, postitList:this.postitList}));
-      this.dummy = '';
+      this.createSnackbar('수정되었습니다', 1000, 'info');
     },
     recvMessage: function(recv) {
       this.userCount = recv.userCount;
@@ -149,7 +158,15 @@ export default {
         channel: this.channelId,
       })
       this.sendMessage();
-    },    
+      // snackbar
+      this.createSnackbar('포스트잇이 생성되었습니다!', 1500, 'success')
+    },
+    createSnackbar(text, timeout, color) {
+      this.snackbar.is = true
+      this.snackbar.text = text
+      this.snackbar.timeout = timeout
+      this.snackbar.color = color
+    },
     handleDrag({ target, left, top }) {
       target.style.left = `${left}px`;
       target.style.top = `${top}px`;
@@ -209,9 +226,7 @@ export default {
       document.querySelector('.moveable-control-box').style.display = 'block';
     },
     test2(){
-      console.log("click body!");
       document.querySelector('.moveable-control-box').style.display = 'none';
-      
     },
     test3({target}){
       console.log("click target!");
