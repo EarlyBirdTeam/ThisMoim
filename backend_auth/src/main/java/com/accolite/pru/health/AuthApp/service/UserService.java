@@ -95,7 +95,7 @@ public class UserService {
     /**
      * delete
      */
-    public Boolean deleteByEamil(String email, String password) { return userRepository.deleteByEmailAndPassword(email,password); }
+    public int deleteByEamil(String email, String password) { return userRepository.deleteByEmailAndPassword(email,password); }
 
     /**
      * Creates a new user from the registration request

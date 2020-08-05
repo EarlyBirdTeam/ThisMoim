@@ -83,12 +83,12 @@ public class UserController {
 
     @ApiOperation(value = "Delete", response = String.class)
     @DeleteMapping("/delete")
-    public ResponseEntity<String> deleteBoard(@RequestParam String email, @RequestParam String password) {
+    public ResponseEntity deleteBoard(@RequestParam String email, @RequestParam String password) {
         logger.debug("delete - 호출");
-        if (userService.deleteByEamil(email,password)) {
-            return new ResponseEntity<String>("success", HttpStatus.OK);
+        if (userService.deleteByEamil(email,password)==1) {
+            return new ResponseEntity<>("success", HttpStatus.OK);
         }
-        return new ResponseEntity<String>("fail", HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>("fail", HttpStatus.NO_CONTENT);
     }
 
 
