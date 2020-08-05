@@ -1,5 +1,8 @@
 package com.websocket.board.dto;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -28,6 +31,7 @@ public class Channel implements Serializable {
     private long userCount; // 채팅방 인원수
 
     @OneToMany(mappedBy = "channel")
+    @JsonManagedReference
     private List<Postit> postitList = new ArrayList<>();
 
     public Channel(String channelName) {
