@@ -77,7 +77,7 @@ public class UserController {
     @GetMapping("/userInfo")
     @PreAuthorize("hasRole('USER')")
     @ApiOperation(value = "Returns the current user profile")
-    public ResponseEntity getUserInfo(@PathVariable String email) {
+    public ResponseEntity getUserInfo(@RequestParam String email) {
         return new ResponseEntity<>(userService.findByEmail(email), HttpStatus.OK);
     }
 
