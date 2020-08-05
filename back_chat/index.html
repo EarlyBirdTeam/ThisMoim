@@ -21,7 +21,11 @@
 
     <div class="container">
         <h3>Socket.io Chat</h3>
-        <div id="chatLogs"></div>
+        
+        
+        <div id="chatLogs" style="height:500px; overflow:auto"></div>
+        
+        
         <form class="form-inline">
             <div class="form-group">
                 <label for="msgForm">Message: </label>
@@ -63,6 +67,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script>
+        var divdiv = document.getElementById("chatLogs");
         console.log(getParameterByName('userName'));
         // var userName = getParameterByName('userName');
 
@@ -208,6 +213,8 @@
                     socket.emit("chatto", { msg: $msgForm.val(), id: $other.val() });
                     $msgForm.val("");
                 }
+
+                divdiv.scrollTop = divdiv.scrollHeight;
             });
         });
 
@@ -268,7 +275,8 @@
             }, 3000);
         }
 
-    </script>
+
+</script>
 
 
 </body>
@@ -282,4 +290,6 @@
 <script src='//unpkg.com/jquery@3/dist/jquery.min.js'></script>
 <script src='//unpkg.com/popper.js@1/dist/umd/popper.min.js'></script>
 <script src='//unpkg.com/bootstrap@4/dist/js/bootstrap.min.js'></script>
+
+
 </html>

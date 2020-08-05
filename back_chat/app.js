@@ -268,10 +268,5 @@ io.on('connection', function(socket) {
 
 
 server.listen(3030, function() {
-<<<<<<< HEAD
-    console.log('Socket IO server listening on port 3000');
-});
-=======
     console.log('Socket IO server listening on port 3030');
 });
->>>>>>> 5be23892ef014f4a0abc437aa740ac4205e0f47a
