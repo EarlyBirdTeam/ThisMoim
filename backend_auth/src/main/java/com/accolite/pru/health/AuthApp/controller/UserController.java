@@ -95,7 +95,8 @@ public class UserController {
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         String hashedPassword = passwordEncoder.encode(password);
         User user = userService.findByEmail(email).orElseThrow(() -> new NoResultException("ohlcv result set null"));
-        System.out.println(user.toString());
+        System.out.println(hashedPassword + "hashed ");
+        System.out.println(user.getPassword() + "get");
         userService.deleteDevice(user.getId());
         emailVerificationTokenService.deleteEmailVerificationToken(user);
         userService.deleteByEamil(user.getEmail(),user.getPassword());
