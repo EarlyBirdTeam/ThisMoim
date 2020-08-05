@@ -31,11 +31,12 @@
           >
           </Moveable> 
 
-          <div v-for="(pi, idx) in this.postitList" :key="idx"
-          @click.right="deleteTargetAction(idx, $event)">
+          <div 
+            class="d-inline-flex">
             <!-- <Postit :id="pi.id" :postit="pi" style="position: relative; display: inline-block"/> -->
-            <Postit 
-            :id="pi.frontPostitid" 
+            <Postit
+            v-for="(pi, idx) in this.postitList" :key="idx"
+            :id="pi.frontPostitId" 
             :postit="pi" 
             :style="{left: pi.left, top: pi.top}"
             />
@@ -89,6 +90,7 @@ export default {
     window.oncontextmenu = function() { // 우클릭 default이벤트 차단
       return false;
     };
+    this.initRecv();
   },
    methods: {
     init() {
@@ -113,11 +115,16 @@ export default {
               location.href="/";
           });
       });
-      // this.initSend();
     },
-    initSend: function(type) {
-      // 접속시 처음 값을 받아오도록 하기 --> 실행 안됨 ㅠ
-      this.ws.send("/pub/board/message", {"token":this.token}, JSON.stringify({channelId:this.channelId}));
+    initRecv() {
+      // 접속시 처음 값을 받아오도록 하기
+      http.get(`/board/${this.channelId}`)
+        .then(response => {
+          this.postitList = response.data.postitList
+          console.log(response.data);
+        }).catch(e => {
+          console.log(e)
+        })
     },
     sendMessage: function(type) {
       // var tempPostitList = this.postitList.unshift({title: this.dummyTitle, contents: this.dummyContents});
@@ -147,9 +154,8 @@ export default {
     handleDrag({ target, left, top }) {
       target.style.left = `${left}px`;
       target.style.top = `${top}px`;
-      console.log(target),
       this.postitList.map(postit => {
-        if(postit.frontPostitId == target.frontPostitId) {
+        if(postit.frontPostitId == target.id) {
           postit.left = `${left}px`,
           postit.top = `${top}px`
         }
@@ -198,7 +204,6 @@ export default {
       if(confirm("요소를 삭제하시겠습니까?") === true) {
         this.postitList.splice(idx, 1);
         target.remove();
-        // target이 뒤에 있는 두 개가 삭제되는 문제가 있다. 
       }
     },
     test(){

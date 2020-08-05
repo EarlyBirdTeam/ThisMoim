@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Data
 public class Postit {
 
-    private Long id;
+    private Long frontPostitId;
     // 좌표필드
     private String left;
     private String top;
@@ -20,4 +20,5 @@ public class Postit {
 //    private String writer; // 작성자
     private String title;
     private String contents; // 포스트잇 텍스트
+    private String channel;
 }
