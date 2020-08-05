@@ -18,11 +18,13 @@ import com.accolite.pru.health.AuthApp.model.TokenStatus;
 import com.accolite.pru.health.AuthApp.model.User;
 import com.accolite.pru.health.AuthApp.model.token.EmailVerificationToken;
 import com.accolite.pru.health.AuthApp.repository.EmailVerificationTokenRepository;
+import com.accolite.pru.health.AuthApp.repository.UserRepository;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.NoResultException;
 import java.time.Instant;
 import java.util.Optional;
 import java.util.UUID;
@@ -95,4 +97,8 @@ public class EmailVerificationTokenService {
         }
     }
 
+    public void deleteEmailVerificationToken(User user){
+        EmailVerificationToken emailVerificationToken=emailVerificationTokenRepository.findByUser(user).orElseThrow(() -> new NoResultException("ohlcv result set null"));
+        emailVerificationTokenRepository.delete(emailVerificationToken);
+    }
 }

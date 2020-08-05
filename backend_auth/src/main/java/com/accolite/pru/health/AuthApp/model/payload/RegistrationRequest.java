@@ -16,15 +16,27 @@ package com.accolite.pru.health.AuthApp.model.payload;
 import com.accolite.pru.health.AuthApp.validation.annotation.NullOrNotBlank;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
 
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 @ApiModel(value = "Registration Request", description = "The registration request payload")
 public class RegistrationRequest {
 
     @NullOrNotBlank(message = "Registration username can be null but not blank")
     @ApiModelProperty(value = "A valid username", allowableValues = "NonEmpty String")
     private String username;
+
+    @NullOrNotBlank(message = "Registration nickname can be null but not blank")
+    @ApiModelProperty(value = "A valid nickname", allowableValues = "NonEmpty String")
+    private String nickname;
 
     @NullOrNotBlank(message = "Registration email can be null but not blank")
     @ApiModelProperty(value = "A valid email", required = true, allowableValues = "NonEmpty String")
@@ -39,46 +51,46 @@ public class RegistrationRequest {
             dataType = "boolean", allowableValues = "true, false")
     private Boolean registerAsAdmin;
 
-    public RegistrationRequest(String username, String email,
-                               String password, Boolean registerAsAdmin) {
-        this.username = username;
-        this.email = email;
-        this.password = password;
-        this.registerAsAdmin = registerAsAdmin;
-    }
-
-    public RegistrationRequest() {
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public Boolean getRegisterAsAdmin() {
-        return registerAsAdmin;
-    }
-
-    public void setRegisterAsAdmin(Boolean registerAsAdmin) {
-        this.registerAsAdmin = registerAsAdmin;
-    }
+//    public RegistrationRequest(String username, String email,
+//                               String password, Boolean registerAsAdmin) {
+//        this.username = username;
+//        this.email = email;
+//        this.password = password;
+//        this.registerAsAdmin = registerAsAdmin;
+//    }
+//
+//    public RegistrationRequest() {
+//    }
+//
+//    public String getUsername() {
+//        return username;
+//    }
+//
+//    public void setUsername(String username) {
+//        this.username = username;
+//    }
+//
+//    public String getEmail() {
+//        return email;
+//    }
+//
+//    public void setEmail(String email) {
+//        this.email = email;
+//    }
+//
+//    public String getPassword() {
+//        return password;
+//    }
+//
+//    public void setPassword(String password) {
+//        this.password = password;
+//    }
+//
+//    public Boolean getRegisterAsAdmin() {
+//        return registerAsAdmin;
+//    }
+//
+//    public void setRegisterAsAdmin(Boolean registerAsAdmin) {
+//        this.registerAsAdmin = registerAsAdmin;
+//    }
 }
