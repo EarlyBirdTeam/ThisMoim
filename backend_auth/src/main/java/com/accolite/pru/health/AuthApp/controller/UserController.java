@@ -22,7 +22,9 @@ import com.accolite.pru.health.AuthApp.model.User;
 import com.accolite.pru.health.AuthApp.model.payload.ApiResponse;
 import com.accolite.pru.health.AuthApp.model.payload.LogOutRequest;
 import com.accolite.pru.health.AuthApp.model.payload.UpdatePasswordRequest;
+import com.accolite.pru.health.AuthApp.model.token.EmailVerificationToken;
 import com.accolite.pru.health.AuthApp.service.AuthService;
+import com.accolite.pru.health.AuthApp.service.EmailVerificationTokenService;
 import com.accolite.pru.health.AuthApp.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -34,11 +36,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import javax.transaction.Transactional;
+import javax.persistence.NoResultException;
 import javax.validation.Valid;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/user")
@@ -52,12 +55,15 @@ public class UserController {
 
     private final UserService userService;
 
+    private final EmailVerificationTokenService emailVerificationTokenService;
+
     private final ApplicationEventPublisher applicationEventPublisher;
 
     @Autowired
-    public UserController(AuthService authService, UserService userService, ApplicationEventPublisher applicationEventPublisher) {
+    public UserController(AuthService authService, UserService userService, EmailVerificationTokenService emailVerificationTokenService, ApplicationEventPublisher applicationEventPublisher) {
         this.authService = authService;
         this.userService = userService;
+        this.emailVerificationTokenService = emailVerificationTokenService;
         this.applicationEventPublisher = applicationEventPublisher;
     }
 
@@ -82,15 +88,18 @@ public class UserController {
         return new ResponseEntity<>(userService.findByEmail(email), HttpStatus.OK);
     }
 
-    @Transactional
     @ApiOperation(value = "Delete", response = String.class)
     @DeleteMapping("/delete")
-    public ResponseEntity deleteBoard(@RequestParam String email, @RequestParam String password) {
+    public ResponseEntity deleteUser(@RequestParam String email, @RequestParam String password) {
         logger.debug("delete - 호출");
-        if (userService.deleteByEamil(email,password)==1) {
-            return new ResponseEntity<>("success", HttpStatus.OK);
-        }
-        return new ResponseEntity<>("fail", HttpStatus.NO_CONTENT);
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String hashedPassword = passwordEncoder.encode(password);
+        User user = userService.findByEmail(email).orElseThrow(() -> new NoResultException("ohlcv result set null"));
+        System.out.println(user.toString());
+        userService.deleteDevice(user.getId());
+        emailVerificationTokenService.deleteEmailVerificationToken(user);
+        userService.deleteByEamil(user.getEmail(),user.getPassword());
+        return new ResponseEntity<>("success", HttpStatus.OK);
     }
 
 

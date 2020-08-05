@@ -80,4 +80,9 @@ public class UserDeviceService {
             throw new TokenRefreshException(refreshToken.getToken(), "Refresh blocked for the device. Please login through a different device");
         }
     }
+
+    public void delete(UserDevice ud){
+
+        userDeviceRepository.delete(ud);
+    }
 }

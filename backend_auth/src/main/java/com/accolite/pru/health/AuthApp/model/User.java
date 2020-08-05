@@ -80,11 +80,11 @@ public class User extends DateAudit {
         username = user.getUsername();
         password = user.getPassword();
         nickname = user.getNickname();
+//        lastName = user.getLastName();
         email = user.getEmail();
         active = user.getActive();
         roles = user.getRoles();
-//        isEmailVerified = user.getEmailVerified();
-        isEmailVerified = true;
+        isEmailVerified = user.getEmailVerified();
     }
 
     public void addRole(Role role) {

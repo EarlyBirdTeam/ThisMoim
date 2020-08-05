@@ -27,7 +27,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.NoResultException;
 import java.util.HashSet;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.Set;
 
@@ -95,7 +97,10 @@ public class UserService {
     /**
      * delete
      */
-    public int deleteByEamil(String email, String password) { return userRepository.deleteByEmailAndPassword(email,password); }
+    public void deleteByEamil(String email, String password) {
+        User user = this.findByEmail(email).orElseThrow(() -> new NoSuchElementException());
+        userRepository.delete(user);
+    }
 
     /**
      * Creates a new user from the registration request
@@ -138,5 +143,13 @@ public class UserService {
 
         logger.info("Removing refresh token associated with device [" + userDevice + "]");
         refreshTokenService.deleteById(userDevice.getRefreshToken().getId());
+    }
+
+    public void deleteDevice(Long userid){
+        UserDevice userDevice = userDeviceService.findByUserId(userid).orElseThrow(() -> new NoResultException("result set null"));
+        System.out.println(userDevice.getRefreshToken().getId());
+        refreshTokenService.deleteById(userDevice.getRefreshToken().getId());
+        System.out.println(userDevice.toString());
+        userDeviceService.delete(userDevice);
     }
 }
