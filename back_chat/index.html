@@ -249,6 +249,9 @@
         ////////////// 메시지 알림 부분
 
         var permission = Notification.requestPermission();
+        console.log("## PERMISSION : " +permission);
+        // var permission = "granted";
+        
         function getNotificationPermission() {
             // 브라우저 지원 여부 체크
             if (!("Notification" in window)) {
