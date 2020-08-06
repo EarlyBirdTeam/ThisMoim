@@ -1,7 +1,7 @@
 <template>
   <div class="bg-white shadow rounded px-3 pt-3 pb-5 border border-white">
     <div class="flex justify-between">
-      <p class="text-gray-700 font-semibold font-sans tracking-wide text-sm">{{task.title}}</p>
+      <input v-model="task" class="text-gray-700 font-semibold font-sans tracking-wide text-sm">
 <!-- 
       <img
         class="w-6 h-6 rounded-full ml-3"
@@ -24,16 +24,6 @@ export default {
     }
   },
   computed: {
-    badgeColor() {
-      const mappings = {
-        Design: "purple",
-        "Feature Request": "teal",
-        Backend: "blue",
-        QA: "green",
-        default: "teal"
-      };
-      return mappings[this.task.type] || mappings.default;
-    }
   }
 };
 </script>

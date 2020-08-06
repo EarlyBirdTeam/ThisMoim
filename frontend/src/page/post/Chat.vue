@@ -134,11 +134,11 @@ export default {
         this.$socket.emit("chatto", { msg: $msgForm.val(), id: $other.val() });
         $msgForm.val("");
       }
-      // $('#chatLogs').scrollTop($('#chatLogs').prop('scrollHeight'));
+      $('#chatLogs').scrollTop($('#chatLogs').prop('scrollHeight'));
 
-      //           setTimeout(function(){
-      //               $('#chatLogs').scrollTop($('#chatLogs').prop('scrollHeight'));
-      //           }, 300);
+                setTimeout(function(){
+                    $('#chatLogs').scrollTop($('#chatLogs').prop('scrollHeight'));
+                }, 300);
 
     },
     makeRandomName() {

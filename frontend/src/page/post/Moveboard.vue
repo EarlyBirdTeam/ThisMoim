@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <div class="flex justify-center">
-      <div class="min-h-screen flex overflow-x-scroll py-12">
+      <div class="min-h-screen d-flex overflow-x-scroll py-12">
         <div
           v-for="column in columns"
           :key="column.title"
@@ -9,16 +9,28 @@
         >
           <p class="text-gray-700 font-semibold font-sans tracking-wide text-sm">{{column.title}}</p>
           <!-- Draggable component comes from vuedraggable. It provides drag & drop functionality -->
-          <draggable :list="column.tasks" :animation="200" ghost-class="ghost-card" group="tasks">
+          <draggable
+            :list="column.tasks"
+            :animation="200"
+            style="margin-right:0"
+            ghost-class="ghost-card"
+            group="tasks"
+          >
             <!-- Each element from here will be draggable and animated. Note :key is very important here to be unique both for draggable and animations to be smooth & consistent. -->
-            <task-card
-              v-for="(task) in column.tasks"
-              :key="task.id"
-              :task="task"
-              class="mt-3 cursor-move"
-            ></task-card>
+
+            <div v-for="(task,idx) in column.tasks" :key="idx" class="mt-3 cursor-move ">
+              <div class="bg-white shadow rounded px-3 pt-3 pb-5 border border-white">
+                <div class="d-flex justify-between center" >
+                  <p class="text-truncate text-gray-700 font-semibold font-sans text-sm word-break:keep-all; " style="text-overflow:clip word-break:keep-all; ">{{task}}</p>
+                  <v-icon v-on:click="deleteTask(column.title,task)">mdi-delete</v-icon>
+                </div>
+              </div>
+              <!-- <input v-model="column.tasks[idx]"/> -->
+            </div>
+           
             <!-- </transition-group> -->
           </draggable>
+          <div v-on:click="addTask(column.title)">+</div>
         </div>
       </div>
     </div>
@@ -27,133 +39,46 @@
 
 <script>
 import draggable from "vuedraggable";
-import TaskCard from "../../components/TaskCard";
+
 export default {
   name: "App",
   components: {
-    TaskCard,
-    draggable
+
+    draggable,
   },
   data() {
     return {
       columns: [
         {
-          title: "Backlog",
-          tasks: [
-            {
-              id: 1,
-              title: "Add discount code to checkout page",
-              date: "Sep 14",
-              type: "Feature Request"
-            },
-            {
-              id: 2,
-              title: "Provide documentation on integrations",
-              date: "Sep 12"
-            },
-            {
-              id: 3,
-              title: "Design shopping cart dropdown",
-              date: "Sep 9",
-              type: "Design"
-            },
-            {
-              id: 4,
-              title: "Add discount code to checkout page",
-              date: "Sep 14",
-              type: "Feature Request"
-            },
-            {
-              id: 5,
-              title: "Test checkout flow",
-              date: "Sep 15",
-              type: "QA"
-            }
-          ]
+          title: "할 일",
+          tasks: [],
         },
         {
-          title: "In Progress",
-          tasks: [
-            {
-              id: 6,
-              title: "Design shopping cart dropdown",
-              date: "Sep 9",
-              type: "Design"
-            },
-            {
-              id: 7,
-              title: "Add discount code to checkout page",
-              date: "Sep 14",
-              type: "Feature Request"
-            },
-            {
-              id: 8,
-              title: "Provide documentation on integrations",
-              date: "Sep 12",
-              type: "Backend"
-            }
-          ]
+          title: "진행중",
+          tasks: [],
         },
         {
-          title: "Review",
-          tasks: [
-            {
-              id: 9,
-              title: "Provide documentation on integrations",
-              date: "Sep 12"
-            },
-            {
-              id: 10,
-              title: "Design shopping cart dropdown",
-              date: "Sep 9",
-              type: "Design"
-            },
-            {
-              id: 11,
-              title: "Add discount code to checkout page",
-              date: "Sep 14",
-              type: "Feature Request"
-            },
-            {
-              id: 12,
-              title: "Design shopping cart dropdown",
-              date: "Sep 9",
-              type: "Design"
-            },
-            {
-              id: 13,
-              title: "Add discount code to checkout page",
-              date: "Sep 14",
-              type: "Feature Request"
-            }
-          ]
+          title: "완료",
+          tasks: [],
         },
-        {
-          title: "Done",
-          tasks: [
-            {
-              id: 14,
-              title: "Add discount code to checkout page",
-              date: "Sep 14",
-              type: "Feature Request"
-            },
-            {
-              id: 15,
-              title: "Design shopping cart dropdown",
-              date: "Sep 9",
-              type: "Design"
-            },
-            {
-              id: 16,
-              title: "Add discount code to checkout page",
-              date: "Sep 14",
-              type: "Feature Request"
-            }
-          ]
-        }
-      ]
+      ],
     };
-  }
+  },
+  methods: {
+    addTask(title,idx) {
+      const newTask = prompt(title, "");
+      this.columns.find((column) => column.title === title).tasks.push(newTask);
+    },
+    deleteTask(title , task) {
+      console.log(title)
+      console.log(task)
+      var index = this.columns.find((column) => column.title === title).tasks.indexOf(task);
+      
+      // var index = tasks.indexOf(task);
+      console.log(index)
+      this.columns.find((column) => column.title === title).tasks.splice(index,1);
+    },
+  },
 };
 </script>
 
@@ -161,12 +86,13 @@ export default {
 .column-width {
   min-width: 320px;
   width: 320px;
+  margin-right: 0;
 }
 /* Unfortunately @apply cannot be setup in codesandbox, 
 but you'd use "@apply border opacity-50 border-blue-500 bg-gray-200" here */
 .ghost-card {
   opacity: 0.5;
-  background: #F7FAFC;
+  background: #f7fafc;
   border: 1px solid #4299e1;
 }
 </style>
