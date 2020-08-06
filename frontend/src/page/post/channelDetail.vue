@@ -42,7 +42,7 @@
 
       <!-- <Postit :id="pi.id" :postit="pi" style="position: relative; display: inline-block"/> -->
       <div class="postit"
-      v-for="(pi, idx) in this.postitList"
+      v-for="(pi, idx) in this.board.postitList"
       :key="pi.frontPostitId"
       @click.right="deleteTargetAction(idx, $event)">
           <Postit
@@ -56,7 +56,7 @@
         <Map v-if="map.isPresent"/>
       </div>
 
-      {{ idCount }} {{ postitList }}
+      {{ board }}
     </div>
   </div>
 </template>
@@ -73,12 +73,18 @@ export default {
   data() {
     return {
       ws: null,
-      channelId: "",
       channelName: "",
-      sender: "",
-      postitList: [],
-      board: "",
-      boards: [],
+      // 소켓 서버 전송
+      board: {
+        channelId: "",
+        idCount: 1,
+        postitList: [],
+        isDelete: false,
+        delete: {
+          moduleName: '',
+          id: -1,
+        },
+      },
       token: "",
       userCount: 0,
       moveable: {
@@ -94,7 +100,6 @@ export default {
         throttleRotate: 0,
         origin: false,
       },
-      idCount: 1,
       map: {
         isPresent: false,
         left: "",
@@ -125,7 +130,7 @@ export default {
       var ws = Stomp.over(sock);
       this.ws = ws;
 
-      this.channelId = localStorage.getItem("wsboard.channelId");
+      this.board.channelId = localStorage.getItem("wsboard.channelId");
       this.channelName = localStorage.getItem("wsboard.channelName");
       var _this = this;
       http.get("/board/user").then((response) => {
@@ -133,7 +138,7 @@ export default {
         ws.connect(
           { token: _this.token },
           function (frame) {
-            ws.subscribe("/sub/board/channel/" + _this.channelId, function (
+            ws.subscribe("/sub/board/channel/" + _this.board.channelId, function (
               message
             ) {
               var recv = JSON.parse(message.body);
@@ -150,10 +155,10 @@ export default {
     initRecv() {
       // 접속시 처음 값을 받아오도록 하기
       http
-        .get(`/board/${this.channelId}`)
+        .get(`/board/${this.board.channelId}`)
         .then((response) => {
-          this.postitList = response.data.postitList;
-          this.idCount = response.data.idCount;
+          this.board.postitList = response.data.postitList;
+          this.board.idCount = response.data.idCount;
           console.log(response.data);
         })
         .catch((e) => {
@@ -169,31 +174,31 @@ export default {
       this.ws.send(
         "/pub/board/message",
         { token: this.token },
-        JSON.stringify({
-          channelId: this.channelId,
-          idCount: this.idCount,
-          postitList: this.postitList,
-        })
+        JSON.stringify(this.board)
       );
       this.createSnackbar("수정되었습니다", 1000, "warning");
     },
     recvMessage: function (recv) {
       this.userCount = recv.userCount;
-      this.idCount = recv.idCount;
-      // this.postitList.unshift({"sender":recv.sender,"postitList":recv.postitList})
-      this.postitList = recv.postitList;
+      this.board.idCount = recv.idCount;
+      this.board.postitList = recv.postitList;
+      this.board.isDelete = false;
     },
     createPostit(event) {
+      if(this.board.postitList.length > 20) {
+        this.createSnackbar("포스트잇이 너무 많습니다!", 3000, "error")
+        return
+      }
       event.stopPropagation();
-      const idc = this.idCount++;
+      const idc = this.board.idCount++;
       // postitList에 새로운 포스트잇 더하기
-      this.postitList.unshift({
+      this.board.postitList.unshift({
         frontPostitId: idc,
         left: "500px",
         top: "170px",
         title: "",
         contents: "",
-        channel: this.channelId,
+        channel: this.board.channelId,
       });
       this.sendMessage();
       // snackbar
@@ -215,7 +220,7 @@ export default {
     handleDrag({ target, left, top }) {
       target.style.left = `${left}px`;
       target.style.top = `${top}px`;
-      this.postitList.map((postit) => {
+      this.board.postitList.map((postit) => {
         if (postit.frontPostitId == target.id) {
           (postit.left = `${left}px`), (postit.top = `${top}px`);
         }
@@ -262,8 +267,13 @@ export default {
       // console.log("delete TARGET!!!!!!");
       // console.log(idx, target);
       if (confirm("요소를 삭제하시겠습니까?") === true) {
+        console.log("삭제발생!@@@@")
         target.remove();
-        this.postitList.splice(idx, 1);
+        this.board.isDelete = true;
+        this.board.delete.moduleName = 'postit';
+        this.board.delete.id = this.board.postitList[idx].frontPostitId;
+        this.board.postitList.splice(idx, 1);
+        this.sendMessage();
         this.cloakMoveable();
       }
     },
