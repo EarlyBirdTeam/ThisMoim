@@ -13,6 +13,7 @@ import MyPage from '../page/user/MyPage.vue'
 import ConfirmDone from '../page/user/ConfirmationCheck.vue'
 import PasswordFind from '../page/user/PasswordFind.vue'
 import PasswordReset from '../page/user/PasswordReset.vue'
+import DeleteUser from '../page/user/ReallyDelete.vue'
 
 // 포스트
 import List from '../page/post/List.vue'
@@ -58,6 +59,11 @@ export default new Router({
       path: '/user/PasswordReset',
       name: constants.URL_TYPE.USER.PASSWORDRESET,
       component: PasswordReset
+    },
+    {
+      path: '/user/DeleteAccount',
+      name: constants.URL_TYPE.USER.DELETEUSER,
+      component: DeleteUser
     },
     // 포스트
     { 

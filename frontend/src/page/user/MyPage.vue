@@ -39,8 +39,10 @@
                         <div class="info-wrap">
                              <button v-on:click="updateUser">회원정보 수정</button>
                         </div>
-                        <div class="info-wrap">
-                             <button v-on:click="deleteUser">회원 탈퇴</button>
+                        <div class="info-wrap">=
+                            <router-link v-bind:to="{name:constants.URL_TYPE.USER.DELETEUSER}" class="btn--text">
+                                회원 탈퇴
+                            </router-link> 
                         </div>
 
                     </div>

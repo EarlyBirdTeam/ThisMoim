@@ -42,25 +42,47 @@ export const store = new Vuex.Store({
     },
     actions:{
         [constants.METHODS.DELETE_USER] : (store, payload) =>{
-            alert(email.value + " and " + password.value);
-            http.put('/account/delete',
-                    {
-                        email: payload.email,
-                        password: payload.password,
-                        nickname: payload.nickName,
-                        name: payload.realName
+            const url = `/api/user/delete?email=${payload.email}&password=${payload.password}`;
+            http.delete(url,{
+                    headers: {
+                        Authorization: 'Bearer ' + store.getters.accessToken
                     }
-                )
-            .then(() => {
-                console.log("delete req success");
-                cookies.delete('Logged');
-                store.commit(constants.METHODS.DELETE_USER);
-                alert("탈퇴되었습니다. 메인 화면으로 돌아갑니다.");
-                router.push('/');
                 })
-            .catch(exp => {
-                store.dispatch("throwError", exp);
-            });
+                .then((res) => {
+                    console.log(res);
+                    if(res == "success"){
+                        store.commit(constants.METHODS.RESETMYPASSWORDREQ,
+                             "계정이 삭제되었습니다. 지금까지 이용해주셔서 감사합니다.\n 3초뒤 되돌아갑니다.")
+                        setTimeout(() => {
+                            router.push('/');
+                            store.commit(constants.METHODS.RESETMYPASSWORDREQ, "");
+                            store.commit("reSetAll");
+                        }, 3000)
+                        
+                    }
+                })
+                .catch(exp => {
+                    store.dispatch("throwError", exp);
+                });
+
+            // http.put('/account/delete',
+            //         {
+            //             email: payload.email,
+            //             password: payload.password,
+            //             nickname: payload.nickName,
+            //             name: payload.realName
+            //         }
+            //     )
+            // .then(() => {
+            //     console.log("delete req success");
+            //     cookies.delete('Logged');
+            //     store.commit(constants.METHODS.DELETE_USER);
+            //     alert("탈퇴되었습니다. 메인 화면으로 돌아갑니다.");
+            //     router.push('/');
+            //     })
+            // .catch(exp => {
+            //     store.dispatch("throwError", exp);
+            // });
 
         },
         [constants.METHODS.UPDATE_USER] : (store, payload) =>{
@@ -280,7 +302,22 @@ export const store = new Vuex.Store({
         },
         [constants.METHODS.RESETMYPASSWORDREQ] : (state, result) =>{
             state.finding.status = result;
-        }
+        },
+        reSetAll : (state) => {
+            state.token= '';
+            state.role='';
+            state.userData.email="";
+            state.userData.name="";
+            state.userData.password="";
+            state.userData.nickName="";
+            
+            state.errorcode='';
+            state.accessToken='';
+            state.modal=false;
+            state.joining.canIUseIt="";
+            state.finding.status="";
+        
+        },
     },
     getters:{
         userData: function(state){

@@ -16,6 +16,8 @@ export default {
             MYPAGE: 'myPage',
             PASSWORDFIND: 'passwordFind',
             PASSWORDRESET: 'passwordReset',
+
+            DELETEUSER: 'deleteUser',
         },
         POST: {
             MAIN : "main",
