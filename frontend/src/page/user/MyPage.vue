@@ -13,7 +13,7 @@
 
                         <div class="info-wrap">
                             <label for="nickName">닉네임 : </label>
-                            <input v-model="userData.nickName"
+                            <input v-model="userData.nickname"
                                 id="nickName"
                                 placeholder="닉네임을 입력해주세요" type="text" readonly="readonly"
                                 />
@@ -66,7 +66,7 @@
 
             this.userData.email = sUserData.email;
             this.userData.name = sUserData.name;
-            this.userData.nickName = sUserData.nickName;
+            this.userData.nickname = sUserData.nickname;
         },
         methods: {
             check(){
@@ -91,7 +91,7 @@
                         email: this.email,
                         realName: this.realName,
                         password: this.password,
-                        nickName: this.nickName,
+                        nickName: this.nickname,
                     };
                      this.$store.dispatch(constants.METHODS.DELETE_USER, userInfo);
                 }
