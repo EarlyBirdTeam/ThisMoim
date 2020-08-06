@@ -110,7 +110,8 @@ public class UserService {
         Boolean isNewUserAsAdmin = registerRequest.getRegisterAsAdmin();
         newUser.setEmail(registerRequest.getEmail());
         newUser.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
-        newUser.setUsername(registerRequest.getEmail());
+        newUser.setUsername(registerRequest.getUsername());
+        newUser.setNickname(registerRequest.getNickname());
         newUser.addRoles(getRolesForNewUser(isNewUserAsAdmin));
         newUser.setActive(true);
         newUser.setEmailVerified(false);
