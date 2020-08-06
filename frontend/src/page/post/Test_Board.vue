@@ -101,9 +101,9 @@ import http from '../../http-common.js';
 
 import Canvas from "../../components/common/Canvas";
 import Moveable from 'vue-moveable';
-import Postit from '../../components/common/Postit';
+import Postit from '../../components/module/Postit';
 import Poll from '../../components/common/Poll';
-import Map from '../../components/common/Map';
+import Map from '../../components/module/Map';
 
 const pI = `<div  class="moveable" @dblclick="dblclickEv"   @click="clickEv"
                 ref="contentTextArea" readonly="readonly"

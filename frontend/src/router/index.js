@@ -20,7 +20,7 @@ import Board from '../page/post/Test_Board.vue'
 
 // test
 import Poll from '../components/common/Poll.vue'
-import Map from '../components/common/Map.vue'
+import Map from '../components/module/Map.vue'
 import Calendar from '../components/module/Calendar.vue'
 
 Vue.use(Router) 

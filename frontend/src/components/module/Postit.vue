@@ -1,8 +1,8 @@
 <template>
     <div class="MoveableBox paper">
         <textarea 
-        name="" id="paperTitle"
-        class="notMoveBox"
+        name=""
+        class="notMoveBox paperTitle"
         cols="30" rows="1"
         v-model="postit.title"
         @click.prevent.self
@@ -10,8 +10,8 @@
         ></textarea>
 
         <textarea
-        name="" id="paperContent"
-        class="notMoveBox"
+        name=""
+        class="notMoveBox paperContent"
         cols="30" rows="5"
         v-model="postit.contents"
         placeholder="content here.."
@@ -54,7 +54,7 @@ export default {
   display: inline-block;
 }
 
-#paperTitle{
+.paperTitle{
   font-size: 30px;
   min-height: 50px;
   /* height: 10%; */
@@ -63,7 +63,7 @@ export default {
   /* padding: 20px 20px 1px 20px; */
   padding: 10px 10px 1px 10px;
 }
-#paperContent{
+.paperContent{
   height: 90%;
   resize: none;
   /* padding: 20px; */
@@ -72,5 +72,6 @@ export default {
 }
 .MoveableBox {
   padding: 30px;
+  position: absolute;
 }
 </style>

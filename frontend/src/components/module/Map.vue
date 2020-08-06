@@ -1,8 +1,5 @@
 <template>
-  <v-container class="page-map">
-    <v-btn @click="kaka">kakao</v-btn>
-    <v-btn @click="mulcam">멀캠</v-btn>
-    <br />
+  <div class="page-kakaoMap MoveableBox">
     <v-row>
       <v-col cols="9">
         <v-text-field 
@@ -16,20 +13,25 @@
     </v-row>
     <v-row>
       <v-col cols="12">
-        <div id="map"></div>
+        <div id="kakaoMap"></div>
       </v-col>
     </v-row>
     <v-btn @click="saveEvent">저장</v-btn>
-    {{ this.coord }}
-  </v-container>
+    {{ map }}
+  </div>
 </template>
 
 <script>
 export default {
+    computed: {
+    map() {
+      return this.$store.state.map;
+    },
+  },
   data() {
     return {
       search: "카카오",
-      map: Object,
+      kakaoMap: Object,
       markers: [],
       coord: {
         place_name: "",
@@ -52,27 +54,25 @@ export default {
   },
   methods: {
     initMap() {
-      var container = document.getElementById("map");
+      var container = document.getElementById("kakaoMap");
 
       var options = {
         center: new kakao.maps.LatLng(0, 0),
         level: 3,
       };
 
-      var map = new kakao.maps.Map(container, options);
-      this.map = map;
-      this.map.setMapTypeId(kakao.maps.MapTypeId.HYBRID);
-
-      var moveLatLon = new kakao.maps.LatLng(33.452701, 126.570667);
-      this.map.panTo(moveLatLon);
-    },
-    kaka() {
-      var moveLatLon = new kakao.maps.LatLng(33.452701, 126.570667);
-      this.map.panTo(moveLatLon);
-    },
-    mulcam() {
-      var moveLatLon = new kakao.maps.LatLng(37.501715, 127.039703);
-      this.map.panTo(moveLatLon);
+      var kakaoMap = new kakao.maps.Map(container, options);
+      this.kakaoMap = kakaoMap;
+      this.kakaoMap.setMapTypeId(kakao.maps.MapTypeId.HYBRID);
+      var initLatLng = new kakao.maps.LatLng(this.map.coord.y, this.map.coord.x);
+      this.kakaoMap.panTo(initLatLng);
+      this.kakaoMap.setLevel(2);
+      console.log(this.map.coord);
+      var initMarker = new kakao.maps.Marker({
+        map: this.kakaoMap,
+        position: initLatLng,
+        title: this.map.coord.place_name,
+      });
     },
     searchEvent() {
       // 이미 찍힌 마커들을 보이지 않게 하고 마커배열을 초기화합니다
@@ -86,7 +86,7 @@ export default {
       var infowindow = new kakao.maps.InfoWindow({ zIndex: 1 });
       // 장소 검색 객체를 생성합니다
       var ps = new kakao.maps.services.Places();
-      var map = this.map;
+      var kakaoMap = this.kakaoMap;
       var coord = this.coord;
       // 키워드로 장소를 검색합니다
       ps.keywordSearch(this.search, placesSearchCB);
@@ -103,10 +103,10 @@ export default {
             bounds.extend(new kakao.maps.LatLng(data[i].y, data[i].x));
           }
           for (var i = 0; i< markers.length; i++) {
-            markers[i].setMap(map);
+            markers[i].setMap(kakaoMap);
           }
           // 검색된 장소 위치를 기준으로 지도 범위를 재설정합니다
-          map.setBounds(bounds);
+          kakaoMap.setBounds(bounds);
         }
       }
 
@@ -120,6 +120,7 @@ export default {
         // 마커에 클릭이벤트를 등록합니다
         kakao.maps.event.addListener(marker, "click", function () {
           // 마커를 클릭하면 장소명이 인포윈도우에 표출됩니다
+          coord.place_name = place.place_name,
           coord.x = place.x;
           coord.y = place.y;
           infowindow.setContent(
@@ -127,31 +128,37 @@ export default {
               place.place_name +
               "</div>"
           );
-          infowindow.open(map, marker);
+          infowindow.open(kakaoMap, marker);
         });
         
         markers.push(marker);
       }
     },
     saveEvent() {
+      this.$store.state.map.coord = this.coord
       // 서버에 coord 값 보내기
-      
+      console.log('저장@');
     }
   },
 };
 </script>
 
 <style>
-#map {
+#kakaoMap {
   height: 500px;
+  width: 550px;
   margin-top: 20px;
 }
-/* .page-map button {
+.page-kakaoMap {
+  width: 600px;
+  height: 550px;
+}
+/* .page-kakaoMap button {
   border: solid 1px;
   border-radius: 5px;
   margin-left: 5px;
 } */
-/* .page-map input {
+/* .page-kakaoMap input {
   border: solid 1px;
   border-radius: 5px;
   margin-left: 5px;

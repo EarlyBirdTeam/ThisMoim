@@ -28,6 +28,17 @@ export const store = new Vuex.Store({
         nickname: '',
         errorcode: '',
         modal: false,
+        // 카카오맵 
+        map: {
+          isPresent: false, 
+          left: '0px',
+          top: '0px',
+          coord: {
+            place_name: '멀티캠퍼스',
+            x: 127.0396,
+            y: 37.5013,
+          },
+        },
         // 캘린더
         calendar: {
             event: {

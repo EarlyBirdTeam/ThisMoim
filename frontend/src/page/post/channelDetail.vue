@@ -2,9 +2,8 @@
   <div id="app" v-cloak @click="test2">
     <div class="row">
       <v-snackbar
-        app
-        top 
-        v-model="snackbar.is"
+        app top 
+        v-model="snackbar.isPresent"
         :timeout="snackbar.timeout"
         :color="snackbar.color"
       > {{ snackbar.text }}
@@ -19,8 +18,11 @@
       </div>
     </div>
     <v-toolbar class="toolBox">
-      <v-btn icon color="orange" @click="createText">
+      <v-btn icon color="orange" @click="createPostit">
         <v-icon>mdi-message</v-icon>
+      </v-btn>
+      <v-btn icon color="orange" @click="createMap">
+        <v-icon>mdi-map</v-icon>
       </v-btn>
     </v-toolbar>
 
@@ -46,6 +48,9 @@
         :postit="pi"
         :style="{left: pi.left, top: pi.top}"
       />
+      <Map
+        v-if="map.isPresent"
+      />
       {{ idCount }} {{ postitList }}
     </div>
   </div>
@@ -54,10 +59,10 @@
 <script>
 import SockJS from 'sockjs-client';
 import Stomp from 'stomp-websocket';
-import axios from 'axios';
 import http from '../../http-common.js';
-import Postit from '../../components/common/Postit'
 import Moveable from 'vue-moveable';
+import Postit from '../../components/module/Postit'
+import Map from '../../components/module/Map'
 
 export default {
   data () {
@@ -66,7 +71,6 @@ export default {
       channelId: '',
       channelName: '',
       sender: '',
-      postit: {title: 'title!!!!', contents: ''},
       postitList: [],
       board:'',
       boards: [],
@@ -86,9 +90,16 @@ export default {
         origin: false,
       },
       idCount: 1,
+      map: {
+        isPresent: false,
+        left: '',
+        top: '',
+        lat: 0,
+        lng: 0,
+      },
       snackbar: {
-        is: false,
-        text: '수정되었습니다!',
+        isPresent: false,
+        text: '',
         timeout: 1000,
       },
     }
@@ -133,11 +144,11 @@ export default {
         }).catch(e => {
           console.log(e)
         })
-      this.createSnackbar(`${this.channelName}에 입장하였습니다!`, 3000, 'info');
+      this.createSnackbar(`'${this.channelName}' 채널에 입장하였습니다!`, 3000, 'info');
     },
     sendMessage: function(type) {
       this.ws.send("/pub/board/message", {"token":this.token}, JSON.stringify({channelId:this.channelId, idCount:this.idCount, postitList:this.postitList}));
-      this.createSnackbar('수정되었습니다', 1000, 'info');
+      this.createSnackbar('수정되었습니다', 1000, 'warning');
     },
     recvMessage: function(recv) {
       this.userCount = recv.userCount;
@@ -145,7 +156,7 @@ export default {
       // this.postitList.unshift({"sender":recv.sender,"postitList":recv.postitList})
       this.postitList = recv.postitList;
     },
-    createText(event) {
+    createPostit(event) {
       event.stopPropagation();
       const idc = this.idCount++;
       // postitList에 새로운 포스트잇 더하기
@@ -161,8 +172,16 @@ export default {
       // snackbar
       this.createSnackbar('포스트잇이 생성되었습니다!', 1500, 'success')
     },
+    createMap(event) {
+      if(this.map.isPresent) {
+        this.createSnackbar('이미 카카오맵이 있습니다!', 3000, 'error')
+      }
+      else {
+        this.map.isPresent = true
+      }
+    },
     createSnackbar(text, timeout, color) {
-      this.snackbar.is = true
+      this.snackbar.isPresent = true
       this.snackbar.text = text
       this.snackbar.timeout = timeout
       this.snackbar.color = color
@@ -240,8 +259,9 @@ export default {
 
   },
   components: {
-    Postit,
     Moveable,
+    Postit,
+    Map,
   }
 }
 </script>
