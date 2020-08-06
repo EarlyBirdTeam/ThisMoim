@@ -60,8 +60,6 @@ public class MailService {
         mail.setFrom(mailFrom);
         mail.getModel().put("userName", to);
         mail.getModel().put("userEmailTokenVerificationLink", emailVerificationUrl);
-//        mail.getModel().put("userEmailTokenVerificationLink", "http://i3a510.p.ssafy.io/");
-
         templateConfiguration.setClassForTemplateLoading(getClass(), basePackagePath);
         Template template = templateConfiguration.getTemplate("email-verification.ftl");
         String mailContent = FreeMarkerTemplateUtils.processTemplateIntoString(template, mail.getModel());

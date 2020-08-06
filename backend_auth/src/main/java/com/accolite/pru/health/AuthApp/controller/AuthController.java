@@ -24,7 +24,6 @@ import com.accolite.pru.health.AuthApp.exception.TokenRefreshException;
 import com.accolite.pru.health.AuthApp.exception.UserLoginException;
 import com.accolite.pru.health.AuthApp.exception.UserRegistrationException;
 import com.accolite.pru.health.AuthApp.model.CustomUserDetails;
-import com.accolite.pru.health.AuthApp.model.User;
 import com.accolite.pru.health.AuthApp.model.payload.ApiResponse;
 import com.accolite.pru.health.AuthApp.model.payload.JwtAuthenticationResponse;
 import com.accolite.pru.health.AuthApp.model.payload.LoginRequest;
@@ -36,6 +35,7 @@ import com.accolite.pru.health.AuthApp.model.token.EmailVerificationToken;
 import com.accolite.pru.health.AuthApp.model.token.RefreshToken;
 import com.accolite.pru.health.AuthApp.security.JwtTokenProvider;
 import com.accolite.pru.health.AuthApp.service.AuthService;
+import com.sun.jndi.toolkit.url.Uri;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -45,20 +45,22 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.util.Optional;
 
+import static org.springframework.web.util.UriComponentsBuilder.newInstance;
+
 //@RestController
 @Controller
 @RequestMapping("/api/auth")
 @Api(value = "Authorization Rest API", description = "Defines endpoints that can be hit only when the user is not logged in. It's not secured by default.")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:3001")
 public class AuthController {
 
     private static final Logger logger = Logger.getLogger(AuthController.class);
@@ -163,9 +165,9 @@ public class AuthController {
     @ApiOperation(value = "Confirms the email verification token that has been generated for the user during registration")
     public String confirmRegistration(@ApiParam(value = "the token that was sent to the user email") @RequestParam("token") String token) {
         if(authService.confirmEmailRegistration(token)!=null){
-            return "redirect:http://localhost:3000/#/api/auth/registrationConfirmation";
+            return "redirect:http://localhost:3001/#/api/auth/registrationConfirmation";
         }else{
-            return "redirect:http://localhost:3000/#/error";
+            return "redirect:http://localhost:3001/#/error";
         }
     }
 

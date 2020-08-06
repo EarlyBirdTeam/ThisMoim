@@ -69,10 +69,10 @@
                                             style="padding: 20px 35px; text-align: left; color: #6f6f6f; font-family: sans-serif; border-top: 0;">
                                             <h1 class="tw-h1"
                                                 style="font-size: 24px; font-weight: bold; mso-line-height-rule: exactly; line-height: 32px; margin: 0 0 20px; color: #474747;">
-                                                Hello ${userName},</h1>
+                                                ${userName}님, 안녕하세요</h1>
                                             <p class=""
                                                style="margin: 20px 0; font-size: 16px; mso-line-height-rule: exactly; line-height: 24px;">
-                                            <span style="font-weight: 400;">A new activity was initiated on your account.</span>
+                                            <span style="font-weight: 400;">계정 변경사항을 알려드립니다.</span>
                                             <br></br><span style="font-weight: 400;">Action: <strong>${action}</strong></span>
                                             <br></br><span
                                                 style="font-weight: 400;">Status: <strong>${actionStatus}</strong></span>
@@ -90,7 +90,7 @@
                                                 question</a></p>
                                             <p class="tw-signoff"
                                                style="margin: 45px 0 5px; font-size: 16px; mso-line-height-rule: exactly; line-height: 24px;">
-                                                Our best, <br/> The Customer Engagement App team</p>
+                                                Our best, <br/> EARLYBIRD team</p>
                                         </td>
                                     </tr>
                                     </tbody>
