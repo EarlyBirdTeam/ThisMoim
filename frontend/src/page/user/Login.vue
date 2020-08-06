@@ -4,19 +4,27 @@
             <div class="user" id="login">
                 <div class="wrapC table" @mousedown.stop>
                     <div class="middle">
-                        <h1>SS_log</h1>
-                        <slot></slot>
+                        <div class="test">
+                            <h1>SS_log</h1>
+                            <slot></slot>
 
-                        <slot name="footer"></slot>
+                            <slot name="footer"></slot>
 
-                        <div class="add-option">
-                            <div class="wrap">
-                                <p>아직 회원이 아니신가요?</p>
-                                <router-link v-bind:to="{name:constants.URL_TYPE.USER.JOIN}" class="btn--text">
-                                    회원가입
-                                </router-link>
+                            <div class="add-option">
+                                <div class="wrap">
+                                    <p>아직 회원이 아니신가요?</p>
+                                    <router-link v-bind:to="{name:constants.URL_TYPE.USER.JOIN}" class="btn--text">
+                                        회원가입
+                                    </router-link>
+                                </div>
+
+                                <div class="wrap">
+                                    <p>비밀번호를 잊으셨나요?</p>
+                                    <router-link v-bind:to="{name:constants.URL_TYPE.USER.PASSWORDFIND}" class="btn--text">
+                                        비밀번호 찾기
+                                    </router-link>
+                                </div>
                             </div>
-
                         </div>
                     </div>
                     

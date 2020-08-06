@@ -8,12 +8,12 @@
                     <div class="Info">
                         <div class="info-wrap">
                             <label for="email">이메일 : </label>
-                            <input id="email" type="text" v-model="email" readonly="readonly">
+                            <input id="email" type="text" v-model="userData.email" readonly="readonly">
                         </div>
 
                         <div class="info-wrap">
                             <label for="nickName">닉네임 : </label>
-                            <input v-model="nickName"
+                            <input v-model="userData.nickName"
                                 id="nickName"
                                 placeholder="닉네임을 입력해주세요" type="text"
                                 />
@@ -21,7 +21,7 @@
 
                         <div class="info-wrap">
                             <label for="password">비밀번호 : </label>    
-                            <input v-model="password"
+                            <input v-model="userData.password"
                                 id="password" 
                                 :type="passwordType"
                                 placeholder="비밀번호를 입력해주세요"/>
@@ -32,7 +32,7 @@
 
                         <div class="info-wrap">
                             <label for="realName">이름 : </label>
-                            <input v-model="realName"
+                            <input v-model="userData.name"
                                 id="realName"
                                 placeholder="이름을 입력해주세요" type="text"/>
                         </div>
@@ -63,34 +63,34 @@
         components: {
         },
         created(){
-            const userEmail = this.email;
 
-            this.$nextTick(()=>
-                 userEmail = this.email
-            );
+            const sUserData = this.$store.getters.userData;
 
-            this.$nextTick(()=>
-                userEmail = this.email,
-                this.$store.dispatch(constants.METHODS.GET_USER, {userEmail}),
-                this.realName = this.$store.state.name,
-                this.nickName = this.$store.state.nickname
-            );
+            this.userData.email = sUserData.email;
+            this.userData.name = sUserData.name;
+            this.userData.nickName = sUserData.nickName;
 
-            this.$nextTick(()=>
-                this.realName = this.$store.state.name
-            );
-            this.$nextTick(()=>
-                this.nickName = this.$store.state.nickname,
+            // const userEmail = this.email;
 
-                alert(this.$store.state.name)
-            );
-                
-                
-            
-            
-            
-            
+            // this.$nextTick(()=>
+            //      userEmail = this.email
+            // );
 
+            // this.$nextTick(()=>
+            //     userEmail = this.email,
+            //     this.$store.dispatch(constants.METHODS.GET_USER, {userEmail}),
+            //     this.realName = this.$store.state.name,
+            //     this.nickName = this.$store.state.nickname
+            // );
+
+            // this.$nextTick(()=>
+            //     this.realName = this.$store.state.name
+            // );
+            // this.$nextTick(()=>
+            //     this.nickName = this.$store.state.nickname,
+
+            //     alert(this.$store.state.name)
+            // );
             
             // const userEmail = this.email;
             // this.$store.dispatch(constants.METHODS.GET_USER, {userEmail});
@@ -142,10 +142,17 @@
         },
         data: () => {
             return {
-                email: cookies.get('Logged'),
-                realName: '',
-                password:'',
-                nickName:'',
+                // email: cookies.get('Logged'),
+                // realName: this.$store.getters.userData.name,
+                // password:'',
+                // nickName:'',
+
+                userData:{
+                    email:'',
+                    name:'',
+                    password:'',
+                    nickname:'',
+                },
                 passwordConfirm: '',
                 isTerm: false,
                 passwordType:"password",

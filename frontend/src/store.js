@@ -34,6 +34,10 @@ export const store = new Vuex.Store({
         
         joining:{
             canIUseIt:"",
+        },
+
+        finding:{
+            status:"",
         }
     },
     actions:{
@@ -55,9 +59,7 @@ export const store = new Vuex.Store({
                 router.push('/');
                 })
             .catch(exp => {
-                router.push('/error');
-                store.commit(constants.METHODS.ERROR, exp)
-                console.log(exp);
+                store.dispatch("throwError", exp);
             });
 
         },
@@ -75,10 +77,7 @@ export const store = new Vuex.Store({
                     alert("수정되었습니다.");
             })
                 .catch(exp => {
-                    router.push('/error');
-                    console.log("error is");
-                    console.log(exp);
-                    store.commit(constants.METHODS.ERROR, exp)
+                    store.dispatch("throwError", exp);
                 });
         },
         /*
@@ -98,8 +97,7 @@ export const store = new Vuex.Store({
                         cookies.set('AccessToken', res.data.accessToken);
                         cookies.set('AcesssData', res.data.userData);
                         store.commit(constants.METHODS.LOGIN_USER, [data, res.data.accessToken]);
-                        // back_auth 에서는 get_user 아직 미구현
-                        // store.dispatch(constants.METHODS.GET_USER, data.email);
+                        store.dispatch(constants.METHODS.GET_USER, data.email);
                         console.log(store.state);
                         return true;
                     }
@@ -124,37 +122,35 @@ export const store = new Vuex.Store({
                 "password": payload.password.value,
                 "registerAsAdmin": false,
                 "username": payload.realName.value,
-                //     "nickname": payload.nickName.value,
+                "nickname": payload.nickName.value,
             };
             console.log(data);
            
             http.post(url, data)
             .then(() => console.log("create req success"))
             .catch(exp => {
-                router.push('/error');
-                store.commit(constants.METHODS.ERROR, exp)
-                console.log(exp);
+                store.dispatch("throwError", exp);
             });
         },
         [constants.METHODS.GET_USER] : (store, payload) =>{
-            console.log("data : " + payload.userEmail);
-            
-            const url = '/account';
-            const data = payload.userEmail;
-            const data2 = "test@test.com";
-            // http.post('http://localhost:8080/account', payload.userEmail)
-            http.post(url, data)
+            console.log("data : " + payload);
+
+            const data = payload;
+            const url = `/api/user/userInfo?email=${data}`;
+            http.get(url, {
+                headers: {
+                    Authorization: 'Bearer ' + store.getters.accessToken
+                }
+            })
                 .then(res => {
-                    const dataWhatINeed = res.data;
-                    console.log(dataWhatINeed);
+                    const dataWhatINeed = res.data  ;
+                    console.log("In store, dataWhatINeed is : ", dataWhatINeed);
                     store.commit(constants.METHODS.GET_USER, {
                         dataWhatINeed
-                    })
+                    });
                 })
                 .catch(exp => {
-                    router.push('/error');
-                    store.commit(constants.METHODS.ERROR, exp)
-                    console.log(exp);
+                    store.dispatch("throwError", exp);
                 });
         },
         [constants.METHODS.EMAILCHECK] : (store, payload) =>{
@@ -179,13 +175,58 @@ export const store = new Vuex.Store({
                     store.commit(constants.METHODS.EMAILCHECK, res.data.data);
                 })
                 .catch(exp => {
-                    router.push('/error');
-                    store.commit(constants.METHODS.ERROR, exp)
-                    console.log(exp);
+                    store.dispatch("throwError", exp);
                     store.commit(constants.METHODS.EMAILCHECK, 0);
                 })
         },
+        [constants.METHODS.RESETMYPASSWORDREQ] : (store, payload) =>{
+            const url = "/api/auth/password/resetlink"
+            const data = payload;
+            http.post(url, {
+                "email":data,
+            })
+            .then(res => {
+                console.log(res);
+                console.log(res.data.success);
+                if(res.data.success){
+                    store.commit(constants.METHODS.RESETMYPASSWORDREQ, "비밀번호 재설정 메일이 발송되었습니다.\n 3초뒤 되돌아갑니다.")
+                    setTimeout(() => {
+                        router.push('/');
+                        store.commit(constants.METHODS.RESETMYPASSWORDREQ, "");
+                    }, 3000)
+                    
+                }
+            })
+            .catch(exp => {
+                store.dispatch("throwError", exp);
+            })
+        },
+        [constants.METHODS.RESETMYPASSWORD] : (store, payload) =>{
+            const url = "/api/auth/password/reset";
+            const data = payload;
+            http.post(url, {
+                "password": data.password,
+                "confirmPassword": data.passwordConfirm,
+                "token": data.token,
+            })
+            .then(res => {
+                store.commit(constants.METHODS.RESETMYPASSWORDREQ, "비밀번호가 성공적으로 변경되었습니다!\n 3초뒤 되돌아갑니다.")
+                    setTimeout(() => {
+                        router.push('/');
+                        store.commit(constants.METHODS.RESETMYPASSWORDREQ, "");
+                    }, 3000)
+            })
+            .catch(exp => {
+                console.log("res");
+                store.dispatch("throwError", exp);
+            })
 
+        },
+        throwError : (store, exp) => {
+            router.push('/error');
+            store.commit(constants.METHODS.ERROR, exp)
+            console.log(exp);
+        }
     },
     mutations:{
         [constants.METHODS.LOGIN_USER] : (state, payload) =>{
@@ -204,11 +245,11 @@ export const store = new Vuex.Store({
             cookies.delete('AccessData');
         },
         [constants.METHODS.GET_USER] : (state, payload) =>{
-            console.log(payload);
+            console.log(payload.dataWhatINeed);
             state.userData.email = payload.dataWhatINeed.email;
             state.userData.password = payload.dataWhatINeed.password;
             state.userData.nickname = payload.dataWhatINeed.nickname;
-            state.userData.name = payload.dataWhatINeed.name;
+            state.userData.name = payload.dataWhatINeed.username;
         },
         [constants.METHODS.DELETE_USER] : (state) =>{
             state.userData.email = "";
@@ -236,6 +277,9 @@ export const store = new Vuex.Store({
                     break;
             }
             console.log("In store, canIUseIt is : ", state.joining.canIUseIt);
+        },
+        [constants.METHODS.RESETMYPASSWORDREQ] : (state, result) =>{
+            state.finding.status = result;
         }
     },
     getters:{
@@ -247,6 +291,9 @@ export const store = new Vuex.Store({
         },
         canIUseIt: function(state){
             return state.joining.canIUseIt;
+        },
+        status: function(state){
+            return state.finding.status;
         }
     }
 });
