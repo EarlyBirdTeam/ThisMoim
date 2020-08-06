@@ -24,6 +24,7 @@ import com.accolite.pru.health.AuthApp.exception.TokenRefreshException;
 import com.accolite.pru.health.AuthApp.exception.UserLoginException;
 import com.accolite.pru.health.AuthApp.exception.UserRegistrationException;
 import com.accolite.pru.health.AuthApp.model.CustomUserDetails;
+import com.accolite.pru.health.AuthApp.model.User;
 import com.accolite.pru.health.AuthApp.model.payload.ApiResponse;
 import com.accolite.pru.health.AuthApp.model.payload.JwtAuthenticationResponse;
 import com.accolite.pru.health.AuthApp.model.payload.LoginRequest;
@@ -44,6 +45,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -144,16 +146,19 @@ public class AuthController {
     @PostMapping("/password/reset")
     @ApiOperation(value = "Reset the password after verification and publish an event to send the acknowledgement " +
             "email")
-    public ResponseEntity resetPassword(@ApiParam(value = "The PasswordResetRequest payload") @Valid @RequestBody PasswordResetRequest passwordResetRequest) {
+    public String resetPassword(@ApiParam(value = "The PasswordResetRequest payload") @Valid @RequestBody PasswordResetRequest passwordResetRequest) {
+        Optional<User> changedUser = authService.resetPassword(passwordResetRequest);
+        if(changedUser!=null){
+            OnUserAccountChangeEvent onPasswordChangeEvent = new OnUserAccountChangeEvent(
+                    changedUser.orElseThrow(() -> new PasswordResetException(passwordResetRequest.getToken(), "Error in resetting password")),
+                    "Reset Password",
+                    "Changed Successfully");
+            applicationEventPublisher.publishEvent(onPasswordChangeEvent);
+            return "redirect:http://localhost:3000/#/user/PasswordReset?token="+passwordResetRequest.getToken();
+        }else{
+            return "redirect:http://localhost:3000/#/error";
+        }
 
-        return authService.resetPassword(passwordResetRequest)
-                .map(changedUser -> {
-                    OnUserAccountChangeEvent onPasswordChangeEvent = new OnUserAccountChangeEvent(changedUser, "Reset Password",
-                            "Changed Successfully");
-                    applicationEventPublisher.publishEvent(onPasswordChangeEvent);
-                    return ResponseEntity.ok(new ApiResponse(true, "Password changed successfully"));
-                })
-                .orElseThrow(() -> new PasswordResetException(passwordResetRequest.getToken(), "Error in resetting password"));
     }
 
 

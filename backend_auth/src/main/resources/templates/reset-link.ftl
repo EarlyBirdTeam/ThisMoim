@@ -120,7 +120,7 @@
                                         <td class="tw-card-header"
                                             style="padding: 5px 5px px; width: 366px; color: #ffff; text-decoration: none; font-family: sans-serif;"
                                             align="center"><span
-                                                style="font-weight: 600;">Password Reset Link</span></td>
+                                                style="font-weight: 600;">비밀번호 변경 링크</span></td>
 
                                     </tr>
                                     </tbody>
@@ -133,10 +133,10 @@
                                             style="padding: 20px 35px; text-align: left; color: #6f6f6f; font-family: sans-serif; border-top: 0;">
                                             <h1 class="tw-h1"
                                                 style="font-size: 24px; font-weight: bold; mso-line-height-rule: exactly; line-height: 32px; margin: 0 0 20px; color: #474747;">
-                                                Hello ${userName},</h1>
+                                                ${userName}님, 안녕하세요</h1>
                                             <p class=""
                                                style="margin: 20px 0; font-size: 16px; mso-line-height-rule: exactly; line-height: 24px;">
-                                            <span style="font-weight: 400;">Please click the below button to change your password for <strong>Customer Engagement App</strong>.The link will be valid for next ${expirationTime} minutes.</span><br/><br/><span
+                                            <span style="font-weight: 400;">비밀번호를 변경하시려면 다음 링크를 클릭해 주세요. 이 링크는 ${expirationTime} 분 동안 유효합니다.</span><br/><br/><span
                                                 style="font-weight: 400;">
                                             <table style="border: 0; width: 100%;" cellspacing="0" cellpadding="0">
                                                 <tbody>
@@ -173,11 +173,10 @@
                                                style="margin: 20px 0; font-size: 16px; mso-line-height-rule: exactly; line-height: 24px;">
                                                 Contact our support team if you have any questions or concerns.&nbsp;<a
                                                     style="color: #316fea; text-decoration: none;"
-                                                    href="javascript:void(0);" target="_blank" rel="noopener">Ask us any
-                                                question</a></p>
+                                                    href="javascript:void(0);" target="_blank" rel="noopener">궁금하신 점이 있으면 문의해주세요</a></p>
                                             <p class="tw-signoff"
                                                style="margin: 45px 0 5px; font-size: 16px; mso-line-height-rule: exactly; line-height: 24px;">
-                                                Our best, <br/> The Customer Engagement App team</p>
+                                                Our best, <br/> The Earlybird team</p>
                                         </td>
                                     </tr>
                                     </tbody>
