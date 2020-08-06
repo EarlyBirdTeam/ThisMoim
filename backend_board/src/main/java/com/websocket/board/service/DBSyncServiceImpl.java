@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Service
@@ -31,9 +32,18 @@ public class DBSyncServiceImpl implements DBSyncService {
             if(requestDbResult.isPresent()) {
                 postit.setId(requestDbResult.get().getId());
             }
+            //?
             postit.setChannel(channelRepository.findByChannelId(board.getChannelId()));
             postitRepository.save(postit);
         }
+    }
+
+    @Override
+    @Transactional
+    public void postitDeleteSync(SocketBoardMessage board) {
+        long id = postitRepository.findPostitByChannel_ChannelIdAndFrontPostitId(board.getChannelId(), board.getDelete().getId()).getId();
+        System.out.println(id);
+        postitRepository.deleteById(id);
     }
 
     @Override

@@ -16,7 +16,6 @@ public class ChannelRedisRepository {
     // Redis CacheKeys
     private static final String CHANNEL = "CHANNEL"; // 채널 저장
     public static final String USER_COUNT = "USER_COUNT"; // 채널에 입장한 클라이언트 수 저장
-    //public static final String POSTIT_COUNT = "POSTIT_COUNT"; // 채널에 마지막으로 저장된 postit의 idCount를 저장
     public static final String ENTER_INFO = "ENTER_INFO"; // 채널에 입장한 클라이언트의 sessionId와 채널 id를 맵핑한 정보 저장
 
     @Resource(name = "redisTemplate")
@@ -25,8 +24,6 @@ public class ChannelRedisRepository {
     private HashOperations<String, String, String> hashOpsEnterInfo;
     @Resource(name = "redisTemplate")
     private ValueOperations<String, String> valueOps;
-    //@Resource(name = "redisTemplate")
-    //private HashOperations<String, String, Long> valueOpsPostit;
 
     // 모든 채널 조회
     public List<Channel> findAllChannel() {
@@ -86,16 +83,4 @@ public class ChannelRedisRepository {
                 .filter(count -> count > 0)
                 .orElse(0L);
     }
-
-    // 채팅방 포스트잇 마지막 저장된 idCount 저장
-//    public void setPostitIdCount(String channelId, long idCount) {
-//        // hashOpsChannel.put(CHANNEL, channel.getChannelId(), channel);
-//        System.out.println(String.valueOf(idCount));
-//        valueOpsPostit.put(POSTIT_COUNT, channelId, String.valueOf(idCount));
-//    }
-
-    // 채팅방 포스트잇 마지막 저장된 idCount 조회
-//    public String getPostitIdCount(String channelId) {
-//        return valueOpsPostit.get(POSTIT_COUNT, channelId);
-//    }
 }

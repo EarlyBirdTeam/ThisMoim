@@ -17,7 +17,7 @@ import java.io.Serializable;
 public class Postit implements Serializable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false, name = "postit_id")
     private Long id;
 

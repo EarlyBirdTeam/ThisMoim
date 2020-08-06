@@ -13,20 +13,21 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class SocketBoardMessage {
+public class SocketBoardMessage implements Serializable {
 
-    public SocketBoardMessage(String channelId, List<Postit> postitList,long userCount,long idCount) {
-        this.channelId = channelId;
-        this.userCount = userCount;
-        this.idCount = idCount;
-        this.postitList = postitList;
-        //this.channelName = channelName;
-        //this.numOfFixtures = 0;
-        //this.overMaxMembers = false;
-        //this.overMaxFixtures = false;
-        //this.liveChat = false;
-        //this.videoChat = false;
-    }
+//    public SocketBoardMessage(String channelId, List<Postit> postitList,long userCount,long idCount, DeletedModule delete) {
+//        this.channelId = channelId;
+//        this.userCount = userCount;
+//        this.idCount = idCount;
+//        this.postitList = postitList;
+//        this.delete =
+//        //this.channelName = channelName;
+//        //this.numOfFixtures = 0;
+//        //this.overMaxMembers = false;
+//        //this.overMaxFixtures = false;
+//        //this.liveChat = false;
+//        //this.videoChat = false;
+//    }
 
     // 채널 자체 정보
     private String channelId;
@@ -34,9 +35,11 @@ public class SocketBoardMessage {
     //private String channelName;
     //private String sender;
 
-    // 전달 모듈 관련 인자
+    // 보드 전달 모듈 관련 인자
     private long idCount;
     private List<Postit> postitList; // 포스트잇 리스트
+    private Boolean isDelete;
+    private DeletedModule delete;
     // List<Calendar> calendarList; // 캘린더 리스트
     // List<Canvas> canvas; // 캔버스 리스트
     // List<Map> mapList; // 맵 리스트

@@ -26,6 +26,7 @@ public class BoardController {
 
     /**
      * websocket "/pub/board/message"로 들어오는 메시징을 처리한다.
+     * 클라이언트로 부터 받은 보드 상태 전
      */
     @MessageMapping("/board/message")
     public void message(SocketBoardMessage message, @Header("token") String token) {
@@ -36,7 +37,8 @@ public class BoardController {
         message.setUserCount(channelRedisRepository.getUserCount(message.getChannelId()));
 
         // 채널 포스트잇 카운트 세팅
-        // 채널 포스트잇 카운트가 레디스에 저장된 idCount와 다르면? DB 에 업데이트 & 레디스도 업데이트
+        // 채널 포스트잇 카운트가 레디스에 저장된 idCount 와 다르면?
+        // DB 에 업데이트 & 레디스도 업데이트(채널 관련 레디스 업데이트는 여기밖에 없음)
         if(message.getIdCount() != channelRedisRepository.findChannelById(message.getChannelId()).getIdCount()) {
             dbSyncService.channelDBIdCountSync(message.getChannelId(), message.getIdCount());
 
@@ -45,9 +47,17 @@ public class BoardController {
             channelRedisRepository.updateChannel(channel);
         }
 
-        // Websocket에 발행된 메시지(클라이언트로 부터 받은 메시지)를 redis로 발행(publish)
+        // Websocket에 발행된 메시지(클라이언트로 부터 받은 메시지)를 redis를 '통해서' 발행(publish)
+        // 우리가 여기서 쓰는 레디스는 sub/pub 용도로 쓰는것이며
+        // redisTemplate(레디스에서 제공하는 프로젝트내에서 쓰일 휘발성 객체) 를 통해서 Channel 정보를 저장하여 맞는 채널에 전달하는 것일뿐
+        // 보드 자체가 가진 상태정보는 저장하고 있지 않음
+        // 받아온 상태를 그대로 전달하는 것이므로 레디스는 문제가 없으나 포스트잇 등 상태정보를 저장하기 위해서는 DB 로 트랜잭션이 있어야 함
         boardService.syncSocketBoardStatus(message);
 
-        dbSyncService.postitDBSync(message);
+        if(message.getIsDelete() && message.getDelete().getModuleName().equals("postit")) {
+            dbSyncService.postitDeleteSync(message);
+        } else {
+            dbSyncService.postitDBSync(message);
+        }
     }
 }

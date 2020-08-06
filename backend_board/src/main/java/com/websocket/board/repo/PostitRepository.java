@@ -10,5 +10,6 @@ import java.util.Optional;
 @Repository
 public interface PostitRepository extends CrudRepository<Postit, Long> {
     List<Postit> findAllByChannel(String channelId);
-    Optional<Postit> findByFrontPostitId(Long frontPostId);
+    Optional<Postit> findByFrontPostitId(Long frontPostitId);
+    Postit findPostitByChannel_ChannelIdAndFrontPostitId(String channel_channelId, Long frontPostitId);
 }
