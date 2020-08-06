@@ -146,19 +146,16 @@ public class AuthController {
     @PostMapping("/password/reset")
     @ApiOperation(value = "Reset the password after verification and publish an event to send the acknowledgement " +
             "email")
-    public String resetPassword(@ApiParam(value = "The PasswordResetRequest payload") @Valid @RequestBody PasswordResetRequest passwordResetRequest) {
-        Optional<User> changedUser = authService.resetPassword(passwordResetRequest);
-        if(changedUser!=null){
-            OnUserAccountChangeEvent onPasswordChangeEvent = new OnUserAccountChangeEvent(
-                    changedUser.orElseThrow(() -> new PasswordResetException(passwordResetRequest.getToken(), "Error in resetting password")),
-                    "Reset Password",
-                    "Changed Successfully");
-            applicationEventPublisher.publishEvent(onPasswordChangeEvent);
-            return "redirect:http://localhost:3000/#/user/PasswordReset?token="+passwordResetRequest.getToken();
-        }else{
-            return "redirect:http://localhost:3000/#/error";
-        }
+    public ResponseEntity resetPassword(@ApiParam(value = "The PasswordResetRequest payload") @Valid @RequestBody PasswordResetRequest passwordResetRequest) {
 
+        return authService.resetPassword(passwordResetRequest)
+                .map(changedUser -> {
+                    OnUserAccountChangeEvent onPasswordChangeEvent = new OnUserAccountChangeEvent(changedUser, "Reset Password",
+                            "Changed Successfully");
+                    applicationEventPublisher.publishEvent(onPasswordChangeEvent);
+                    return ResponseEntity.ok(new ApiResponse(true, "Password changed successfully"));
+                })
+                .orElseThrow(() -> new PasswordResetException(passwordResetRequest.getToken(), "Error in resetting password"));
     }
 
 
