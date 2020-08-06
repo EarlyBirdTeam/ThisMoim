@@ -56,7 +56,7 @@
         <Map v-if="map.isPresent"/>
       </div>
 
-      {{ board.idCount }} {{ board.postitList }}
+      {{ board }}
     </div>
   </div>
 </template>
@@ -74,9 +74,10 @@ export default {
     return {
       ws: null,
       channelName: "",
+      // 소켓 서버 전송
       board: {
         channelId: "",
-        idCount: 0,
+        idCount: 1,
         postitList: [],
         isDelete: false,
         delete: {
@@ -173,11 +174,7 @@ export default {
       this.ws.send(
         "/pub/board/message",
         { token: this.token },
-        JSON.stringify({
-          channelId: this.board.channelId,
-          idCount: this.board.idCount,
-          postitList: this.board.postitList,
-        })
+        JSON.stringify(this.board)
       );
       this.createSnackbar("수정되었습니다", 1000, "warning");
     },
@@ -185,6 +182,7 @@ export default {
       this.userCount = recv.userCount;
       this.board.idCount = recv.idCount;
       this.board.postitList = recv.postitList;
+      this.board.isDelete = false;
     },
     createPostit(event) {
       event.stopPropagation();
@@ -265,8 +263,13 @@ export default {
       // console.log("delete TARGET!!!!!!");
       // console.log(idx, target);
       if (confirm("요소를 삭제하시겠습니까?") === true) {
+        console.log("삭제발생!@@@@")
         target.remove();
+        this.board.isDelete = true;
+        this.board.delete.moduleName = 'postit';
+        this.board.delete.id = this.board.postitList[idx].id;
         this.board.postitList.splice(idx, 1);
+        this.sendMessage();
         this.cloakMoveable();
       }
     },
