@@ -18,16 +18,23 @@
           >
             <!-- Each element from here will be draggable and animated. Note :key is very important here to be unique both for draggable and animations to be smooth & consistent. -->
 
-            <div v-for="(task,idx) in column.tasks" :key="idx" class="mt-3 cursor-move ">
+            <div v-for="(task,idx) in column.tasks" :key="idx" class="mt-3 cursor-move">
               <div class="bg-white shadow rounded px-3 pt-3 pb-5 border border-white">
-                <div class="d-flex justify-between center" >
-                  <p class="text-truncate text-gray-700 font-semibold font-sans text-sm word-break:keep-all; " style="text-overflow:clip word-break:keep-all; ">{{task}}</p>
-                  <v-icon v-on:click="deleteTask(column.title,task)">mdi-delete</v-icon>
+                <div class="d-flex justify-space-between">
+                  <p
+                    class="text-truncate text-gray-700 font-semibold font-sans text-sm word-break:keep-all;"
+                    style="word-break:keep-all; "
+                  >{{task}}</p>
+
+                  <div>
+                    <v-icon>mdi-pencil</v-icon>
+                    <v-icon v-on:click="deleteTask(column.title,task)">mdi-delete</v-icon>
+                  </div>
                 </div>
               </div>
               <!-- <input v-model="column.tasks[idx]"/> -->
             </div>
-           
+
             <!-- </transition-group> -->
           </draggable>
           <div v-on:click="addTask(column.title)">+</div>
@@ -43,7 +50,6 @@ import draggable from "vuedraggable";
 export default {
   name: "App",
   components: {
-
     draggable,
   },
   data() {
@@ -65,18 +71,22 @@ export default {
     };
   },
   methods: {
-    addTask(title,idx) {
+    addTask(title, idx) {
       const newTask = prompt(title, "");
       this.columns.find((column) => column.title === title).tasks.push(newTask);
     },
-    deleteTask(title , task) {
-      console.log(title)
-      console.log(task)
-      var index = this.columns.find((column) => column.title === title).tasks.indexOf(task);
-      
+    deleteTask(title, task) {
+      console.log(title);
+      console.log(task);
+      var index = this.columns
+        .find((column) => column.title === title)
+        .tasks.indexOf(task);
+
       // var index = tasks.indexOf(task);
-      console.log(index)
-      this.columns.find((column) => column.title === title).tasks.splice(index,1);
+      console.log(index);
+      this.columns
+        .find((column) => column.title === title)
+        .tasks.splice(index, 1);
     },
   },
 };
