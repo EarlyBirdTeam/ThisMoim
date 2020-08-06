@@ -171,12 +171,13 @@
                                             </div>
                                             <p class=""
                                                style="margin: 20px 0; font-size: 16px; mso-line-height-rule: exactly; line-height: 24px;">
-                                                Contact our support team if you have any questions or concerns.&nbsp;<a
-                                                    style="color: #316fea; text-decoration: none;"
-                                                    href="javascript:void(0);" target="_blank" rel="noopener">궁금하신 점이 있으면 문의해주세요</a></p>
+                                                문의사항이 있으시면 저희 팀에 연락하세요&nbsp;<a
+                                                        style="color: #316fea; text-decoration: none;"
+                                                        href="https://ssafy-ysj.my.webex.com/meet/chl30shl20">Ask us any
+                                                    question</a></p>
                                             <p class="tw-signoff"
                                                style="margin: 45px 0 5px; font-size: 16px; mso-line-height-rule: exactly; line-height: 24px;">
-                                                Our best, <br/> The Earlybird team</p>
+                                                Our best, <br/> EarlyBird</p>
                                         </td>
                                     </tr>
                                     </tbody>
