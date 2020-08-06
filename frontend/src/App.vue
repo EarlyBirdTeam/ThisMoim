@@ -11,11 +11,10 @@
 </template>
 
 <script>
-// import './assets/css/style.scss' 
+import './assets/css/style.scss' 
 import Header from './components/common/Header.vue'
-// import Sidebar from './components/common/Sidebar'
+
 import Baseboard from './page/post/BaseBoard'
-import CreateModal from './components/CreateModal'
 import constants from './lib/constants' 
 import axios from 'axios'
 
@@ -23,10 +22,7 @@ export default {
   name: 'App',
   components: { 
     Header,
-    CreateModal,
-    Baseboard
-    // Sidebar
-
+     Baseboard
   },
   created() {
       let url = this.$route.name;
@@ -36,14 +32,13 @@ export default {
   },
   watch: {
       $route (to){
-
+this.checkBoard(to.name)
           this.checkUrl(to.name);
-          this.checkBoard(to.name)
       }
   },
   methods : {
       checkUrl(url) { 
-
+          console.log(url);
           let array = [
               constants.URL_TYPE.USER.LOGIN,
               constants.URL_TYPE.USER.JOIN,
@@ -51,14 +46,14 @@ export default {
           ];
 
           let isHeader = true;
-         
+          let isSidebar = true;
           // array.map(path => {
           //     if (url === path)
           //         isHeader = false;
           //         isSidebar = false;
           // })
           this.isHeader = isHeader;
-    
+          this.isSidebar = isSidebar;
 
       },
       checkBoard(url) {
@@ -76,7 +71,7 @@ export default {
 
       }
   },
-  data: function () {
+    data: function () {
         return {
             isHeader: true,
             isBoard: false,

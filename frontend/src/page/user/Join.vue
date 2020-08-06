@@ -2,7 +2,6 @@
     <div class="user" id="join"> 
         <div class="wrapC table">
             <div class="middle">
-                <br>
                 <h1>회원가입</h1>
                 <div class="form-wrap">
                     <div class="input-wrap">
@@ -47,33 +46,11 @@
                 </div>
 
                 <label>
-                                        <v-dialog v-model="dialog" width="600px">
-                        <template v-slot:activator="{ on, attrs }">
-                            <button
-                            v-bind="attrs"
-                            v-on="on"
-                            >
-                            약관보기
-                            </button>
-                        </template>
-                        <v-card>
-                            <v-card-title>
-                            <span class="headline">회원가입 약관</span>
-                            </v-card-title>
-                            <v-card-text>제1장 총 칙
-                            제1조(목적) 
-                            <br>
-                            이 약관은 이거모임(http://www.이거모임)이 온라인으로 제공하는 각종 서비스의 이용과 관련하여 이거미임과 이용자의 권리, 의무 및 책임사항 등을 규정함을 목적으로 합니다.
-                            </v-card-text>
-                        
-                        </v-card>
-                                    </v-dialog> 
-                    <br>
                     <input v-model="isTerm" type="checkbox" id="term"/>
                     <span>약관에 동의합니다</span>
                 </label>
 
-                
+                <span class="go-term">약관 보기</span>
 
                 <button  @click="createUserRequest"  class="btn">
                     <span>
@@ -101,7 +78,7 @@
         components: {
         },
         created(){
-            
+
 
 
 
@@ -135,7 +112,11 @@
                     email, password, nickName, realName
                      });
                 this.$router.push(constants.URL_TYPE.USER.JOINDONE);
-                }                
+                }
+
+
+
+                  
             }
         },
         watch: {

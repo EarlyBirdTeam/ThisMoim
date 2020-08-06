@@ -92,12 +92,12 @@
     import LoginModal from '../LoginModal'
     import constants from '../../lib/constants'
     import cookies from 'vue-cookie'
-    import CreateModal from '../CreateModal'
+
     export default {
         name: 'Header',
         components: { 
             LoginModal,
-            CreateModal
+
     
             
         },

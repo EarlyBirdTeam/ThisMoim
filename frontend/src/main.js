@@ -13,6 +13,7 @@ const socket = io('http://localhost:3000');
 
 
 Vue.prototype.$socket = socket;
+
 Vue.prototype.$axios = axios;
 
 /* eslint-disable no-new */

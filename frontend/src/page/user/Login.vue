@@ -38,7 +38,6 @@
 <script>
     import '../../assets/css/user.scss';
     import constants from '../../lib/constants';
-    
     import cookies from 'vue-cookie';
     import router from 'vue-router';
 
@@ -100,26 +99,3 @@
 // <style lang="scss" scoped>
 
 
-
-// .modal-enter-active, .modal-leave-active {
-//   transition: opacity 0.4s;
-// }
-// .modal-window {
-//   transition: opacity 0.4s, transform 0.4s;
-// }
-
-
-// .modal-leave-active {
-//   transition: opacity 0.6s ease 0.4s;
-// }
-
-// .modal-enter, .modal-leave-to {
-//   opacity: 0;
-
-//   .modal-window {
-//     opacity: 0;
-//     transform: translateY(-20px);
-//   }
-// }
-
-// </style>

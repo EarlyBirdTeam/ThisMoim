@@ -1,16 +1,15 @@
 <template>
     <div id="sidebar">
         <div class="tag-list-wrap">
-                <!-- <h4>{{Moim.profile}}</h4> -->
-                <h4>프로필</h4>
+                <h4>Test Link</h4>
                 <ul class="tag-list">
                     <li>
-                        <router-link v-bind:to="{name:constants.URL_TYPE.POST.BASE}" class="btn--text">
+                        <router-link v-bind:to="{name:constants.URL_TYPE.POST.MAIN}" class="btn--text">
                           <img src="https://image.flaticon.com/icons/svg/846/846449.svg" alt="">
                         </router-link> 
                     </li>
                     <li>
-                        <router-link v-bind:to="{name:constants.URL_TYPE.POST.CHAT}" class="btn--text">
+                        <router-link v-bind:to="{name:constants.URL_TYPE.USER.JOIN}" class="btn--text">
                           <img src="https://image.flaticon.com/icons/svg/992/992675.svg" alt="">
                         </router-link> 
                     </li>
@@ -26,7 +25,7 @@
                     </li>
 
                     <li>
-                        <router-link v-bind:to="{name:constants.URL_TYPE.POST.MEMBERS}" class="btn--text">
+                        <router-link v-bind:to="{name:constants.URL_TYPE.POST.TEST_BOARD}" class="btn--text">
                          <img src="https://image.flaticon.com/icons/svg/615/615075.svg" alt="">
                         </router-link> 
                     </li>
@@ -44,41 +43,22 @@ export default {
         data: function() {
            return {
                constants,
-               Moim:[]
            }
         },
-            methods: {
-        // getMoim() {
-        //     const API_MOIM_URL = API_BASE_URL + '/board'
-        //     const config ={}
-        //     this.$axios.get(API_MOIM_URL, config)
-        //     .then(res => {
-        //         this.members = res.data
-        //     })
-        //     .catch(err => {
-        //         console.error(err)
-        //     })            
-        // }
-    },
-    created() {
-        this.getMoim()
-    }
 }
 </script>
 
 <style scoped>
  .tag-list-wrap{
      background-color: white;
-     width: 5vw;
-     float: left;
-     margin:1%;
+     width: 35px;
      /* top: auto; */
      border-right: 3px solid rgb(223, 223, 223);
      text-align: center;
      
-     height: 40%;
-     top: 7.5%;
-     left: 1%;
+     height: 290px;
+     top: 85px;
+     left: 5px;
  }
  
  .tag-list{
@@ -87,7 +67,8 @@ export default {
  }
 
  img{
-     height: 3vh;
-     width: 3vw;
+     margin-left: 3px;
+     height: 25px;
+     width: 25px;
  }
 </style>

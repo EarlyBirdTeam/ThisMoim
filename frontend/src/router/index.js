@@ -2,7 +2,11 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import Router from 'vue-router'
 import VueCookie from 'vue-cookie'
+
 import constants from '../lib/constants'
+// 서버
+import ChannelDetail from '../page/post/channelDetail.vue'
+import Server from '../page/post/server.vue'
 
 // 유저
 import Login from '../page/user/Login.vue'
@@ -12,12 +16,15 @@ import MyPage from '../page/user/MyPage.vue'
 
 // 포스트
 import List from '../page/post/List.vue'
-import Test from '../page/post/Test_Board.vue'
-import Create from '../page/post/Create_Community.vue'
-import Base from '../page/post/BaseBoard.vue'
-import Chat from '../page/post/Chat.vue'
+import Board from '../page/post/Test_Board.vue'
+import Mboard from '../page/post/Moveboard.vue'
 import Members from '../page/post/BoardMember.vue'
 import Schedule from '../page/post/Schedule.vue'
+
+// test
+import Poll from '../components/common/Poll.vue'
+import Map from '../components/common/Map.vue'
+import Calendar from '../components/module/Calendar.vue'
 
 Vue.use(Router) 
 Vue.use(Vuex)
@@ -26,12 +33,54 @@ Vue.use(VueCookie)
 export default new Router({
   mode: 'history',
   routes: [   
+    // 서버 연결
+    { 
+      path: '/server',
+      name: 'server',
+      component: Server,
+    },
+    { 
+      path: '/mboard',
+      name: constants.URL_TYPE.POST.MBOARD,
+      component: Mboard,
+    },
+    {
+      path: '/channel/:channelId',
+      name: 'channelDeatil',
+      component: ChannelDetail,
+      
+      // name: constants.URL_TYPE.POST.TEST_BOARD,
+      // component: ChannelDetail  ,
+      props: route => ({channelId: Number(route.params.ChannelId)})
+    },
+    { 
+      path: '/channel/:channelId/test',
+      name: constants.URL_TYPE.POST.TEST_BOARD,
+      component: Board,
+      props: route => ({channelId: Number(route.params.ChannelId)})
+    },
+    { 
+      path: '/channel/:channelId/members',
+      name: constants.URL_TYPE.POST.MEMBERS,
+      component: Members,
+    },
+
+    { 
+      path: '/channel/:channelId/schedule',
+      name: constants.URL_TYPE.POST.SCHEDULE,
+      component: Schedule,
+    },
+
+
+
+
+
     // 로그인/가입
-    // { 
-    //   path: '/user/login',
-    //   name: constants.URL_TYPE.USER.LOGIN,
-    //   component: Login
-    // },
+    { 
+      path: '/user/login',
+      name: constants.URL_TYPE.USER.LOGIN,
+      component: Login
+    },
     {
       path: '/user/join',
       name: constants.URL_TYPE.USER.JOIN,
@@ -53,42 +102,7 @@ export default new Router({
       name: constants.URL_TYPE.POST.MAIN,
       component: List,
     },
-    // { 
-    //   path: '/board',
-    //   name: constants.URL_TYPE.POST.BASE,
-    //   component: Base,
-    //   // beforeEnter: function (to,from,next){
-    //   //   alert("로그인 후 이용가능한 서비스 입니다.")
-    //   //   next('/');
-    //   // }
-    // },
-    { 
-      path: '/board/test',
-      name: constants.URL_TYPE.POST.TEST_BOARD,
-      component: Test,
-   
-    },
-    { 
-      path: '/board/create',
-      name: constants.URL_TYPE.POST.CREATE,
-      component: Create,
-    },
-    { 
-      path: '/board/members',
-      name: constants.URL_TYPE.POST.MEMBERS,
-      component: Members,
-    },
-    { 
-      path: '/board/chat',
-      name: constants.URL_TYPE.POST.CHAT,
-      component: Chat,
-    },
-    { 
-      path: '/board/schedule',
-      name: constants.URL_TYPE.POST.SCHEDULE,
-      component: Schedule,
-    },
-
+  
     { 
       path: '/error',
       name: constants.ERROR.FRONT_ERROR,
@@ -101,8 +115,23 @@ export default new Router({
       path: '*',
       name: 'e404',
       component: () => import('../page/etc/e404.vue')
-    }
+    },
 
-    
+    //test
+    { 
+      path: '/poll',
+      name: 'poll',
+      component: Poll,
+    },
+    { 
+      path: '/map',
+      name: 'map',
+      component: Map,
+    },
+    { 
+      path: '/calendar',
+      name: 'Calendar',
+      component: Calendar,
+    },
   ]
 })

@@ -1,47 +1,7 @@
 <template>
-  <div id="app" style="margin-top:45px" v-cloak @click="test2">
-
-        <div class="row" align="center">
-            <div class="col-md-6" style="center">
-                <h4>{{channelName}} 참석자<span class="badge badge-info badge-pill">{{userCount}}</span></h4>
-        <v-btn @click="sendMessage()">보내기</v-btn><br>
-            </div>
-        </div>
-        <v-toolbar class="toolBox">
-            <v-btn icon color="orange" @click="createText">
-              <v-icon>mdi-message</v-icon>
-            </v-btn>
-        </v-toolbar> 
-        
-        <div class="bodyBox " ref="whiteBoard" 
-        @dblclick="focusAction"
-        @click="changeTargetAction">
-
-          <Moveable
-          ref="moveable"
-          class="moveable"
-          v-bind="moveable"
-          @drag="handleDrag"
-          @dragEnd="handleDragEnd"
-          @resize="handleResize"
-          @scale="handleScale"
-          @rotate="handleRotate"
-          @warp="handleWarp"
-          style="display: none;"
-          >
-          </Moveable> 
-
-          <div v-for="(pi, idx) in this.postitList" :key="idx"
-          @click.right="deleteTargetAction(idx, $event)">
-            <!-- <Postit :id="pi.id" :postit="pi" style="position: relative; display: inline-block"/> -->
-            <Postit 
-            :id="pi.frontPostitId" 
-            :postit="pi" 
-            :style="{left: pi.left, top: pi.top}"
-            />
-          </div>
-        </div>
-
+  <div id="app" v-cloak @click="test2">
+  
+<Baseboard/>
     </div>
 </template>
 
@@ -52,7 +12,7 @@ import axios from 'axios';
 import http from '../../http-common.js';
 import Postit from '../../components/common/Postit'
 import Moveable from 'vue-moveable';
-
+import Baseboard from './BaseBoard'
 
 export default {
   data () {
@@ -222,7 +182,7 @@ export default {
   },
   components: {
     Postit,
-    Moveable, 
+    Moveable, Baseboard
   }
 }
 </script>

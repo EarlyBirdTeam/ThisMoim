@@ -16,11 +16,9 @@ export default {
         },
         POST: {
             MAIN : "main",
-            BASE : "base",
             TEST_BOARD: "test_vue",
-            CREATE: "create",
             MEMBERS: "members",
-            CHAT: "chat",
+            MBOARD: "mboard",
             SCHEDULE: "schedule"
         },
     },
