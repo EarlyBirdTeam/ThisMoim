@@ -15,29 +15,29 @@
                             <label for="nickName">닉네임 : </label>
                             <input v-model="userData.nickName"
                                 id="nickName"
-                                placeholder="닉네임을 입력해주세요" type="text"
+                                placeholder="닉네임을 입력해주세요" type="text" readonly="readonly"
                                 />
                         </div>
 
-                        <div class="info-wrap">
+                        <!-- <div class="info-wrap">
                             <label for="password">비밀번호 : </label>    
                             <input v-model="userData.password"
                                 id="password" 
-                                :type="passwordType"
+                                :type="passwordType" readonly="readonly"
                                 placeholder="비밀번호를 입력해주세요"/>
                             <span :class="{active : passwordType==='text'}">
                                     <i class="fas fa-eye"></i>
                             </span>
-                        </div>
+                        </div> -->
 
                         <div class="info-wrap">
                             <label for="realName">이름 : </label>
-                            <input v-model="userData.name"
+                            <input v-model="userData.name" readonly="readonly"
                                 id="realName"
                                 placeholder="이름을 입력해주세요" type="text"/>
                         </div>
                         <div class="info-wrap">
-                             <button v-on:click="updateUser">회원정보 수정</button>
+                             <!-- <button v-on:click="updateUser">회원정보 수정</button> -->
                         </div>
                         <div class="info-wrap">
                             <router-link v-bind:to="{name:constants.URL_TYPE.USER.DELETEUSER}" class="btn--text btn--warn">

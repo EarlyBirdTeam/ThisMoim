@@ -49,7 +49,8 @@ export const store = new Vuex.Store({
          */
 
         [constants.METHODS.DELETE_USER] : (store, payload) =>{
-            const url = `/api/user/delete?email=${payload.email}&password=${payload.password}`;
+            const url = `/api/user/delete?email=${payload.email.trim()}&password=${payload.password.trim()}`;
+            console.log(store.getters.accessToken);
             http.delete(url,{
                     headers: {
                         Authorization: 'Bearer ' + store.getters.accessToken
@@ -148,6 +149,7 @@ export const store = new Vuex.Store({
                 "username": payload.realName.value,
                 "nickname": payload.nickName.value,
             };
+            console.log(data);
             // console.log(data);
            
             http.post(url, data)
@@ -172,7 +174,7 @@ export const store = new Vuex.Store({
             })
                 .then(res => {
                     const dataWhatINeed = res.data  ;
-                    // console.log("In store, dataWhatINeed is : ", dataWhatINeed);
+                    console.log("In store, dataWhatINeed is : ", dataWhatINeed);
                     store.commit(constants.METHODS.GET_USER, {
                         dataWhatINeed
                     });
@@ -240,7 +242,7 @@ export const store = new Vuex.Store({
          * 비밀번호 초기화 메소드
          */
         [constants.METHODS.RESETMYPASSWORD] : (store, payload) =>{
-            const url = "/password/reset";
+            const url = "/api/auth/password/reset";
             const data = payload;
             http.post(url, {
                 "password": data.password,
