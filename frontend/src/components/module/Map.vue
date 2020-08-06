@@ -30,7 +30,7 @@ export default {
   },
   data() {
     return {
-      search: "카카오",
+      search: "멀티캠퍼스 역삼",
       kakaoMap: Object,
       markers: [],
       coord: {

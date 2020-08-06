@@ -5,9 +5,6 @@
             <div class="col-md-6">
                 <h3>채널 리스트</h3>
             </div>
-            <div class="col-md-6 text-right">
-                <a class="btn btn-primary btn-sm" href="/logout">로그아웃</a>
-            </div>
         </div>
         <div class="input-group">
             <div class="input-group-prepend">
@@ -18,7 +15,7 @@
                 <button class="btn btn-primary" type="button" @click="createChannel">채널 개설</button>
             </div>
         </div>
-        <ul class="list-group">
+        <ul class="list-group pl-0 mt-5">
             <li class="list-group-item list-group-item-action" v-for="item in channels" v-bind:key="item.channelId" v-on:click="enterRoom(item.channelId, item.channelName)">
                 <h6>{{item.channelName}} <span class="badge badge-info badge-pill">{{item.userCount}}</span></h6>
             </li>
