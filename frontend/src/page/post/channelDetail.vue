@@ -185,6 +185,10 @@ export default {
       this.board.isDelete = false;
     },
     createPostit(event) {
+      if(this.board.postitList.length > 20) {
+        this.createSnackbar("포스트잇이 너무 많습니다!", 3000, "error")
+        return
+      }
       event.stopPropagation();
       const idc = this.board.idCount++;
       // postitList에 새로운 포스트잇 더하기
@@ -267,7 +271,7 @@ export default {
         target.remove();
         this.board.isDelete = true;
         this.board.delete.moduleName = 'postit';
-        this.board.delete.id = this.board.postitList[idx].id;
+        this.board.delete.id = this.board.postitList[idx].frontPostitId;
         this.board.postitList.splice(idx, 1);
         this.sendMessage();
         this.cloakMoveable();
