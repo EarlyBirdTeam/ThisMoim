@@ -32,32 +32,33 @@
 <script>
     import '../../assets/css/user.scss'
     import constants from '../../lib/constants'
-export default {
-     data: () =>{
-            return {
-                password:'',
-                passwordConfirm:'',
-            }
-        },
-    methods:   {
-        deleteMyAccount() {
-            const token = this.$route.query.token;
-
-                if(this.password == ''){return;}
-                if(this.password != this.passwordConfirm){
-                    return;
+    export default {
+        data: () =>{
+                return {
+                    password:'',
+                    passwordConfirm:'',
                 }
-                else {
-                    const data = {
-                        "email":this.$store.getters.userData.email,
-                        "password":this.password
+            },
+        methods:   {
+            deleteMyAccount() {
+                const token = this.$route.query.token;
+
+                    if(this.password == ''){return;}
+                    if(this.password != this.passwordConfirm){
+                        return;
                     }
-                    this.$store.dispatch(constants.METHODS.DELETE_USER, data);
+                    else {
+                        const data = {
+                            "email":this.$store.getters.userData.email,
+                            "password":this.password
+                        }
+                        console.log(data);
+                        this.$store.dispatch(constants.METHODS.DELETE_USER, data);
 
-                }
+                    }
+            }
         }
     }
-}
 </script>
 
 <style>

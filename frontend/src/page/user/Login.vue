@@ -65,8 +65,6 @@
         }
 
     }
-// http://localhost:8080/account/login?email=test@test.com&password=1234
-
 </script>
 
 

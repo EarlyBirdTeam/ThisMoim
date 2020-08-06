@@ -16,10 +16,9 @@
                             placeholder="이메일을 입력해주세요"
                             type="text"
                             @change="emailCheck"/>
-                        <!-- {{stateMessage}} -->
+
+                        <!-- 이메일이 사용중인지 체크 -->
                         {{this.$store.getters.canIUseIt}}
-                        
-                        <!-- {{canIUseIt}} -->
                     </div>
 
                     <div class="input-wrap">
@@ -109,6 +108,9 @@
                 }
                 else if(password.value != passwordConfirm.value){
                     alert("비밀번호가 동일하지않습니다. 다시 입력해주세요.")
+                } 
+                else if(!this.isTerm){
+                    alert("약관을 읽어보시고, 동의란에 체크해주세요.")
                 }
                 else{
                     this.$store.dispatch(constants.METHODS.CREATE_USER, {

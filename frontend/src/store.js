@@ -41,6 +41,12 @@ export const store = new Vuex.Store({
         }
     },
     actions:{
+
+
+        /**
+         *  회원 탈퇴 메소드
+         */
+
         [constants.METHODS.DELETE_USER] : (store, payload) =>{
             const url = `/api/user/delete?email=${payload.email}&password=${payload.password}`;
             http.delete(url,{
@@ -50,7 +56,7 @@ export const store = new Vuex.Store({
                 })
                 .then((res) => {
                     console.log(res);
-                    if(res == "success"){
+                    if(res.data == "success"){
                         store.commit(constants.METHODS.RESETMYPASSWORDREQ,
                              "계정이 삭제되었습니다. 지금까지 이용해주셔서 감사합니다.\n 3초뒤 되돌아갑니다.")
                         setTimeout(() => {
@@ -64,47 +70,33 @@ export const store = new Vuex.Store({
                 .catch(exp => {
                     store.dispatch("throwError", exp);
                 });
-
-            // http.put('/account/delete',
-            //         {
-            //             email: payload.email,
-            //             password: payload.password,
-            //             nickname: payload.nickName,
-            //             name: payload.realName
-            //         }
-            //     )
-            // .then(() => {
-            //     console.log("delete req success");
-            //     cookies.delete('Logged');
-            //     store.commit(constants.METHODS.DELETE_USER);
-            //     alert("탈퇴되었습니다. 메인 화면으로 돌아갑니다.");
-            //     router.push('/');
-            //     })
-            // .catch(exp => {
-            //     store.dispatch("throwError", exp);
-            // });
-
         },
-        [constants.METHODS.UPDATE_USER] : (store, payload) =>{
-            http.put('http://localhost:8080/account',
-                    {
-                        email: payload.email,
-                        password: payload.password,
-                        nickname: payload.nickName,
-                        name: payload.realName
-                    }
-                )
-                .then(() => {
-                    console.log("update req success");
-                    alert("수정되었습니다.");
-            })
-                .catch(exp => {
-                    store.dispatch("throwError", exp);
-                });
-        },
-        /*
-            로그인
+        /**
+         * 유저 프로필 업데이트. 미구현. => 구현이 필요한가?
+         */
+        // [constants.METHODS.UPDATE_USER] : (store, payload) =>{
+        //     http.put('http://localhost:8080/account',
+        //             {
+        //                 email: payload.email,
+        //                 password: payload.password,
+        //                 nickname: payload.nickName,
+        //                 name: payload.realName
+        //             }
+        //         )
+        //         .then(() => {
+        //             console.log("update req success");
+        //             alert("수정되었습니다.");
+        //     })
+        //         .catch(exp => {
+        //             store.dispatch("throwError", exp);
+        //         });
+        // },
+
+
+        /**
+            회원 로그인 메소드
         */
+
         [constants.METHODS.LOGIN_USER] : (_store, payload) =>{
             const url = "api/auth/login";
             const data = {
@@ -114,13 +106,14 @@ export const store = new Vuex.Store({
                 http
                 .post(url, data)
                 .then(res => {
-                    console.log(res);
+                    console.log("In store, res is : ", res);
                     if (res.status == 200) {
                         cookies.set('AccessToken', res.data.accessToken);
-                        cookies.set('AcesssData', res.data.userData);
                         store.commit(constants.METHODS.LOGIN_USER, [data, res.data.accessToken]);
                         store.dispatch(constants.METHODS.GET_USER, data.email);
-                        console.log(store.state);
+                        console.log("In store, state is : ", store.state);
+                        
+                        cookies.set('AcesssData', _store.getters.userData.email);
                         return true;
                     }
                 })
@@ -132,10 +125,18 @@ export const store = new Vuex.Store({
                 
                 return false;
         },
+
+        /** 
+         * 로그아웃 메소드
+         */
         [constants.METHODS.LOGOUT_USER] : (store) =>{
             store.commit(constants.METHODS.LOGOUT_USER);
                
         },
+
+        /**
+         * 회원가입 메소드
+         */
         [constants.METHODS.CREATE_USER] : (_store, payload) =>{
             store.commit(constants.METHODS.EMAILCHECK, "reset");
             const url = 'api/auth/register';
@@ -146,7 +147,7 @@ export const store = new Vuex.Store({
                 "username": payload.realName.value,
                 "nickname": payload.nickName.value,
             };
-            console.log(data);
+            // console.log(data);
            
             http.post(url, data)
             .then(() => console.log("create req success"))
@@ -154,8 +155,12 @@ export const store = new Vuex.Store({
                 store.dispatch("throwError", exp);
             });
         },
+
+        /**
+         * 유저 정보 가져오기
+         */
         [constants.METHODS.GET_USER] : (store, payload) =>{
-            console.log("data : " + payload);
+            // console.log("data : " + payload);
 
             const data = payload;
             const url = `/api/user/userInfo?email=${data}`;
@@ -166,7 +171,7 @@ export const store = new Vuex.Store({
             })
                 .then(res => {
                     const dataWhatINeed = res.data  ;
-                    console.log("In store, dataWhatINeed is : ", dataWhatINeed);
+                    // console.log("In store, dataWhatINeed is : ", dataWhatINeed);
                     store.commit(constants.METHODS.GET_USER, {
                         dataWhatINeed
                     });
@@ -175,6 +180,10 @@ export const store = new Vuex.Store({
                     store.dispatch("throwError", exp);
                 });
         },
+
+        /**
+         * 이메일 중복 체크 메소드
+         */
         [constants.METHODS.EMAILCHECK] : (store, payload) =>{
             const checkEmail = payload;
             if(checkEmail==""){         
@@ -188,8 +197,6 @@ export const store = new Vuex.Store({
                 return;
             }
 
-
-
             const url = `/api/auth/checkEmailInUse?email=${checkEmail}`;
             http.get(url)
                 .then(res => {
@@ -201,6 +208,10 @@ export const store = new Vuex.Store({
                     store.commit(constants.METHODS.EMAILCHECK, 0);
                 })
         },
+
+        /** 
+         * 비밀번호 초기화 요청 메소드 
+         */
         [constants.METHODS.RESETMYPASSWORDREQ] : (store, payload) =>{
             const url = "/api/auth/password/resetlink"
             const data = payload;
@@ -223,8 +234,12 @@ export const store = new Vuex.Store({
                 store.dispatch("throwError", exp);
             })
         },
+
+        /**
+         * 비밀번호 초기화 메소드
+         */
         [constants.METHODS.RESETMYPASSWORD] : (store, payload) =>{
-            const url = "/api/auth/password/reset";
+            const url = "/password/reset";
             const data = payload;
             http.post(url, {
                 "password": data.password,
@@ -239,11 +254,14 @@ export const store = new Vuex.Store({
                     }, 3000)
             })
             .catch(exp => {
-                console.log("res");
                 store.dispatch("throwError", exp);
             })
 
         },
+
+        /**
+         * 에러페이지 이동 메소드
+         */
         throwError : (store, exp) => {
             router.push('/error');
             store.commit(constants.METHODS.ERROR, exp)
@@ -253,7 +271,7 @@ export const store = new Vuex.Store({
     mutations:{
         [constants.METHODS.LOGIN_USER] : (state, payload) =>{
             // state.password = payload.password;
-            console.log("In Store, payload is : ", payload);
+            // console.log("In Store, payload is : ", payload);
             state.userData.email = payload[0].email  ;
             state.accessToken = payload[1];
             state.modal = !state.modal;
@@ -283,7 +301,7 @@ export const store = new Vuex.Store({
             state.errorcode = exp;
         },
         [constants.METHODS.EMAILCHECK] : (state, result) =>{
-            console.log("In store, result is : ", result);
+            // console.log("In store, result is : ", result);
             switch(result){
                 case "true":
                     state.joining.canIUseIt = "사용할 수 없는 이메일입니다.";
@@ -298,7 +316,7 @@ export const store = new Vuex.Store({
                     state.joining.canIUseIt = "";
                     break;
             }
-            console.log("In store, canIUseIt is : ", state.joining.canIUseIt);
+            // console.log("In store, canIUseIt is : ", state.joining.canIUseIt);
         },
         [constants.METHODS.RESETMYPASSWORDREQ] : (state, result) =>{
             state.finding.status = result;

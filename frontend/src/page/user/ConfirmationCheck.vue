@@ -20,14 +20,6 @@
     export default {
         components: {
         },
-        created(){
-
-
-        },
-        methods: {
-        },
-        watch: {
-        },
         data: () => {
             return {
                 constants

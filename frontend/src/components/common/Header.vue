@@ -75,10 +75,10 @@
             }
         },
         created() {
-            console.log("arr is ");
-            // console.log(arr);
             const arr = document.cookie.split(";");
-
+            console.log(this.$store.getters.userData);
+            // console.log("arr is ");
+            // console.log(arr);
             arr.forEach(element => {
                 if(element.split('=')[0] == 'AccessToken'){
                     this.userinfo = element.split('=')[1];
@@ -145,7 +145,6 @@
                constants,
                keyword : "",
                modal:this.$store.state.modal,
-            //    userinfo:this.$store.state.email,
                 userinfo: '',
                 email:"",
                 password:"",

@@ -39,8 +39,8 @@
                         <div class="info-wrap">
                              <button v-on:click="updateUser">회원정보 수정</button>
                         </div>
-                        <div class="info-wrap">=
-                            <router-link v-bind:to="{name:constants.URL_TYPE.USER.DELETEUSER}" class="btn--text">
+                        <div class="info-wrap">
+                            <router-link v-bind:to="{name:constants.URL_TYPE.USER.DELETEUSER}" class="btn--text btn--warn">
                                 회원 탈퇴
                             </router-link> 
                         </div>
@@ -57,45 +57,16 @@
 <script>
     import '../../assets/css/user.scss'
     import constants from '../../lib/constants'
-    import axios from "axios";
-    import cookies from 'vue-cookie';
-    const vm = this;
     
     export default {
         components: {
         },
         created(){
-
             const sUserData = this.$store.getters.userData;
 
             this.userData.email = sUserData.email;
             this.userData.name = sUserData.name;
             this.userData.nickName = sUserData.nickName;
-
-            // const userEmail = this.email;
-
-            // this.$nextTick(()=>
-            //      userEmail = this.email
-            // );
-
-            // this.$nextTick(()=>
-            //     userEmail = this.email,
-            //     this.$store.dispatch(constants.METHODS.GET_USER, {userEmail}),
-            //     this.realName = this.$store.state.name,
-            //     this.nickName = this.$store.state.nickname
-            // );
-
-            // this.$nextTick(()=>
-            //     this.realName = this.$store.state.name
-            // );
-            // this.$nextTick(()=>
-            //     this.nickName = this.$store.state.nickname,
-
-            //     alert(this.$store.state.name)
-            // );
-            
-            // const userEmail = this.email;
-            // this.$store.dispatch(constants.METHODS.GET_USER, {userEmail});
         },
         methods: {
             check(){
@@ -144,11 +115,6 @@
         },
         data: () => {
             return {
-                // email: cookies.get('Logged'),
-                // realName: this.$store.getters.userData.name,
-                // password:'',
-                // nickName:'',
-
                 userData:{
                     email:'',
                     name:'',

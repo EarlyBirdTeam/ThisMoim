@@ -24,23 +24,8 @@
     export default {
         components: {
         },
-        created(){
-
-
-        },
-        methods: {
-        },
-        watch: {
-        },
         data: () => {
             return {
-                email: '',
-                nickName: '',
-                password: '',
-                passwordConfirm: '',
-                isTerm: false,
-                passwordType:"password",
-                passwordConfirmType:"password",
                 constants
             }
         }
