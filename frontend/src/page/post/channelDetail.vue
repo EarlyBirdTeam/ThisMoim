@@ -42,7 +42,7 @@
 
       <!-- <Postit :id="pi.id" :postit="pi" style="position: relative; display: inline-block"/> -->
       <div class="postit"
-      v-for="(pi, idx) in this.postitList"
+      v-for="(pi, idx) in this.board.postitList"
       :key="pi.frontPostitId"
       @click.right="deleteTargetAction(idx, $event)">
           <Postit
@@ -56,7 +56,7 @@
         <Map v-if="map.isPresent"/>
       </div>
 
-      {{ idCount }} {{ postitList }}
+      {{ board.idCount }} {{ board.postitList }}
     </div>
   </div>
 </template>
@@ -156,8 +156,8 @@ export default {
       http
         .get(`/board/${this.board.channelId}`)
         .then((response) => {
-          this.postitList = response.data.postitList;
-          this.idCount = response.data.idCount;
+          this.board.postitList = response.data.postitList;
+          this.board.idCount = response.data.idCount;
           console.log(response.data);
         })
         .catch((e) => {
@@ -188,9 +188,9 @@ export default {
     },
     createPostit(event) {
       event.stopPropagation();
-      const idc = this.idCount++;
+      const idc = this.board.idCount++;
       // postitList에 새로운 포스트잇 더하기
-      this.postitList.unshift({
+      this.board.postitList.unshift({
         frontPostitId: idc,
         left: "500px",
         top: "170px",
@@ -218,7 +218,7 @@ export default {
     handleDrag({ target, left, top }) {
       target.style.left = `${left}px`;
       target.style.top = `${top}px`;
-      this.postitList.map((postit) => {
+      this.board.postitList.map((postit) => {
         if (postit.frontPostitId == target.id) {
           (postit.left = `${left}px`), (postit.top = `${top}px`);
         }
@@ -266,7 +266,7 @@ export default {
       // console.log(idx, target);
       if (confirm("요소를 삭제하시겠습니까?") === true) {
         target.remove();
-        this.postitList.splice(idx, 1);
+        this.board.postitList.splice(idx, 1);
         this.cloakMoveable();
       }
     },
