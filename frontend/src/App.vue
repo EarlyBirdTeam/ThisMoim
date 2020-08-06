@@ -20,6 +20,31 @@ export default {
       let url = this.$route.name;
 
       this.checkUrl(url);
+
+      console.log("refresh!");
+      console.log(this.$store);
+      const arr = document.cookie.split(";");
+      console.log(this.$store.getters.userData);
+      const logInfo = {
+          "AccessData" : '',
+          "AccessToken" : ''
+      };
+      arr.forEach(element => {
+        console.log("In App, element is : ", element);
+          if(element.split('=')[0].trim() == 'AccessToken'){
+              // logInfo.AccessToken = element.split('=')[1];
+              logInfo.AccessToken = element.split('=')[1];
+          }
+          if(element.split('=')[0].trim() == 'AccessData'){
+              
+              logInfo.AccessData = unescape(element.split('=')[1]);
+          }
+      });
+
+      console.log("In App, logInfo is : ", logInfo);
+
+      this.$store.commit("setDataAgain", logInfo);
+
   },
   watch: {
       $route (to){

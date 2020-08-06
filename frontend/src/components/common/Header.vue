@@ -27,6 +27,11 @@
                 </div>
             </template>
 
+            
+                    <button @click="check">
+                        스토어 체크
+                    </button>
+
         </div>  
         
         

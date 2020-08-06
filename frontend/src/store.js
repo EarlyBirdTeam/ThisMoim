@@ -5,7 +5,7 @@ import cookies from 'vue-cookie';
 import constants from './lib/constants.js'
 import router from './router/index.js'
 import http from './http-common.js';
-import * as Cookies from 'js-cookie'
+import Cookies from 'js-cookie'
 import createPersistedState from 'vuex-persistedstate';
 
 Vue.use(Vuex);
@@ -29,6 +29,7 @@ export const store = new Vuex.Store({
             nickname:'',
         },
         errorcode:'',
+        accessData:'',
         accessToken:'',
         modal:false,
         
@@ -113,7 +114,7 @@ export const store = new Vuex.Store({
                         store.dispatch(constants.METHODS.GET_USER, data.email);
                         console.log("In store, state is : ", store.state);
                         
-                        cookies.set('AcesssData', _store.getters.userData.email);
+                        cookies.set('AccessData', _store.getters.userData.email);
                         return true;
                     }
                 })
@@ -273,6 +274,7 @@ export const store = new Vuex.Store({
             // state.password = payload.password;
             // console.log("In Store, payload is : ", payload);
             state.userData.email = payload[0].email  ;
+            state.accessData = state.userData.email;
             state.accessToken = payload[1];
             state.modal = !state.modal;
         },
@@ -336,6 +338,11 @@ export const store = new Vuex.Store({
             state.finding.status="";
         
         },
+        setDataAgain : (state, payload) => {
+            state.userData.email = payload.AccessData;
+            state.accessData = payload.AccessData;
+            state.accessToken = payload.AccessToken;
+        }
     },
     getters:{
         userData: function(state){
