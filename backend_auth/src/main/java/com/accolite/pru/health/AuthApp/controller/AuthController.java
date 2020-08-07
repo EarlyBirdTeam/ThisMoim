@@ -119,7 +119,8 @@ public class AuthController {
 
         return authService.registerUser(registrationRequest)
                 .map(user -> {
-                    UriComponentsBuilder urlBuilder = ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/auth/registrationConfirmation");
+                    UriComponentsBuilder urlBuilder = ServletUriComponentsBuilder.newInstance().scheme("http").host("i3a510.p.ssafy.io").port(9004).path("/api/auth/registrationConfirmation");
+//                    UriComponentsBuilder urlBuilder = ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/auth/registrationConfirmation");
                     OnUserRegistrationCompleteEvent onUserRegistrationCompleteEvent = new OnUserRegistrationCompleteEvent(user, urlBuilder);
                     applicationEventPublisher.publishEvent(onUserRegistrationCompleteEvent);
                     logger.info("Registered User returned [API[: " + user);
@@ -136,7 +137,8 @@ public class AuthController {
 
         return authService.generatePasswordResetToken(passwordResetLinkRequest)
                 .map(passwordResetToken -> {
-                    UriComponentsBuilder urlBuilder = ServletUriComponentsBuilder.fromCurrentContextPath().path("/password/reset");
+                    UriComponentsBuilder urlBuilder = ServletUriComponentsBuilder.newInstance().scheme("http").host("i3a510.p.ssafy.io").port(9004).path("/password/reset");
+//                    UriComponentsBuilder urlBuilder = ServletUriComponentsBuilder.fromCurrentContextPath().path("/password/reset");
                     OnGenerateResetLinkEvent generateResetLinkMailEvent = new OnGenerateResetLinkEvent(passwordResetToken,
                             urlBuilder);
                     applicationEventPublisher.publishEvent(generateResetLinkMailEvent);
