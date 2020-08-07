@@ -2,7 +2,7 @@
   <div>
     <div style="border:solid 1px;">
       <h3>욕설 금지^^</h3>
-      <p>{{name}}</p>
+<!--      <p>{{name}}</p> -->
       <div>
         <p>현재 참석자는 {{chatComes}}</p>
         <div v-for="(chatMsg, idx) in chatMsgs" :key="idx">

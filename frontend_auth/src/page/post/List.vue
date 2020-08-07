@@ -2,7 +2,8 @@
     <div class="post">
         <div class="wrapB">
             <h2>전체글</h2>
-
+		<p>현재 페이지는 로그인 보안 인증서버를 테스트하는 페이지입니다.</p>
+<!--
             <section class="post-list">
                 <div>
                     <div class="post-card">
@@ -164,7 +165,7 @@
             </section>
 
             <div class="tag-list-wrap">
-                <!-- <h4>인기태그</h4>
+                <h4>인기태그</h4>
                 <ul class="tag-list">
                     <li>
                         #태그1 (8)
@@ -175,7 +176,7 @@
                     <li>
                         #태그3 (2)
                     </li> 
-                </ul> -->
+                </ul>
                 <h4>Test Link</h4>
                 <ul class="tag-list">
                     <li>
@@ -191,6 +192,8 @@
 
                 </ul>   
             </div>
+
+-->
         </div>
         
 

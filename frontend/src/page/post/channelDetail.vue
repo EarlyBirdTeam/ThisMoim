@@ -26,7 +26,7 @@
       </v-btn> -->
     </v-toolbar>
 
-    <div class="bodyBox" ref="whiteBoard" @dblclick="focusAction" @click="changeTargetAction">
+    <div class="bodyBox" ref="whiteBoard" @dblclick="focusAction" @click="changeTargetAction" @change="sendMessage()">
       
       <Moveable
         ref="moveable"
@@ -57,10 +57,9 @@
         <Map v-if="map.isPresent"/>
       </div>
 
-      <v-dialog v-model="dialog" width="600px">
+      <v-dialog width="600px">
       <template v-slot:activator="{ on, attrs }">
         <v-btn
-          v-btn
           color="rgb(255,157,91)"
           style="right:10px; bottom:30px; position:fixed; display:flex"
           dark
@@ -151,8 +150,8 @@ export default {
   },
   methods: {
     init() {
-      // var BASE_URL =  "http://i3a510.p.ssafy.io/api"
-      var BASE_URL = "http://localhost:8080";
+      var BASE_URL =  "http://i3a510.p.ssafy.io/api"
+      //var BASE_URL = "http://localhost:8080";
       var sock = new SockJS(BASE_URL + "/ws-stomp");
       var ws = Stomp.over(sock);
       this.ws = ws;

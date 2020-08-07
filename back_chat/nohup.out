@@ -894,3 +894,211 @@ npm ERR! This is probably not a problem with npm. There is likely additional log
 
 npm ERR! A complete log of this run can be found in:
 npm ERR!     /home/ubuntu/.npm/_logs/2020-08-05T01_48_26_012Z-debug.log
+
+> backend_Chat@1.0.0 start /home/ubuntu/project/s03p13a510/back_chat
+> node app.js
+
+Socket IO server listening on port 3030
+undefined님이 연결을 끓으셨습니다.
+undefined님이 연결을 끓으셨습니다.
+undefined님이 연결을 끓으셨습니다.
+undefined님이 연결을 끓으셨습니다.
+undefined님이 연결을 끓으셨습니다.
+undefined님이 연결을 끓으셨습니다.
+undefined님이 연결을 끓으셨습니다.
+undefined님이 연결을 끓으셨습니다.
+undefined님이 연결을 끓으셨습니다.
+undefined님이 연결을 끓으셨습니다.
+undefined님이 연결을 끓으셨습니다.
+undefined님이 연결을 끓으셨습니다.
+undefined님이 연결을 끓으셨습니다.
+undefined님이 연결을 끓으셨습니다.
+undefined님이 연결을 끓으셨습니다.
+undefined님이 연결을 끓으셨습니다.
+undefined님이 연결을 끓으셨습니다.
+undefined님이 연결을 끓으셨습니다.
+undefined님이 연결을 끓으셨습니다.
+undefined님이 연결을 끓으셨습니다.
+undefined님이 연결을 끓으셨습니다.
+Client logged-in:
+ name: xlu
+ userid: xlu
+0)xlu 
+(xlu)room : xlu
+socket.id: 7Pocq56vvSSl8WSdAAAZ
+Client logged-in:
+ name: sue
+ userid: sue
+0)xlu 
+1)sue 
+(sue)room : sue
+socket.id: pWN5hQEFC2iQHXiSAAAY
+Message from sue, 내용 : 안녕?
+undefined님이 연결을 끓으셨습니다.
+undefined님이 연결을 끓으셨습니다.
+Client logged-in:
+ name: pcj
+ userid: pcj
+0)xlu 
+1)sue 
+2)pcj 
+(pcj)room : pcj
+socket.id: H6C4Xpe6CR57jfviAAAc
+Message from pcj, 내용 : asdf
+Client logged-in:
+ name: dzj
+ userid: dzj
+0)xlu 
+1)sue 
+2)pcj 
+3)dzj 
+(dzj)room : dzj
+socket.id: 7Pocq56vvSSl8WSdAAAZ
+dzj님이 연결을 끓으셨습니다.
+client_list[i] : xlu
+client_list[i] : dzj
+pcj님이 연결을 끓으셨습니다.
+client_list[i] : pcj
+undefined님이 연결을 끓으셨습니다.
+undefined님이 연결을 끓으셨습니다.
+undefined님이 연결을 끓으셨습니다.
+Client logged-in:
+ name: fwq
+ userid: fwq
+0)xlu 
+1)sue 
+2)pcj 
+3)dzj 
+4)fwq 
+(fwq)room : fwq
+socket.id: u8CjjtdarMiJlHaMAAAf
+Message from sue, 내용 : ㅁㄴㄹ
+undefined님이 연결을 끓으셨습니다.
+undefined님이 연결을 끓으셨습니다.
+Client logged-in:
+ name: gjo
+ userid: gjo
+0)xlu 
+1)sue 
+2)pcj 
+3)dzj 
+4)fwq 
+5)gjo 
+(gjo)room : gjo
+socket.id: rd5zOvjjd-YJSB01AAAd
+sue님이 연결을 끓으셨습니다.
+client_list[i] : sue
+undefined님이 연결을 끓으셨습니다.
+Message from gjo, 내용 : chatchat
+Client logged-in:
+ name: juc
+ userid: juc
+0)xlu 
+1)sue 
+2)pcj 
+3)dzj 
+4)fwq 
+5)gjo 
+6)juc 
+(juc)room : juc
+socket.id: DCoYajy7b2eYwVtzAAAm
+Message from juc, 내용 : ㅁㄴㅇㄹ
+Message from juc, 내용 : 들리세여?
+Message from juc, 내용 : 누구 없어요?
+Message from juc, 내용 : 애니바디데어!
+Message from gjo, 내용 : 안녕하세요
+Message from juc, 내용 : 헤이!
+Message from juc, 내용 : 헬로!
+Message from gjo, 내용 : 헬로헬로
+Message from juc, 내용 : 어 사람있었네
+Message from juc, 내용 : 어찌 쪽팔려
+Message from gjo, 내용 : 괜찮아요 익명이니까 : >
+undefined님이 연결을 끓으셨습니다.
+Message from juc, 내용 : ㅎㅎ 그렇네여
+undefined님이 연결을 끓으셨습니다.
+undefined님이 연결을 끓으셨습니다.
+Message from juc, 내용 : 전 배민규라고 해여
+undefined님이 연결을 끓으셨습니다.
+undefined님이 연결을 끓으셨습니다.
+Message from gjo, 내용 : 민규씨 아닌거 알아요
+undefined님이 연결을 끓으셨습니다.
+undefined님이 연결을 끓으셨습니다.
+Message from juc, 내용 : 밍큐라고 불러주세요
+undefined님이 연결을 끓으셨습니다.
+undefined님이 연결을 끓으셨습니다.
+undefined님이 연결을 끓으셨습니다.
+undefined님이 연결을 끓으셨습니다.
+Message from gjo, 내용 : :minkyu:
+undefined님이 연결을 끓으셨습니다.
+Message from gjo, 내용 : 매터모스트에 :minkyu 를 입력해주세요!
+undefined님이 연결을 끓으셨습니다.
+Message from juc, 내용 : 헐
+Message from juc, 내용 : 놀라워라
+Message from juc, 내용 : 있네
+undefined님이 연결을 끓으셨습니다.
+undefined님이 연결을 끓으셨습니다.
+undefined님이 연결을 끓으셨습니다.
+Message from gjo, 내용 : 이것이 싸피인싸
+undefined님이 연결을 끓으셨습니다.
+undefined님이 연결을 끓으셨습니다.
+undefined님이 연결을 끓으셨습니다.
+fwq님이 연결을 끓으셨습니다.
+client_list[i] : fwq
+gjo님이 연결을 끓으셨습니다.
+client_list[i] : gjo
+undefined님이 연결을 끓으셨습니다.
+undefined님이 연결을 끓으셨습니다.
+undefined님이 연결을 끓으셨습니다.
+juc님이 연결을 끓으셨습니다.
+client_list[i] : juc
+Client logged-in:
+ name: zze
+ userid: zze
+0)xlu 
+1)sue 
+2)pcj 
+3)dzj 
+4)fwq 
+5)gjo 
+6)juc 
+7)zze 
+(zze)room : zze
+socket.id: kN7JXw3slBwsfzzpAAA-
+undefined님이 연결을 끓으셨습니다.
+Client logged-in:
+ name: exp
+ userid: exp
+0)xlu 
+1)sue 
+2)pcj 
+3)dzj 
+4)fwq 
+5)gjo 
+6)juc 
+7)zze 
+8)exp 
+(exp)room : exp
+socket.id: odfOoJK0t2x5dSJVAAA_
+exp님이 연결을 끓으셨습니다.
+client_list[i] : exp
+undefined님이 연결을 끓으셨습니다.
+undefined님이 연결을 끓으셨습니다.
+undefined님이 연결을 끓으셨습니다.
+Client logged-in:
+ name: dwd
+ userid: dwd
+0)xlu 
+1)sue 
+2)pcj 
+3)dzj 
+4)fwq 
+5)gjo 
+6)juc 
+7)zze 
+8)exp 
+9)dwd 
+(dwd)room : dwd
+socket.id: SyIIfFUOJ4sLYKtnAABD
+Message from dwd, 내용 : 사람있오요?
+undefined님이 연결을 끓으셨습니다.
+undefined님이 연결을 끓으셨습니다.
