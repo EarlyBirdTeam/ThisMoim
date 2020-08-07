@@ -165,9 +165,9 @@ public class AuthController {
     @ApiOperation(value = "Confirms the email verification token that has been generated for the user during registration")
     public String confirmRegistration(@ApiParam(value = "the token that was sent to the user email") @RequestParam("token") String token) {
         if(authService.confirmEmailRegistration(token)!=null){
-            return "redirect:http://localhost:3001/#/api/auth/registrationConfirmation";
+            return "redirect:http://i3a510.p.ssafy.io:3001/#/api/auth/registrationConfirmation";
         }else{
-            return "redirect:http://localhost:3001/#/error";
+            return "redirect:http://i3a510.p.ssafy.io:3001/#/error";
         }
     }
 
