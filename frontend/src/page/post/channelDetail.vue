@@ -57,7 +57,6 @@
         <Map v-if="map.isPresent"/>
       </div>
 
-      {{ board }}
       <v-dialog v-model="dialog" width="600px">
       <template v-slot:activator="{ on, attrs }">
         <v-btn
@@ -187,10 +186,8 @@ export default {
         .then((response) => {
           this.board.postitList = response.data.postitList;
           this.board.idCount = response.data.idCount;
-          console.log(response.data);
         })
         .catch((e) => {
-          console.log(e);
         });
       this.createSnackbar(
         `'${this.channelName}' 채널에 입장하였습니다!`,
@@ -261,7 +258,6 @@ export default {
       this.sendMessage();
     },
     handleResize({ target, width, height, delta }) {
-      console.log("onResize", width, height, delta);
       delta[0] && (target.style.width = `${width}px`);
       delta[1] && (target.style.height = `${height}px`);
     },
@@ -292,10 +288,7 @@ export default {
       }
     },
     deleteTargetAction(idx, { target }) {
-      // console.log("delete TARGET!!!!!!");
-      // console.log(idx, target);
       if (confirm("요소를 삭제하시겠습니까?") === true) {
-        console.log("삭제발생!@@@@")
         target.remove();
         this.board.isDelete = true;
         this.board.delete.moduleName = 'postit';
