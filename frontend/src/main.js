@@ -8,7 +8,7 @@ import constant from './lib/constants'
 import vuetify from './plugins/vuetify';
 import io from 'socket.io-client'; 
 
-const socket = io('http://localhost:3000');
+const socket = io('http://localhost:3030');
 
 
 Vue.prototype.$socket = socket;
