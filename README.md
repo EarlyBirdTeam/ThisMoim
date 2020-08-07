@@ -1,5 +1,5 @@
 # SubPJT3 1주차 위키페이지
-[얼리버드팀의 위키페이지](https://www.notion.so/1-1831d923157246a68ace9204c5d67a55)
+[얼리버드팀의 위키페이지](https://www.notion.so/SubPJT3-1-0616a5b8622e45f2918d983e4f402d77)
 
 # 아마존 배포주소
 [인증서버](http://i3a510.p.ssafy.io:3001)
