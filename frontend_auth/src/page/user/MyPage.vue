@@ -8,12 +8,12 @@
                     <div class="Info">
                         <div class="info-wrap">
                             <label for="email">이메일 : </label>
-                            <input id="email" type="text" v-model="userData.email" readonly="readonly">
+                            <input id="email" type="text" v-model="this.$store.getters.userData.email" readonly="readonly">
                         </div>
 
                         <div class="info-wrap">
                             <label for="nickName">닉네임 : </label>
-                            <input v-model="userData.nickname"
+                            <input v-model="this.$store.getters.userData.nickname"
                                 id="nickName"
                                 placeholder="닉네임을 입력해주세요" type="text" readonly="readonly"
                                 />
@@ -32,7 +32,7 @@
 
                         <div class="info-wrap">
                             <label for="realName">이름 : </label>
-                            <input v-model="userData.name" readonly="readonly"
+                            <input v-model="this.$store.getters.userData.name" readonly="readonly"
                                 id="realName"
                                 placeholder="이름을 입력해주세요" type="text"/>
                         </div>
@@ -62,51 +62,9 @@
         components: {
         },
         created(){
-            const sUserData = this.$store.getters.userData;
-
-            this.userData.email = sUserData.email;
-            this.userData.name = sUserData.name;
-            this.userData.nickname = sUserData.nickname;
         },
         methods: {
-            check(){
-                var passwordExp = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d$@$!%*#?&]{8,}$/;
-                if(password.value =='')
-                {
-                    alert("비밀번호를 입력해주세요");
-                    return false;
-                }
-                else if (passwordExp.test(password.value) == false){
-                    alert("비밀번호 형식이 잘못되었습니다.");
-                    return false;
-                }
-
-                return true;
-            },
-
-
-            deleteUser(){
-                if(this.check()){
-                    const userInfo = {
-                        email: this.email,
-                        realName: this.realName,
-                        password: this.password,
-                        nickName: this.nickname,
-                    };
-                     this.$store.dispatch(constants.METHODS.DELETE_USER, userInfo);
-                }
-            },
-            updateUser(){
-                if(this.check()){
-                    const userInfo = {
-                        email: this.email,
-                        realName: this.realName,
-                        password: this.password,
-                        nickName: this.nickName,
-                    };
-                    this.$store.dispatch(constants.METHODS.UPDATE_USER, userInfo);
-                }
-            },
+            
         },
         computed:{
             
@@ -115,12 +73,6 @@
         },
         data: () => {
             return {
-                userData:{
-                    email:'',
-                    name:'',
-                    password:'',
-                    nickname:'',
-                },
                 passwordConfirm: '',
                 isTerm: false,
                 passwordType:"password",

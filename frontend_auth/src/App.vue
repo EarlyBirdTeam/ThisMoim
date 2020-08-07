@@ -43,7 +43,11 @@ export default {
 
       console.log("In App, logInfo is : ", logInfo);
 
-      this.$store.commit("setDataAgain", logInfo);
+      if(logInfo.AccessData != '' && logInfo.AccessData != ''){
+        this.$store.commit("setDataAgain", logInfo);
+        this.$store.dispatch(constants.METHODS.GET_USER, logInfo.AccessData);
+      }
+
 
   },
   watch: {
