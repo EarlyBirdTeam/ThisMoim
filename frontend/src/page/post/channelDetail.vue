@@ -72,13 +72,9 @@
           <v-icon>mdi-message-bulleted</v-icon>
         </v-btn>
       </template>
+
       <v-card>
-        <!-- <v-card-title>
-          <span class="headline">채팅</span>
-        </v-card-title>-->
-        <v-card-text style="padding:16px">
           <Chat/>
-        </v-card-text>
       </v-card>
     </v-dialog>
     </div>

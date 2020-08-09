@@ -60,12 +60,12 @@ io.on('connection', function(socket) {
           email : data.userid
         };
 
-        client_list.push(obj);
-        for(var i in client_list){
-          console.log(i+')'+client_list[i].nickname+" ");
-        }
+        //client_list.push(obj);
+        // for(var i in client_list){
+        //   console.log(i+')'+client_list[i].nickname+" ");
+        // }
 
-        socket.emit('sendList', client_list);
+        // socket.emit('sendList', client_list);
 
 
         // 현재 접속된 유저를 전달, JSON형식으로 보냄 -> userList를 갖고오기 위함
@@ -86,9 +86,8 @@ io.on('connection', function(socket) {
         console.log('('+socket.name+')'+ 'room : '+room);
         socket.join(room);
         console.log('socket.id: '+socket.id);
-        // 접속된 모든 클라이언트에게 메시지를 전송한다
-        // 'data.userid' has joined 가 index.html 에 출력. emit과 on방식 알기
-        io.emit('login', data);
+      
+        socket.broadcast.emit('enter', data.name);
     });
 
     // 클라이언트로부터의 메시지가 수신되면
@@ -100,7 +99,7 @@ io.on('connection', function(socket) {
                 name: '',
             },
             from: {
-                name: socket.name,
+                name: socket.name, // 내 소켓 네임
                 userid: socket.userid
             },
             msg: data.msg,
@@ -108,13 +107,13 @@ io.on('connection', function(socket) {
         };
 
         // 메시지를 전송한 클라이언트를 제외한 모든 클라이언트에게 메시지를 전송한다
-        // socket.broadcast.emit('chat', msg);
+        socket.broadcast.emit('s2c chat', msg);
 
         // 메시지를 전송한 클라이언트에게만 메시지를 전송한다
-        // socket.emit('s2c chat', msg);
+        socket.emit('s2c chat me', msg);
 
         // 접속된 모든 클라이언트에게 메시지를 전송한다
-        io.emit('s2c chat', msg);
+        // io.emit('s2c chat', msg);
 
         // 특정 클라이언트에게만 메시지를 전송한다
         // io.to(id).emit('s2c chat', data);

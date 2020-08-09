@@ -1,80 +1,42 @@
 <template>
-  <div>
-    <div style="border:solid 1px;">
-      <h3>욕설 금지^^</h3>
-      <p>{{name}}</p>
-      <div>
-        <p>현재 참석자는 {{chatComes}}</p>
-        <div v-for="(chatMsg, idx) in chatMsgs" :key="idx">
-          <!-- {{chatMsg.substring(0,1)}} -->
+  <div class="chat-container">
+    <div class="chat-header">
+      <button id="close" class="header-btn"></button>
+      <button id="minimize" class="header-btn"></button>
+      <button id="maximize" class="header-btn"></button>
 
-          <div style="margin:2px" v-if="naname!=chatMsg.name">{{chatMsg.name}}</div>
-          <div style="margin:2px" v-if="naname==chatMsg.name">
-            <br />
-          </div>
-          <div class="d-flex">
-            <div
-            class="ml-auto"
-              v-if="naname==chatMsg.name"
-              style="background-color:rgb(255, 235, 221); border-radius: 5%;  margin-right:4px; min-width:40vw"
-            >{{chatMsg.msg}}</div>
-            <div
+      <!-- <img id="profile-pic" v-bind:src="picture.jpg" > -->
+      <!-- <img id="profile-pic" v-bind:src="picutre.jpg" width="50" height="50"> -->
+      <img id="profile-pic" src='../../assets/img/picture.jpg' width="1">
+      <span id="username">나</span>
+    </div>
 
-            class=" mr-auto"
-              v-if="naname!=chatMsg.name"
-              style="background-color:rgb(255, 235, 221); border-radius: 5%; margin-left:4px; min-width:40vw"
-            >{{chatMsg.msg}}</div>
-          </div>
-          <!-- <br>
-          {{chatMsg.substring(chatMsg.substring(0,1)+1,chatMsg.substring(0,1)+4)}}-->
-          <!-- <p v-for="chatMsg in chatMsgs" style="border:solid 1px; background-color:rgb(255, 235, 221); border-radius: 2%; margin:10px">
-          {{chatMsg}}
-            
-          </p>-->
-        </div>
+    <div class="chatbox">
+      <div class="friend-bubble bubble">
+        매너 채팅 해주세요 :)
       </div>
     </div>
-    <form style="margin-top:5px  left:0; bottom:0;" class="form-inline">
-      <div class="form-group" style="margin-top:3px; ">
-        <label for="msgForm"></label>
 
-        <input
-          type="text"
-          style="border:solid 1px;"
-          placeholder="귓말 대상"
-          class="form-control d-flex-6"
-          id="other"
-        />
-        <!-- <v-overflow-btn
-        style="margin:0 "
-        background-color="rgb(230,230,230)"          
-        :chatmem="chatmem"
-        label="전체에게"
-         class="form-control btn d-flex-1" id="other"
-         dense
-        >
-        </v-overflow-btn>-->
-        <input
-          type="text"
-          style="border:solid 1px;"
-          placeholder="메시지를 입력해주세요 :)"
-          class="form-control d-flex-3"
-          id="msgForm"
-        />
-        <button style="border:solid 1px;" @click="sendMessage()">작성</button>
-      </div>
+    <form>
+    <div class="text-box">
+      <textarea id="msgForm" placeholder="메시지를 입력해주세요 :)" @keyup="enter" ></textarea>
+      <button id="send" @click=send>전송</button>
+      <div class="clearfix"></div>
+    </div>
     </form>
   </div>
 </template>
 
+
+
 <script>
+// import ZZ from '../img/picture.jpg';
+
 export default {
   name: "Chat",
   created() {
-    // this.$socket.on('chat', (data)=> {
-    //     this.textarea += data.message + "\n"
-    //     })
 
+    var $msgForm = $('textarea').val();
     var myname = this.makeRandomName();
     this.naname = myname;
 
@@ -87,28 +49,49 @@ export default {
     });
 
     this.$socket.on("login", (data) => {
-      this.chatLogs.push(data.name + "님이 입장하셨습니다");
-      this.chatComes.push(data.name);
+      // this.chatLogs.push(data.name + "님이 접속하셨습니다");
+      // this.chatComes.push(data.name);
+      console.log("입장!");
+      $('.chatbox').append('<div class="friend-bubble bubble">'+data+'님이 입장하셨습니다.</div>');
+    
+    });
+
+     this.$socket.on("enter", (data) => {
+      // this.chatLogs.push(data.name + "님이 접속하셨습니다");
+      // this.chatComes.push(data.name);
+      $('.chatbox').append('<div class="friend-bubble bubble">##'+data+'님이 입장하셨습니다.##</div>');
+    
     });
 
     this.$socket.on("s2c chat", (data) => {
       var name = data.from.name;
       var msg = data.msg;
-      var chatMsg = {
-        name: data.from.name,
-        msg: data.msg,
-      };
-      this.chatMsgs.push(chatMsg);
+      // var chatMsg = {
+      //   name: data.from.name,
+      //   msg: data.msg,
+      // };
+      //this.chatMsgs.push(chatMsg);
+      $('.chatbox').append('<div class="friend-bubble bubble">('+name+'님) '+msg+'</div>');
+    });
+    this.$socket.on("s2c chat me", (data) => {
+      var name = data.from.name;
+      var msg = data.msg;
+     
+      $('.chatbox').append('<div class="my-bubble bubble">'+msg+'</div>');
     });
 
     this.$socket.on("out", (data) => {
-      this.chatLogs.push(data.from.name + "님이 나가셨습니다.");
-      this.chatComes.pop(data.from.name);
+      $('.chatbox').append('<div class="friend-bubble bubble">##'+data.from.name+'님이 나가셨습니다.##</div>');
+    
     });
+
     this.$socket.on(() => {});
+
   },
+
   data() {
     return {
+      
       textarea: "",
       message: "",
       chatmem: [],
@@ -117,9 +100,39 @@ export default {
       chatNames: [],
       chatMsgs: [],
       naname: "",
+      
     };
   },
   methods: {
+
+    send() {
+      event.preventDefault(); // 줄바꿈 방지?
+        var $msgForm = $('textarea').val();
+        console.log("msgForm : msgForm");
+
+        // if(msgForm){
+        // $('.chatbox').append('<div class="my-bubble bubble">'+$msgForm+'</div>');
+        // $('textarea').val('');
+        // }
+
+        this.$socket.emit("chat", {msg: $msgForm});
+        $('textarea').val("");
+    },
+
+     enter() { // 엔터 처리
+       var code = event.keyCode;
+        if(code==13){
+
+          if(event.shiftKey === true){ // Shift + Enter 처리
+            //console.log("Shift도 눌러짐");
+          
+          }
+          else this.send();
+        }
+
+        //console.log(code);
+    },
+
     sendMessage() {
       event.preventDefault();
       var $msgForm = $("#msgForm");
@@ -156,4 +169,135 @@ export default {
 </script>
 
 <style>
+* {
+    box-sizing: border-box;
+  }
+  
+  body {
+    /* background-image: url('../images/background.jpg'); */
+    font-family: 'Noto Sans KR', sans-serif;
+  }
+  
+  .chat-container {
+    
+    width: 600px;
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,0.50);
+    transition: width 0.3s ease;
+  }
+  
+  .chat-header {
+    background-color: white;
+    position: relative;
+    padding: 30px 8px 8px 8px;
+  }
+  
+  .chat-header .header-btn {
+    border-radius: 50%;
+    border: none;
+    width: 12px;
+    height: 12px;
+    cursor: pointer;
+    position: absolute;
+    top: 8px;
+    padding: 0;
+  }
+  
+  .chat-header #close {
+    background-color: #ff6059;
+    left: 8px;
+  }
+  
+  .chat-header #minimize {
+    background-color: #ffbf2f;
+    left: 26px;
+  }
+  
+  .chat-header #maximize {
+    background-color: #29cd42;
+    left: 44px;
+  }
+  
+  .chat-header #profile-pic {
+    vertical-align: middle;
+    border-radius: 50%;
+    width: 5%;
+    height: 5%;
+  }
+  
+  .chat-header #username {
+    vertical-align: middle;
+    font-size: 14px;
+    font-weight: 500;
+    margin-left: 5px;
+    color: #343434;
+  }
+  
+  /* chat box */
+  
+  .chatbox {
+    height: 400px;
+    background-color: #d7e4f2;
+    padding: 10px;
+    overflow-y: scroll;
+    position: relative;
+  }
+  
+  .bubble {
+    margin: 5px 0;
+    display: inline-block;
+    max-width: 300px;
+    font-size: 14px;
+    position: relative;
+  }
+  
+  .friend-bubble {
+    background-color: white;
+    border-radius: 14px 14px 14px 0;
+    padding: 7px 15px 7px 15px;
+    float: left;
+    clear: both;
+  }
+  
+  .my-bubble {
+    background-color: #fff46d;
+    border-radius: 14px 14px 0px 14px;
+    padding: 7px 15px 7px 15px;
+    float: right;
+    clear: both;
+  }
+  
+  /* text box */
+  
+  .text-box {
+    background-color: #fafafa;
+    padding: 10px;
+  }
+  
+  .text-box textarea {
+    height: 60px;
+    float: left;
+    width: calc(100% - 70px);
+    border-radius: 3px;
+    background-color: #ffffff;
+    border: solid 0.5px #d7d7d7;
+    resize: none;
+    padding: 10px;
+    font-size: 14px;
+  }
+  
+  #send {
+    background-color: #4a90e2;
+    width: 60px;
+    height: 60px;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    margin-left: 10px;
+    float: left;
+  }
+  
+  .clearfix {
+    clear: both;
+  }
 </style>
