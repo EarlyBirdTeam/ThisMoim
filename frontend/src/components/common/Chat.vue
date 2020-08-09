@@ -286,7 +286,7 @@ export default {
   }
   
   #send {
-    background-color: #4a90e2;
+    background-color: orange;
     width: 60px;
     height: 60px;
     color: white;
