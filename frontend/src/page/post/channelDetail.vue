@@ -22,9 +22,9 @@
       <v-btn icon color="orange" @click="createPostit">
         <v-icon>mdi-message</v-icon>
       </v-btn>
-      <!-- <v-btn icon color="orange" @click="createMap">
+      <v-btn icon color="orange" @click="createMap">
         <v-icon>mdi-map</v-icon>
-      </v-btn> -->
+      </v-btn>
       <v-btn icon color="orange" @click="createCalendar">
         <v-icon>mdi-calendar</v-icon>
       </v-btn>
@@ -62,7 +62,7 @@
       </div>
 
       <div class="calendar" @click.right="deleteAction">
-        <Calendar v-if="board.isCalendar"/>
+        <Calendar v-if="isCalendar"/>
       </div>
 
       <v-dialog width="600px">
@@ -73,6 +73,9 @@
           dark
           fab
           large
+          v-bind="attrs"
+          v-on="on"
+
         >
           <v-icon>mdi-message-bulleted</v-icon>
         </v-btn>
@@ -112,7 +115,6 @@ export default {
         channelId: "",
         idCount: 1,
         postitList: [],
-        isCalendar: false,
         calendar: {},
         isDelete: false,
         delete: {
@@ -120,6 +122,7 @@ export default {
           id: -1,
         },
       },
+      isCalendar: false, 
       token: "",
       userCount: 0,
       moveable: {
@@ -135,6 +138,7 @@ export default {
         throttleRotate: 0,
         origin: false,
       },
+      
       map: {
         isPresent: false,
         left: "",
@@ -217,18 +221,20 @@ export default {
       this.board.idCount = recv.idCount;
       this.board.postitList = recv.postitList;
       this.board.isDelete = false;
-      this.board.isCalendar = recv.isCalendar;
-      this.board.calendar = recv.calendar; 
+      if(recv.calendar !== {}){
+        this.board.calendar = recv.calendar;
+        this.isCalendar = true;
+      }
     },
     createPostit(event) {
       if(this.board.postitList.length > 20) {
         this.createSnackbar("포스트잇이 너무 많습니다!", 3000, "error")
         return
       }
-      event.stopPropagation();
+      // event.stopPropagation();
       const idc = this.board.idCount++;
       // postitList에 새로운 포스트잇 더하기
-      this.board.postitList.unshift({
+      this.board.postitList.push({
         frontPostitId: idc,
         left: "500px",
         top: "170px",
@@ -248,9 +254,16 @@ export default {
       }
     },    
     createCalendar(event) {
-      this.board.calendar = this.$store.state.calendar;
-      this.board.isCalendar = true;
-      this.sendMessage();
+      this.board.calendar = {
+        // frontCalendarId: 0,
+        left: '500px',
+        top: '170px',
+        events: this.$store.state.calendar.events,
+      }
+      console.log("create Calendar");
+      console.log(this.board.calendar);
+      this.isCalendar = true;
+      // this.sendMessage();
     },
     createSnackbar(text, timeout, color) {
       this.snackbar.isPresent = true;
