@@ -70,7 +70,7 @@ export default {
     /* border: solid gray 1px; */
     background-color: white;
     border-radius: 2%;
-    height: 90%;
+    height: 88%;
     margin: 25px;
     padding: 10px;
     margin-left: 50px;
