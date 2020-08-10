@@ -1,5 +1,6 @@
-package com.websocket.board.model;
+package com.websocket.board.model.kanban;
 
+import com.websocket.board.model.kanban.Task;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,7 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 @Builder
-public class Kanban implements Serializable {
-    private String kanbanName;
-    private List<Column> columns;
+public class Column implements Serializable {
+    private String columnTitle;
+    private List<Task> tasks;
 }
