@@ -39,6 +39,7 @@ public class SocketBoardMessage implements Serializable {
     private long idCount;
     private List<Postit> postitList; // 포스트잇 리스트
     private Boolean isDelete;
+    private Kanban kanban;
     private DeletedModule delete;
     // List<Calendar> calendarList; // 캘린더 리스트
     // List<Canvas> canvas; // 캔버스 리스트

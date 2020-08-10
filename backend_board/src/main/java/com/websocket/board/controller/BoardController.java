@@ -1,15 +1,12 @@
 package com.websocket.board.controller;
 
-import com.websocket.board.config.JwtTokenProvider;
 import com.websocket.board.dto.Channel;
 import com.websocket.board.model.SocketBoardMessage;
 import com.websocket.board.repo.ChannelRedisRepository;
 import com.websocket.board.service.BoardService;
 import com.websocket.board.service.DBSyncService;
-import com.websocket.board.service.InitService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.stereotype.Controller;

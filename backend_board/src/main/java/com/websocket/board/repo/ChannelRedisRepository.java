@@ -1,7 +1,7 @@
 package com.websocket.board.repo;
 
-import com.websocket.board.dto.Channel;
 import lombok.RequiredArgsConstructor;
+import com.websocket.board.dto.Channel;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
