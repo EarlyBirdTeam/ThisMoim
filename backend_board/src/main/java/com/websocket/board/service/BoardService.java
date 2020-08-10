@@ -32,6 +32,7 @@ public class BoardService {
      */
     public void syncSocketBoardStatus(SocketBoardMessage boardMessage) {
         boardMessage.setUserCount(channelRedisRepository.getUserCount(boardMessage.getChannelId()));
+
 //        if (ChatMessage.MessageType.ENTER.equals(chatMessage.getType())) {
 //            chatMessage.setMessage(chatMessage.getSender() + "님이 방에 입장했습니다.");
 //            chatMessage.setSender("[알림]");

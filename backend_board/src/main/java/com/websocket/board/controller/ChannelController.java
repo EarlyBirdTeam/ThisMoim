@@ -54,4 +54,3 @@ public class ChannelController {
         return LoginInfo.builder().name(name).token(jwtTokenProvider.generateToken(name)).build();
     }
 }
-

@@ -1,6 +1,5 @@
 package com.websocket.board.controller;
 
-import com.websocket.board.dto.Channel;
 import com.websocket.board.model.SocketBoardMessage;
 import com.websocket.board.repo.ChannelRedisRepository;
 import com.websocket.board.service.BoardService;
@@ -23,26 +22,30 @@ public class BoardController {
 
     /**
      * websocket "/pub/board/message"로 들어오는 메시징을 처리한다.
-     * 클라이언트로 부터 받은 보드 상태 전
+     * 클라이언트로 부터 받은 보드 상태 전달
      */
     @MessageMapping("/board/message")
     public void message(SocketBoardMessage message, @Header("token") String token) {
         //String nickname = jwtTokenProvider.getUserNameFromJwt(token);
         // 로그인 회원 정보로 대화명 설정
         //message.setSender(nickname);
+
+        // Redis 세팅
         // 채널 인원수 세팅
         message.setUserCount(channelRedisRepository.getUserCount(message.getChannelId()));
-
+        // 보드 정보 업데이트
+        channelRedisRepository.updateBoard(message);
+        channelRedisRepository.findBoardByChannelId(message.getChannelId());
         // 채널 포스트잇 카운트 세팅
         // 채널 포스트잇 카운트가 레디스에 저장된 idCount 와 다르면?
         // DB 에 업데이트 & 레디스도 업데이트(채널 관련 레디스 업데이트는 여기밖에 없음)
-        if(message.getIdCount() != channelRedisRepository.findChannelById(message.getChannelId()).getIdCount()) {
-            dbSyncService.channelDBIdCountSync(message.getChannelId(), message.getIdCount());
-
-            Channel channel = channelRedisRepository.findChannelById(message.getChannelId());
-            channel.setIdCount(message.getIdCount());
-            channelRedisRepository.updateChannel(channel);
-        }
+//        if(message.getIdCount() != channelRedisRepository.findChannelById(message.getChannelId()).getIdCount()) {
+//            dbSyncService.channelDBIdCountSync(message.getChannelId(), message.getIdCount());
+//
+//            Channel channel = channelRedisRepository.findChannelById(message.getChannelId());
+//            channel.setIdCount(message.getIdCount());
+//            channelRedisRepository.updateChannel(channel);
+//        }
 
         // Websocket에 발행된 메시지(클라이언트로 부터 받은 메시지)를 redis를 '통해서' 발행(publish)
         // 우리가 여기서 쓰는 레디스는 sub/pub 용도로 쓰는것이며
@@ -51,10 +54,10 @@ public class BoardController {
         // 받아온 상태를 그대로 전달하는 것이므로 레디스는 문제가 없으나 포스트잇 등 상태정보를 저장하기 위해서는 DB 로 트랜잭션이 있어야 함
         boardService.syncSocketBoardStatus(message);
 
-        if(message.getIsDelete() && message.getDelete().getModuleName().equals("postit")) {
-            dbSyncService.postitDeleteSync(message);
-        } else {
-            dbSyncService.postitDBSync(message);
-        }
+//        if(message.getIsDelete() && message.getDelete().getModuleName().equals("postit")) {
+//            dbSyncService.postitDeleteSync(message);
+//        } else {
+//            dbSyncService.postitDBSync(message);
+//        }
     }
 }
