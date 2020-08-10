@@ -1,6 +1,7 @@
 package com.websocket.board.model;
 
 import com.websocket.board.dto.Postit;
+import com.websocket.board.model.calendar.Calendar;
 import com.websocket.board.model.kanban.Kanban;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,7 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.util.Calendar;
+
 import java.util.List;
 
 @Data
