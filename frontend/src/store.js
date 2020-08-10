@@ -54,6 +54,33 @@ export const store = new Vuex.Store({
             dialog: false,
             eventDetail: false,
         },
+        Kanban:{
+            task: {
+                taskTitle:'',
+                taskContents:'',
+                taskAssigner:'',
+              },
+              columns: [
+                {
+                  columnTitle: '할 일',
+                  tasks: [],
+                },
+                {
+                  columnTitle: "진행중",
+                  tasks: [],
+                },
+                {
+                  columnTitle: "완료",
+                  tasks: [],
+                },
+              ],
+        },
+        kanban: {
+            frontKanbanId:'', 
+            kanban: {}, 
+            channel:""
+        },
+        
     },
     actions: {
         async REQUEST_ADD_EVENT(context, event) {

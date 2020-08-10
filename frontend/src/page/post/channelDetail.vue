@@ -21,6 +21,9 @@
       <v-btn icon color="orange" @click="createPostit">
         <v-icon>mdi-message</v-icon>
       </v-btn>
+      <v-btn icon color="orange" @click="createKanban">
+        <v-icon>mdi-clipboard-list-outline</v-icon>
+      </v-btn>
       <!-- <v-btn icon color="orange" @click="createMap">
         <v-icon>mdi-map</v-icon>
       </v-btn> -->
@@ -53,14 +56,20 @@
           />
 
       </div>
+
+      <div class="kanban" v-if="board.isKanban" @click.right="deleteKanban"  @click.left="reKan(board.kanban)" >
+        <Kanban @click.left="reKan(Kanban)" />
+      
+        {{this.$store.state.kanban.kanban}}
+      </div>
       <div class="map" @click.right="deleteAction">
         <Map v-if="map.isPresent"/>
       </div>
 
-      <v-dialog v-model="dialog" width="600px">
+      <v-dialog width="600px">
       <template v-slot:activator="{ on, attrs }">
         <v-btn
-          v-btn
+        
           color="rgb(255,157,91)"
           style="right:10px; bottom:30px; position:fixed; display:flex"
           dark
@@ -96,7 +105,13 @@ import Postit from "../../components/module/Postit";
 import Map from "../../components/module/Map";
 import Chat from "../../components/common/Chat";
 
+import Kanban from "../../components/module/Kanban";
+
 export default {
+  props:[
+
+  ]
+  ,
   data() {
     return {
       ws: null,
@@ -106,6 +121,8 @@ export default {
         channelId: "",
         idCount: 1,
         postitList: [],
+        isKanban: false,
+        kanban: { frontKanbanId:"", kanban:{}, channel:""},
         isDelete: false,
         delete: {
           moduleName: '',
@@ -229,6 +246,42 @@ export default {
       // snackbar
       this.createSnackbar("포스트잇이 생성되었습니다!", 1500, "success");
     },
+
+    createKanban(event) {
+      if(this.board.isKanban==true){
+        this.createSnackbar("보드가 이미 생성되어 있습니다", 3000, "error")
+        return
+      }
+      const idc = this.board.idCount++;
+      this.board.kanban = {
+        frontKanbanId:idc,
+        kanban: Kanban.data().columns,
+        channel: this.board.channelId
+        }
+      this.createSnackbar("보드가 생성되었습니다", 1500, "success")
+      this.board.isKanban=true
+      console.log(this.board.kanban)
+      console.log(Kanban.data().columns)
+    },
+    reKan(){
+      console.log(this.$store.state.Kanban)
+      this.$store.state.kanban.kanban = this.$store.state.Kanban.columns
+      console.log(kanban)
+      
+    },
+
+    deleteKanban({target}) {
+      if(confirm("요소를 삭제하시겠습니까?") === true) {
+        target.remove();
+        this.cloakMoveable();
+        this.board.isKanban=false;
+      }
+    },
+
+
+
+
+
     createMap(event) {
       if (this.map.isPresent) {
         this.createSnackbar("이미 카카오맵이 있습니다!", 3000, "error");
@@ -316,6 +369,7 @@ export default {
     Postit,
     Map,
     Chat,
+    Kanban
   },
 };
 </script>
