@@ -21,6 +21,10 @@
       <v-btn icon color="orange" @click="createPostit">
         <v-icon>mdi-message</v-icon>
       </v-btn>
+
+       <v-btn icon color="orange" @click="createCalendar">
+        <v-icon>mdi-calendar</v-icon>
+      </v-btn>
       <!-- <v-btn icon color="orange" @click="createMap">
         <v-icon>mdi-map</v-icon>
       </v-btn> -->
@@ -53,11 +57,25 @@
           />
 
       </div>
+
+      <div style="width:10px height:10px;"
+      v-for="(pi, idx) in this.board.calendarList"
+      :key="pi.frontPostitId"
+      >
+          <Calendar
+          :id="pi.frontPostitId"
+          :postit="pi"
+          :style="{left: pi.left, top: pi.top}"
+          />
+
+      </div>
+
       <div class="map" @click.right="deleteAction">
         <Map v-if="map.isPresent"/>
       </div>
 
-      <v-dialog v-model="dialog" width="600px">
+      <!-- <v-dialo
+      g v-model="dialog" width="600px">
       <template v-slot:activator="{ on, attrs }">
         <v-btn
           v-btn
@@ -76,7 +94,7 @@
       <v-card>
           <Chat/>
       </v-card>
-    </v-dialog>
+    </v-dialog> -->
     </div>
      
 
@@ -89,6 +107,9 @@ import Stomp from "stomp-websocket";
 import http from "../../http-common.js";
 import Moveable from "vue-moveable";
 import Postit from "../../components/module/Postit";
+import Calendar from "../../components/module/Calendar";
+import Dialog from "../../components/module/calendar/Dialog";
+import EventDetail from "../../components/module/calendar/EventDetail";
 import Map from "../../components/module/Map";
 import Chat from "../../components/common/Chat";
 
@@ -102,6 +123,7 @@ export default {
         channelId: "",
         idCount: 1,
         postitList: [],
+        calendarList: [],
         isDelete: false,
         delete: {
           moduleName: '',
@@ -181,6 +203,7 @@ export default {
         .get(`/board/${this.board.channelId}`)
         .then((response) => {
           this.board.postitList = response.data.postitList;
+          //this.board.calendarList = response.data.calendarList;
           this.board.idCount = response.data.idCount;
         })
         .catch((e) => {
@@ -198,21 +221,26 @@ export default {
         JSON.stringify(this.board)
       );
       this.createSnackbar("수정되었습니다", 1000, "warning");
+      console.log("token : "+this.token);
     },
     recvMessage: function (recv) {
       this.userCount = recv.userCount;
       this.board.idCount = recv.idCount;
       this.board.postitList = recv.postitList;
+      this.board.calendarList = recv.calendarList;
       this.board.isDelete = false;
     },
     createPostit(event) {
-      if(this.board.postitList.length > 20) {
+      // event.stopPropagation();
+      // event.preventDefault()
+      if(this.board.postitList > 20) {
         this.createSnackbar("포스트잇이 너무 많습니다!", 3000, "error")
         return
       }
       event.stopPropagation();
       const idc = this.board.idCount++;
       // postitList에 새로운 포스트잇 더하기
+      
       this.board.postitList.unshift({
         frontPostitId: idc,
         left: "500px",
@@ -224,6 +252,36 @@ export default {
       this.sendMessage();
       // snackbar
       this.createSnackbar("포스트잇이 생성되었습니다!", 1500, "success");
+    },
+    createCalendar(event) {
+      // event.stopPropagation();
+      // event.preventDefault()
+      if(this.board.postitList.length > 20) {
+        this.createSnackbar("포스트잇이 너무 많습니다!", 3000, "error")
+        return
+      }
+      event.stopPropagation();
+      const idc = this.board.idCount++;
+
+      if(this.board.calendarList.length >= 1) {
+        this.createSnackbar("일정표는 하나만 생성 가능합니다!", 3000, "error")
+        return
+      }
+
+      //calendar 추가 
+      this.board.calendarList.unshift({
+        frontPostitId: idc,
+        left: "300px",
+        top: "70px",
+        title: "",
+        contents: "",
+        channel: this.board.channelId,
+      });
+
+      //this.sendMessage();
+
+      // snackbar
+      this.createSnackbar("일정표가 생성되었습니다!", 1500, "success");
     },
     createMap(event) {
       if (this.map.isPresent) {
@@ -310,6 +368,7 @@ export default {
   components: {
     Moveable,
     Postit,
+    Calendar,
     Map,
     Chat,
   },

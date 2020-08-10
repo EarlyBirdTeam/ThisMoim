@@ -20,7 +20,7 @@
     <form>
     <div class="text-box">
       <textarea id="msgForm" placeholder="메시지를 입력해주세요 :)" @keyup="enter" ></textarea>
-      <button id="send" @click=send>전송</button>
+      <button id="sendChat" @click=sendChat>전송</button>
       <div class="clearfix"></div>
     </div>
     </form>
@@ -105,10 +105,10 @@ export default {
   },
   methods: {
 
-    send() {
+    sendChat() {
       event.preventDefault(); // 줄바꿈 방지?
         var $msgForm = $('textarea').val();
-        console.log("msgForm : msgForm");
+        console.log("msgForm : "+$msgForm);
 
         // if(msgForm){
         // $('.chatbox').append('<div class="my-bubble bubble">'+$msgForm+'</div>');
@@ -127,33 +127,33 @@ export default {
             //console.log("Shift도 눌러짐");
           
           }
-          else this.send();
+          else this.sendChat();
         }
 
         //console.log(code);
     },
 
-    sendMessage() {
-      event.preventDefault();
-      var $msgForm = $("#msgForm");
-      var $other = $("#other");
-      // 서버로 메시지를 전송한다.
-      if ($other.val() == "") {
-        // 서버로 메시지를 전송한다.
-        this.$socket.emit("chat", { msg: $msgForm.val() });
-        $msgForm.val("");
-      } else {
-        console.log("귓속말 대상 : " + $other.val());
-        this.$socket.emit("chatto", { msg: $msgForm.val(), id: $other.val() });
-        $msgForm.val("");
-      }
-      $('#chatLogs').scrollTop($('#chatLogs').prop('scrollHeight'));
+    // sendMessage() {
+    //   event.preventDefault();
+    //   var $msgForm = $("#msgForm");
+    //   var $other = $("#other");
+    //   // 서버로 메시지를 전송한다.
+    //   if ($other.val() == "") {
+    //     // 서버로 메시지를 전송한다.
+    //     this.$socket.emit("chat", { msg: $msgForm.val() });
+    //     $msgForm.val("");
+    //   } else {
+    //     console.log("귓속말 대상 : " + $other.val());
+    //     this.$socket.emit("chatto", { msg: $msgForm.val(), id: $other.val() });
+    //     $msgForm.val("");
+    //   }
+    //   $('#chatLogs').scrollTop($('#chatLogs').prop('scrollHeight'));
 
-                setTimeout(function(){
-                    $('#chatLogs').scrollTop($('#chatLogs').prop('scrollHeight'));
-                }, 300);
+    //             setTimeout(function(){
+    //                 $('#chatLogs').scrollTop($('#chatLogs').prop('scrollHeight'));
+    //             }, 300);
 
-    },
+    // },
     makeRandomName() {
       var name = "";
       var possible = "abcdefghijklmnopqrstuvwxyz";
@@ -285,7 +285,7 @@ export default {
     font-size: 14px;
   }
   
-  #send {
+  #sendChat {
     background-color: orange;
     width: 60px;
     height: 60px;
