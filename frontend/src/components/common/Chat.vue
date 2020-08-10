@@ -52,14 +52,14 @@ export default {
       // this.chatLogs.push(data.name + "님이 접속하셨습니다");
       // this.chatComes.push(data.name);
       console.log("입장!");
-      $('.chatbox').append('<div class="friend-bubble bubble">'+data+'님이 입장하셨습니다.</div>');
+      $('.chatbox').append('<div class="inout-bubble">'+data+'님이 입장하셨습니다.</div>');
     
     });
 
      this.$socket.on("enter", (data) => {
       // this.chatLogs.push(data.name + "님이 접속하셨습니다");
       // this.chatComes.push(data.name);
-      $('.chatbox').append('<div class="friend-bubble bubble">##'+data+'님이 입장하셨습니다.##</div>');
+      $('.chatbox').append('<div class="inout-bubble">'+data+'님이 입장하셨습니다.</div>');
     
     });
 
@@ -81,7 +81,7 @@ export default {
     });
 
     this.$socket.on("out", (data) => {
-      $('.chatbox').append('<div class="friend-bubble bubble">##'+data.from.name+'님이 나가셨습니다.##</div>');
+      $('.chatbox').append('<div class="inout-bubble">'+data.from.name+'님이 나가셨습니다.</div>');
     
     });
 
@@ -251,6 +251,19 @@ export default {
     position: relative;
   }
   
+  .inout-bubble {
+    background-color:lightslategray;
+    border-radius: 14px 14px 14px 14px;
+    padding: 7px 50px 7px 50px;
+    float: left;
+    clear: both;
+
+    margin: 5px 0;
+    max-width: 300px;
+    font-size: 14px;
+    position: relative;
+  }
+
   .friend-bubble {
     background-color: white;
     border-radius: 14px 14px 14px 0;

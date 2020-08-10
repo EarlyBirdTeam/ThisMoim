@@ -66,7 +66,7 @@
       </div>
 
 
-      <v-dialog width="600px">
+      <v-dialog width="620px">
       <template v-slot:activator="{ on, attrs }">
         <v-btn
           color="rgb(255,157,91)"
