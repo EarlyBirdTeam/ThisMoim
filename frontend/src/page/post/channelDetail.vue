@@ -196,6 +196,7 @@ export default {
       http
         .get(`/board/${this.board.channelId}`)
         .then((response) => {
+          console.log(response.data)
           this.board.postitList = response.data.postitList;
           this.board.idCount = response.data.idCount;
         })

@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.util.Date;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -15,6 +14,6 @@ import java.util.Date;
 public class Event implements Serializable {
     private String name;
     private String content;
-    private Date start;
-    private Date end;
+    private String start;
+    private String end;
 }
