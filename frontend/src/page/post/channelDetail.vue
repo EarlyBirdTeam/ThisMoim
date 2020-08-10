@@ -22,13 +22,12 @@
       <v-btn icon color="orange" @click="createPostit">
         <v-icon>mdi-message</v-icon>
       </v-btn>
-      <v-btn icon color="orange" @click="createMap">
       <v-btn icon color="orange" @click="createKanban">
         <v-icon>mdi-clipboard-list-outline</v-icon>
       </v-btn>
       <!-- <v-btn icon color="orange" @click="createMap">
         <v-icon>mdi-map</v-icon>
-      </v-btn>
+      </v-btn> -->
       <v-btn icon color="orange" @click="createCalendar">
         <v-icon>mdi-calendar</v-icon>
       </v-btn>
@@ -62,8 +61,8 @@
 
       </div>
 
-      <div class="kanban" v-if="board.isKanban" @click.right="deleteKanban"  @click.left="reKan(board.kanban)" >
-        <Kanban @click.left="reKan(Kanban)" />
+      <div class="kanban" v-if="board.isKanban" @click.right="deleteKanban" >
+        <Kanban/>
       
  
       </div>
@@ -132,7 +131,7 @@ export default {
         idCount: 1,
         postitList: [],
         isKanban: false,
-        kanban: { frontKanbanId:"", kanban:{}, channel:""},
+        kanban: this.$store.state.Kanban,
         calendar: {},
         isDelete: false,
         delete: {
@@ -215,8 +214,9 @@ export default {
         .get(`/board/${this.board.channelId}`)
         .then((response) => {
           console.log(response.data)
-          this.board.postitList = response.data.postitList;
-          this.board.idCount = response.data.idCount;
+          //this.board.postitList = response.data.postitList;
+          //this.board.idCount = response.data.idCount;
+          this.board = response.data;
         })
         .catch((e) => {
         });
@@ -271,20 +271,10 @@ export default {
         this.createSnackbar("보드가 이미 생성되어 있습니다", 3000, "error")
         return
       }
-      const idc = this.board.idCount++;
-      this.$store.state.kanban.frontKanbanId= idc,
-      this.$store.state.kanban.kanban= this.$store.state.Kanban.columns,
-      this.$store.state.kanban.channel= this.board.channelId
   
       this.createSnackbar("보드가 생성되었습니다", 1500, "success")
       this.board.isKanban=true
-      this.board.kanban = this.$store.state.kanban
-    },
-    reKan(){
-
-      this.$store.state.kanban.kanban = this.$store.state.Kanban.columns
-
-      
+      this.board.kanban = this.$store.state.Kanban
     },
 
     deleteKanban({target}) {
@@ -304,7 +294,7 @@ export default {
                   columnTitle: "완료",
                   tasks: [],
                 },]
-        this.$store.state.kanban.kanban = this.$store.state.Kanban.columns
+        
       }
     },
 
