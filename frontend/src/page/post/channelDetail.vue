@@ -1,6 +1,7 @@
 <template>
   <div id="app" v-cloak @click="cloakMoveable">
     <div class="row">
+      {{ board }}
       <v-snackbar
         app
         top
@@ -24,6 +25,9 @@
       <!-- <v-btn icon color="orange" @click="createMap">
         <v-icon>mdi-map</v-icon>
       </v-btn> -->
+      <v-btn icon color="orange" @click="createCalendar">
+        <v-icon>mdi-calendar</v-icon>
+      </v-btn>
     </v-toolbar>
 
     <div class="bodyBox" ref="whiteBoard" @dblclick="focusAction" @click="changeTargetAction">
@@ -57,17 +61,18 @@
         <Map v-if="map.isPresent"/>
       </div>
 
-      <v-dialog v-model="dialog" width="600px">
+      <div class="calendar" @click.right="deleteAction">
+        <Calendar v-if="board.isCalendar"/>
+      </div>
+
+      <v-dialog width="600px">
       <template v-slot:activator="{ on, attrs }">
         <v-btn
-          v-btn
           color="rgb(255,157,91)"
           style="right:10px; bottom:30px; position:fixed; display:flex"
           dark
           fab
           large
-          v-bind="attrs"
-          v-on="on"
         >
           <v-icon>mdi-message-bulleted</v-icon>
         </v-btn>
@@ -94,6 +99,7 @@ import http from "../../http-common.js";
 import Moveable from "vue-moveable";
 import Postit from "../../components/module/Postit";
 import Map from "../../components/module/Map";
+import Calendar from "../../components/module/Calendar";
 import Chat from "../../components/common/Chat";
 
 export default {
@@ -106,6 +112,8 @@ export default {
         channelId: "",
         idCount: 1,
         postitList: [],
+        isCalendar: false,
+        calendar: {},
         isDelete: false,
         delete: {
           moduleName: '',
@@ -204,10 +212,13 @@ export default {
       this.createSnackbar("수정되었습니다", 1000, "warning");
     },
     recvMessage: function (recv) {
+      console.log(recv);
       this.userCount = recv.userCount;
       this.board.idCount = recv.idCount;
       this.board.postitList = recv.postitList;
       this.board.isDelete = false;
+      this.board.isCalendar = recv.isCalendar;
+      this.board.calendar = recv.calendar; 
     },
     createPostit(event) {
       if(this.board.postitList.length > 20) {
@@ -235,6 +246,11 @@ export default {
       } else {
         this.map.isPresent = true;
       }
+    },    
+    createCalendar(event) {
+      this.board.calendar = this.$store.state.calendar;
+      this.board.isCalendar = true;
+      this.sendMessage();
     },
     createSnackbar(text, timeout, color) {
       this.snackbar.isPresent = true;
@@ -315,6 +331,7 @@ export default {
     Moveable,
     Postit,
     Map,
+    Calendar,
     Chat,
   },
 };
