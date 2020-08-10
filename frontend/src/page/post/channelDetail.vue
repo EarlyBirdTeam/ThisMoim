@@ -1,6 +1,7 @@
 <template>
   <div id="app" v-cloak @click="cloakMoveable">
     <div class="row">
+      {{ board }}
       <v-snackbar
         app
         top
@@ -21,9 +22,12 @@
       <v-btn icon color="orange" @click="createPostit">
         <v-icon>mdi-message</v-icon>
       </v-btn>
-      <!-- <v-btn icon color="orange" @click="createMap">
+      <v-btn icon color="orange" @click="createMap">
         <v-icon>mdi-map</v-icon>
-      </v-btn> -->
+      </v-btn>
+      <v-btn icon color="orange" @click="createCalendar">
+        <v-icon>mdi-calendar</v-icon>
+      </v-btn>
     </v-toolbar>
 
     <div class="bodyBox" ref="whiteBoard" @dblclick="focusAction" @click="changeTargetAction">
@@ -57,10 +61,13 @@
         <Map v-if="map.isPresent"/>
       </div>
 
-      <v-dialog v-model="dialog" width="600px">
+      <div class="calendar" @click.right="deleteAction">
+        <Calendar v-if="isCalendar"/>
+      </div>
+
+      <v-dialog width="600px">
       <template v-slot:activator="{ on, attrs }">
         <v-btn
-          v-btn
           color="rgb(255,157,91)"
           style="right:10px; bottom:30px; position:fixed; display:flex"
           dark
@@ -68,6 +75,7 @@
           large
           v-bind="attrs"
           v-on="on"
+
         >
           <v-icon>mdi-message-bulleted</v-icon>
         </v-btn>
@@ -94,6 +102,7 @@ import http from "../../http-common.js";
 import Moveable from "vue-moveable";
 import Postit from "../../components/module/Postit";
 import Map from "../../components/module/Map";
+import Calendar from "../../components/module/Calendar";
 import Chat from "../../components/common/Chat";
 
 export default {
@@ -106,12 +115,14 @@ export default {
         channelId: "",
         idCount: 1,
         postitList: [],
+        calendar: {},
         isDelete: false,
         delete: {
           moduleName: '',
           id: -1,
         },
       },
+      isCalendar: false, 
       token: "",
       userCount: 0,
       moveable: {
@@ -127,6 +138,7 @@ export default {
         throttleRotate: 0,
         origin: false,
       },
+      
       map: {
         isPresent: false,
         left: "",
@@ -204,20 +216,25 @@ export default {
       this.createSnackbar("수정되었습니다", 1000, "warning");
     },
     recvMessage: function (recv) {
+      console.log(recv);
       this.userCount = recv.userCount;
       this.board.idCount = recv.idCount;
       this.board.postitList = recv.postitList;
       this.board.isDelete = false;
+      if(recv.calendar !== {}){
+        this.board.calendar = recv.calendar;
+        this.isCalendar = true;
+      }
     },
     createPostit(event) {
       if(this.board.postitList.length > 20) {
         this.createSnackbar("포스트잇이 너무 많습니다!", 3000, "error")
         return
       }
-      event.stopPropagation();
+      // event.stopPropagation();
       const idc = this.board.idCount++;
       // postitList에 새로운 포스트잇 더하기
-      this.board.postitList.unshift({
+      this.board.postitList.push({
         frontPostitId: idc,
         left: "500px",
         top: "170px",
@@ -235,6 +252,18 @@ export default {
       } else {
         this.map.isPresent = true;
       }
+    },    
+    createCalendar(event) {
+      this.board.calendar = {
+        // frontCalendarId: 0,
+        left: '500px',
+        top: '170px',
+        events: this.$store.state.calendar.events,
+      }
+      console.log("create Calendar");
+      console.log(this.board.calendar);
+      this.isCalendar = true;
+      // this.sendMessage();
     },
     createSnackbar(text, timeout, color) {
       this.snackbar.isPresent = true;
@@ -315,6 +344,7 @@ export default {
     Moveable,
     Postit,
     Map,
+    Calendar,
     Chat,
   },
 };

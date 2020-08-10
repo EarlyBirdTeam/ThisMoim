@@ -31,6 +31,7 @@ export const store = new Vuex.Store({
         // 카카오맵 
         map: {
           isPresent: false, 
+          isSearched: false,
           left: '0px',
           top: '0px',
           coord: {
@@ -46,11 +47,10 @@ export const store = new Vuex.Store({
                 startTime: '',
                 endDate: '',
                 endTime: '',
-                hasTime: '',
                 content: '',
                 title: '',
             },
-            events: [],
+            events: [{ "name": "오프라인", "content": "hello", "start": "2020-08-05T12:30:00", "end": "2020-08-05T18:00:00" }],
             dialog: false,
             eventDetail: false,
         },
@@ -75,6 +75,7 @@ export const store = new Vuex.Store({
                 const end = `${event.endDate}T${event.endTime}:00`;
                 return {
                     name: event.title,
+                    content: event.content,
                     start: start,
                     end: end,
                     // start: event.startDate + getTime(event.startTime),
@@ -207,7 +208,6 @@ export const store = new Vuex.Store({
             state.calendar.event.startDate = payload.date;
             state.calendar.event.endDate = payload.date;
             state.calendar.event.startTime = payload.time;
-            state.calendar.hasTime = payload.hasTime;
             state.calendar.dialog = true;
         },
         CLOSE_CALENDAR_DIALOG(state) {
@@ -223,18 +223,17 @@ export const store = new Vuex.Store({
                 startTime: '',
                 endDate: '',
                 endTime: '',
-                hasTime: '',
                 content: '',
                 title: '',
             };
         },
-        OPEN_CALENDAR_EVENT(state, payload) { 
+        OPEN_CALENDAR_EVENT(state, payload) {
             state.calendar.event = {
                 startDate: payload.eventParsed.start.date,
                 startTime: payload.eventParsed.start.time,
                 endDate: payload.eventParsed.end.date,
                 endTime: payload.eventParsed.end.time,
-                content: '',
+                content: payload.event.content,
                 title: payload.event.name,
             }
             state.calendar.eventDetail = true;
@@ -245,7 +244,6 @@ export const store = new Vuex.Store({
                 startTime: '',
                 endDate: '',
                 endTime: '',
-                hasTime: '',
                 content: '',
                 title: '',
             };
