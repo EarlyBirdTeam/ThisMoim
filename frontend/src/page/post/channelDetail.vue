@@ -60,7 +60,7 @@
       <div class="kanban" v-if="board.isKanban" @click.right="deleteKanban"  @click.left="reKan(board.kanban)" >
         <Kanban @click.left="reKan(Kanban)" />
       
-        {{this.$store.state.kanban.kanban}}
+ 
       </div>
       <div class="map" @click.right="deleteAction">
         <Map v-if="map.isPresent"/>
@@ -253,20 +253,18 @@ export default {
         return
       }
       const idc = this.board.idCount++;
-      this.board.kanban = {
-        frontKanbanId:idc,
-        kanban: Kanban.data().columns,
-        channel: this.board.channelId
-        }
+      this.$store.state.kanban.frontKanbanId= idc,
+      this.$store.state.kanban.kanban= this.$store.state.Kanban.columns,
+      this.$store.state.kanban.channel= this.board.channelId
+  
       this.createSnackbar("보드가 생성되었습니다", 1500, "success")
       this.board.isKanban=true
-      console.log(this.board.kanban)
-      console.log(Kanban.data().columns)
+      this.board.kanban = this.$store.state.kanban
     },
     reKan(){
-      console.log(this.$store.state.Kanban)
+
       this.$store.state.kanban.kanban = this.$store.state.Kanban.columns
-      console.log(kanban)
+
       
     },
 
@@ -275,6 +273,19 @@ export default {
         target.remove();
         this.cloakMoveable();
         this.board.isKanban=false;
+        this.$store.state.Kanban.columns=[ {
+                  columnTitle: '할 일',
+                  tasks: [],
+                },
+                {
+                  columnTitle: "진행중",
+                  tasks: [],
+                },
+                {
+                  columnTitle: "완료",
+                  tasks: [],
+                },]
+        this.$store.state.kanban.kanban = this.$store.state.Kanban.columns
       }
     },
 

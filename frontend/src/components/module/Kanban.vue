@@ -5,7 +5,7 @@
       <div class="min-h-screen d-flex overflow-x-scroll py-12">
 
         <div
-          v-for="column in columns"
+          v-for="column in this.$store.state.Kanban.columns"
           :key="column.columnTitle"
           class="bg-gray-100 rounded-lg px-3 py-3 column-width rounded mr-4"
         >
