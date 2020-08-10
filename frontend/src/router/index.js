@@ -13,6 +13,10 @@ import Login from '../page/user/Login.vue'
 import Join from '../page/user/Join.vue'
 import JoinDone from '../page/user/JoinDone.vue'
 import MyPage from '../page/user/MyPage.vue'
+import ConfirmDone from '../page/user/ConfirmationCheck.vue'
+import PasswordFind from '../page/user/PasswordFind.vue'
+import PasswordReset from '../page/user/PasswordReset.vue'
+import DeleteUser from '../page/user/ReallyDelete.vue'
 
 // 포스트
 import List from '../page/post/List.vue'
@@ -65,6 +69,26 @@ export default new Router({
       path:'/user/MyPage',
       name: constants.URL_TYPE.USER.MYPAGE,
       component: MyPage
+    },
+    { // 유저 정보 - 가입 확인
+      path: '/api/auth/registrationConfirmation',
+      name: constants.URL_TYPE.USER.CONFIRMDONE,
+      component: ConfirmDone
+    },
+    {  // 유저 - 비밀번호 찾기
+      path: '/user/PasswordFind',
+      name: constants.URL_TYPE.USER.PASSWORDFIND,
+      component: PasswordFind
+    },
+    {  // 유저 - 비밀번호 리셋
+      path: '/user/PasswordReset',
+      name: constants.URL_TYPE.USER.PASSWORDRESET,
+      component: PasswordReset
+    },
+    {  // 유저 - 계정 삭제
+      path: '/user/DeleteAccount',
+      name: constants.URL_TYPE.USER.DELETEUSER,
+      component: DeleteUser
     },
     // 포스트
     { 

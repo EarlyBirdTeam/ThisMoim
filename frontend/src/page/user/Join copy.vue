@@ -84,7 +84,6 @@
         watch:{
         },
         created(){
-            this.$store.commit("toggleModal");
         },
         methods: {
             createUserRequest: function(){
