@@ -61,8 +61,8 @@
         <Map v-if="map.isPresent"/>
       </div>
 
-      <div class="calendar" @click.right="deleteAction">
-        <Calendar v-if="isCalendar"/>
+      <div @click.right="deleteAction">
+        <Calendar v-if="!!board.calendar.left"/>
       </div>
 
       <v-dialog width="600px">
@@ -122,7 +122,6 @@ export default {
           id: -1,
         },
       },
-      isCalendar: false, 
       token: "",
       userCount: 0,
       moveable: {
@@ -197,8 +196,9 @@ export default {
         .get(`/board/${this.board.channelId}`)
         .then((response) => {
           console.log(response.data)
-          this.board.postitList = response.data.postitList;
-          this.board.idCount = response.data.idCount;
+          // this.board.postitList = response.data.postitList;
+          // this.board.idCount = response.data.idCount;
+          this.board = response.data;
         })
         .catch((e) => {
         });
@@ -222,10 +222,9 @@ export default {
       this.board.idCount = recv.idCount;
       this.board.postitList = recv.postitList;
       this.board.isDelete = false;
-      if(recv.calendar !== {}){
-        this.board.calendar = recv.calendar;
-        this.isCalendar = true;
-      }
+
+      this.board.calendar = recv.calendar;
+      this.$store.state.calendar.events = recv.calendar.events;
     },
     createPostit(event) {
       if(this.board.postitList.length > 20) {
@@ -263,7 +262,6 @@ export default {
       }
       console.log("create Calendar");
       console.log(this.board.calendar);
-      this.isCalendar = true;
       // this.sendMessage();
     },
     createSnackbar(text, timeout, color) {
