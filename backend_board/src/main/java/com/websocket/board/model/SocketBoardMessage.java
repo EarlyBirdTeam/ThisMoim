@@ -1,5 +1,6 @@
 package com.websocket.board.model;
 
+import com.websocket.board.dto.Calendar;
 import com.websocket.board.dto.Postit;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -38,6 +39,8 @@ public class SocketBoardMessage implements Serializable {
     // 보드 전달 모듈 관련 인자
     private long idCount;
     private List<Postit> postitList; // 포스트잇 리스트
+    private Calendar calendar; // 캘린더 (객체 하나)
+    private String isCalendar; // ?
     private Boolean isDelete;
     private DeletedModule delete;
     // List<Calendar> calendarList; // 캘린더 리스트

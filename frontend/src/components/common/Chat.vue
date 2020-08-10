@@ -36,7 +36,7 @@ export default {
   name: "Chat",
   created() {
 
-    var $msgForm = $('textarea').val();
+    var $msgForm = $('#msgForm').val();
     var myname = this.makeRandomName();
     this.naname = myname;
 
@@ -107,7 +107,8 @@ export default {
 
     sendChat() {
       event.preventDefault(); // 줄바꿈 방지?
-        var $msgForm = $('textarea').val();
+      event.stopPropagation();
+        var $msgForm = $('#msgForm').val();
         console.log("msgForm : "+$msgForm);
 
         // if(msgForm){
@@ -116,7 +117,7 @@ export default {
         // }
 
         this.$socket.emit("chat", {msg: $msgForm});
-        $('textarea').val("");
+        $('#msgForm').val("");
     },
 
      enter() { // 엔터 처리

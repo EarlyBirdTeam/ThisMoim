@@ -41,18 +41,20 @@ export const store = new Vuex.Store({
         },
         // 캘린더
         calendar: {
+            
+            frontCalendarId: 0,
+            left: '0px',
+            top: '0px',
             event: {
                 startDate: '',
                 startTime: '',
                 endDate: '',
                 endTime: '',
-                hasTime: '',
                 content: '',
                 title: '',
+                
             },
-            events: [],
-            dialog: false,
-            eventDetail: false,
+            events: []
         },
     },
     actions: {
