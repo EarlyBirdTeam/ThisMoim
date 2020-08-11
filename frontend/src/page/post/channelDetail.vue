@@ -12,52 +12,88 @@
         <h4>
           {{channelName}}
           <span class="badge badge-info badge-pill">{{userCount}}</span>
-          <v-btn @click="sendMessage()">보내기</v-btn>
+
+          <v-toolbar class="toolBox">
+          <v-btn icon color="orange" @click="createPostit">
+            <v-icon>mdi-message</v-icon>
+          </v-btn>
+          <!-- <v-btn icon color="orange" @click="createMap">
+            <v-icon>mdi-map</v-icon>
+          </v-btn> -->
+        </v-toolbar>
         </h4>
         <br />
+
+        
       </div>
     </div>
-    <v-toolbar class="toolBox">
-      <v-btn icon color="orange" @click="createPostit">
-        <v-icon>mdi-message</v-icon>
-      </v-btn>
-      <!-- <v-btn icon color="orange" @click="createMap">
-        <v-icon>mdi-map</v-icon>
-      </v-btn> -->
-    </v-toolbar>
 
-    <div class="bodyBox" ref="whiteBoard" @dblclick="focusAction" @click="changeTargetAction">
-      <Moveable
-        ref="moveable"
-        class="moveable"
-        v-bind="moveable"
-        @drag="handleDrag"
-        @dragEnd="handleDragEnd"
-        @resize="handleResize"
-        @scale="handleScale"
-        @rotate="handleRotate"
-        @warp="handleWarp"
-        style="display: none;"
-      ></Moveable>
+    <Moveable
+      ref="moveable"
+      class="moveable"
+      v-bind="moveable"
+      @drag="handleDrag"
+      @dragEnd="handleDragEnd"
+      @resize="handleResize"
+      @scale="handleScale"
+      @rotate="handleRotate"
+      @warp="handleWarp"
+      style="display: none;"
+    ></Moveable>
 
-      <!-- <Postit :id="pi.id" :postit="pi" style="position: relative; display: inline-block"/> -->
-      <div class="postit"
-      v-for="(pi, idx) in this.postitList"
-      :key="pi.frontPostitId"
-      @click.right="deleteTargetAction(idx, $event)">
-          <Postit
-          :id="pi.frontPostitId"
-          :postit="pi"
-          :style="{left: pi.left, top: pi.top}"
-          />
+    <div class="MoveableBox bodyBox" ref="whiteBoard" 
+    @dblclick="focusAction" 
+    @click="changeTargetAction"
+    @wheel="wheelEvent"
+    style="height: 73vh; width: 80vw;">
+      
+      
+      <div class="MoveableBox realBoard" >
+
+        <!-- <Postit :id="pi.id" :postit="pi" style="position: relative; display: inline-block"/> -->
+        <div class="postit"
+        v-for="(pi, idx) in this.board.postitList"
+        :key="pi.frontPostitId"
+        @click.right="deleteTargetAction(idx, $event)">
+            <Postit
+            :id="pi.frontPostitId"
+            :postit="pi"
+            :style="{left: pi.left, top: pi.top}"
+            />
+        </div>
+
+        <div class="map" @click.right="deleteAction">
+          <Map v-if="map.isPresent"/>
+        </div>
 
       </div>
-      <div class="map" @click.right="deleteAction">
-        <Map v-if="map.isPresent"/>
-      </div>
+        <v-dialog width="600px">
 
-      {{ idCount }} {{ postitList }}
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+              color="rgb(255,157,91)"
+              style="right:10px; bottom:30px; position:fixed; display:flex"
+              dark
+              fab
+              large
+              v-bind="attrs"
+              v-on="on"
+            >
+              <v-icon>mdi-message-bulleted</v-icon>
+            </v-btn>
+          </template>
+
+          <v-card>
+            <!-- <v-card-title>
+              <span class="headline">채팅</span>
+            </v-card-title>-->
+            <v-card-text style="padding:16px">
+            </v-card-text>
+          </v-card>
+
+        </v-dialog>
     </div>
+
   </div>
 </template>
 
@@ -69,16 +105,23 @@ import Moveable from "vue-moveable";
 import Postit from "../../components/module/Postit";
 import Map from "../../components/module/Map";
 
+const boardLength = 3000;
 export default {
   data() {
     return {
       ws: null,
-      channelId: "",
       channelName: "",
-      sender: "",
-      postitList: [],
-      board: "",
-      boards: [],
+      // 소켓 서버 전송
+      board: {
+        channelId: "",
+        idCount: 1,
+        postitList: [],
+        isDelete: false,
+        delete: {
+          moduleName: '',
+          id: -1,
+        },
+      },
       token: "",
       userCount: 0,
       moveable: {
@@ -94,7 +137,6 @@ export default {
         throttleRotate: 0,
         origin: false,
       },
-      idCount: 1,
       map: {
         isPresent: false,
         left: "",
@@ -107,6 +149,7 @@ export default {
         text: "",
         timeout: 1000,
       },
+      boardScale: 1,
     };
   },
   created() {
@@ -117,15 +160,27 @@ export default {
     };
     this.initRecv();
   },
+  mounted() {
+    document.querySelector('.realBoard').style.height = boardLength+"px";
+    document.querySelector('.realBoard').style.width = boardLength+"px";
+
+    console.log((boardLength/2) - (window.innerWidth * 0.4));
+    document.querySelector('.realBoard').style.left = 
+      -(boardLength/2) + (window.innerWidth * 0.4) + "px";
+      
+    document.querySelector('.realBoard').style.top = 
+      -(boardLength/2) + (window.innerHeight * 0.4) + "px";
+  },
   methods: {
     init() {
       // var BASE_URL =  "http://i3a510.p.ssafy.io/api"
-      var BASE_URL = "http://localhost:8080";
+      // var BASE_URL = "http://localhost:8080";
+      var BASE_URL = "http://218.146.39.122:8080";
       var sock = new SockJS(BASE_URL + "/ws-stomp");
       var ws = Stomp.over(sock);
       this.ws = ws;
 
-      this.channelId = localStorage.getItem("wsboard.channelId");
+      this.board.channelId = localStorage.getItem("wsboard.channelId");
       this.channelName = localStorage.getItem("wsboard.channelName");
       var _this = this;
       http.get("/board/user").then((response) => {
@@ -133,7 +188,7 @@ export default {
         ws.connect(
           { token: _this.token },
           function (frame) {
-            ws.subscribe("/sub/board/channel/" + _this.channelId, function (
+            ws.subscribe("/sub/board/channel/" + _this.board.channelId, function (
               message
             ) {
               var recv = JSON.parse(message.body);
@@ -150,14 +205,13 @@ export default {
     initRecv() {
       // 접속시 처음 값을 받아오도록 하기
       http
-        .get(`/board/${this.channelId}`)
+        .get(`/board/${this.board.channelId}`)
         .then((response) => {
-          this.postitList = response.data.postitList;
-          this.idCount = response.data.idCount;
-          console.log(response.data);
+          this.board.postitList = response.data.postitList;
+          this.board.idCount = response.data.idCount;
+          // this.board = response.board;
         })
         .catch((e) => {
-          console.log(e);
         });
       this.createSnackbar(
         `'${this.channelName}' 채널에 입장하였습니다!`,
@@ -169,31 +223,31 @@ export default {
       this.ws.send(
         "/pub/board/message",
         { token: this.token },
-        JSON.stringify({
-          channelId: this.channelId,
-          idCount: this.idCount,
-          postitList: this.postitList,
-        })
+        JSON.stringify(this.board)
       );
       this.createSnackbar("수정되었습니다", 1000, "warning");
     },
     recvMessage: function (recv) {
       this.userCount = recv.userCount;
-      this.idCount = recv.idCount;
-      // this.postitList.unshift({"sender":recv.sender,"postitList":recv.postitList})
-      this.postitList = recv.postitList;
+      this.board.idCount = recv.idCount;
+      this.board.postitList = recv.postitList;
+      this.board.isDelete = false;
     },
     createPostit(event) {
+      if(this.board.postitList.length > 20) {
+        this.createSnackbar("포스트잇이 너무 많습니다!", 3000, "error")
+        return
+      }
       event.stopPropagation();
-      const idc = this.idCount++;
+      const idc = this.board.idCount++;
       // postitList에 새로운 포스트잇 더하기
-      this.postitList.unshift({
+      this.board.postitList.unshift({
         frontPostitId: idc,
         left: "500px",
         top: "170px",
         title: "",
         contents: "",
-        channel: this.channelId,
+        channel: this.board.channelId,
       });
       this.sendMessage();
       // snackbar
@@ -213,9 +267,59 @@ export default {
       this.snackbar.color = color;
     },
     handleDrag({ target, left, top }) {
+      
+      // if(target.getAttribute('class') != null){
+      //   var clas = target.getAttribute('class').split(' ');
+
+      //   for(var cla in clas){
+      //     if( clas[cla] == 'bodyBox'){
+      //       target = document.querySelector('.realBoard');
+      //     }
+      //   }
+      // }
+
       target.style.left = `${left}px`;
       target.style.top = `${top}px`;
-      this.postitList.map((postit) => {
+      // console.log(target);
+      // console.log(document.querySelector('.bodyBox').style.width);
+      console.log(window.innerWidth * 0.8);
+      if(target.getAttribute('class') != null){
+        var clas = target.getAttribute('class').split(' ');
+        
+        for(var cla in clas){
+          if(clas[cla] == 'realBoard'){
+            // console.log(target.style.left, " ",target.style.top);
+            let lp = target.style.left.replace("px", "");
+            let tp = target.style.top.replace("px", "");
+            console.log(lp, " , ", tp);
+            if(lp > 0) {
+              target.style.left = '1px'
+              document.querySelector('.bodyBox').style.borderLeft = "red 3px solid";
+            }
+            else if(((lp*-1) + window.innerWidth ) > (boardLength )) {
+              target.style.left = (-boardLength + window.innerWidth)+'px';
+              document.querySelector('.bodyBox').style.borderRight = "red 3px solid";
+            } 
+            else {
+              document.querySelector('.bodyBox').style.border = "1px pink solid";
+            }
+
+            if(tp > 0) {
+              target.style.top = '1px'
+              document.querySelector('.bodyBox').style.borderTop = "red 3px solid";
+            }
+            else if ((tp*-1) + window.innerHeight > boardLength) {
+              target.style.top = (-boardLength + window.innerHeight)+'px';
+              document.querySelector('.bodyBox').style.borderBottom = "red 3px solid";
+            }
+            else {
+              document.querySelector('.bodyBox').style.border = "1px pink solid";
+            }
+
+            return ;
+          }
+        }
+        this.board.postitList.map((postit) => {
         if (postit.frontPostitId == target.id) {
           (postit.left = `${left}px`), (postit.top = `${top}px`);
         }
@@ -223,12 +327,25 @@ export default {
           ...postit,
         };
       });
+
+      }
     },
-    handleDragEnd() {
+    handleDragEnd({target}) {
+
+      if(target.getAttribute('class') != null){
+        var clas = target.getAttribute('class').split(' ');
+        
+        for(var cla in clas){
+          if(clas[cla] == 'realBoard'){
+            return ;
+          }
+        }
+       
+      }
+
       this.sendMessage();
     },
     handleResize({ target, width, height, delta }) {
-      console.log("onResize", width, height, delta);
       delta[0] && (target.style.width = `${width}px`);
       delta[1] && (target.style.height = `${height}px`);
     },
@@ -245,27 +362,60 @@ export default {
       target.focus();
     },
     changeTargetAction({ target }) {
-      this.blockMoveable();
-      if (target.getAttribute("class") != null) {
-        var clas = target.getAttribute("class").split(" ");
+       this.blockMoveable();
 
-        for (var cla in clas) {
-          if (clas[cla] == "MoveableBox") {
+      if(target.getAttribute('class') != null){
+        var clas = target.getAttribute('class').split(' ');
+      
+        for(var cla in clas){
+          // console.log(clas[cla]);
+          if(clas[cla] == 'MoveableBox'){
             event.stopPropagation();
             target.blur();
             this.$refs.moveable.moveable.target = target;
+          }
+
+          if(clas[cla] == 'realBoard' || clas[cla] == 'bodyBox'){
+            // event.stopPropagation();
+            // target.blur();
+            // this.$refs.moveable.moveable.target = target;
+            this.cloakMoveable(); 
           }
         }
       }
     },
     deleteTargetAction(idx, { target }) {
-      // console.log("delete TARGET!!!!!!");
-      // console.log(idx, target);
       if (confirm("요소를 삭제하시겠습니까?") === true) {
         target.remove();
-        this.postitList.splice(idx, 1);
+        this.board.isDelete = true;
+        this.board.delete.moduleName = 'postit';
+        this.board.delete.id = this.board.postitList[idx].frontPostitId;
+        this.board.postitList.splice(idx, 1);
+        this.sendMessage();
         this.cloakMoveable();
       }
+    },
+    wheelEvent: function(event) {
+      // console.log(event.deltaY);
+      if (event.deltaY < 0) { 
+        console.log("up!"); 
+        this.boardScale += 0.05;
+
+        if(this.boardScale > 1.3) this.boardScale = 1.3;
+
+        console.log(this.boardScale);
+      }
+      else if (event.deltaY > 0) {
+        this.boardScale -= 0.05;
+
+        if(this.boardScale < 0.3) this.boardScale = 0.3;
+
+        console.log(this.boardScale);
+         console.log("down!"); 
+      }
+
+      document.querySelector(".realBoard").style.transform = `scale(${this.boardScale})`;
+      
     },
     deleteAction({target}) {
       if(confirm("요소를 삭제하시겠습니까?") === true) {
@@ -288,7 +438,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .moveable {
   font-family: "Roboto", sans-serif;
   position: relative;
@@ -301,4 +451,40 @@ export default {
   letter-spacing: 1px;
   /* background-color: yellow; */
 }
+
+.bodyBox {
+  position: relative;
+  height: 75vh;
+  /* width: 80vw; */
+  margin: 1% 3%;
+  /* transform: translate(-50%, -50%); */
+  /* border: solid 1px; */
+  background-color: rgb(255, 255, 255);
+  overflow: hidden;
+}
+
+.realBoard {
+  /* boardLength와 동일해야함! */
+  /* height: 2000px;
+  width: 2000px; */
+  /* left: -680px;
+  top: -680px; */
+  border: 1px solid pink;
+  background: rgba(221, 12, 12, 0.507);
+
+  background-image: linear-gradient(0deg, transparent 0%, transparent 9px, rgba(255, 255, 255, 0.2) 9px, rgba(255, 255, 255, 0.2) 10px, transparent 10px, transparent 19px, rgba(255, 255, 255, 0.1) 19px, rgba(255, 255, 255, 0.1) 20px, transparent 20px, transparent 29px, rgba(255, 255, 255, 0.1) 29px, rgba(255, 255, 255, 0.1) 30px, transparent 30px, transparent 39px, rgba(255, 255, 255, 0.1) 39px, rgba(255, 255, 255, 0.1) 40px, transparent 40px, transparent 49px, rgba(255, 255, 255, 0.1) 49px, rgba(255, 255, 255, 0.1) 50px), linear-gradient(-90deg, transparent 0%, transparent 9px, rgba(255, 255, 255, 0.2) 9px, rgba(255, 255, 255, 0.2) 10px, transparent 10px, transparent 19px, rgba(255, 255, 255, 0.1) 19px, rgba(255, 255, 255, 0.1) 20px, transparent 20px, transparent 29px, rgba(255, 255, 255, 0.1) 29px, rgba(255, 255, 255, 0.1) 30px, transparent 30px, transparent 39px, rgba(255, 255, 255, 0.1) 39px, rgba(255, 255, 255, 0.1) 40px, transparent 40px, transparent 49px, rgba(255, 255, 255, 0.1) 49px, rgba(255, 255, 255, 0.1) 50px);background-size: 100px 100px;
+  }
+
+
+.moveable-control-box{
+    display:none;
+  }
+
+
+.toolBox{
+  font-family: "Roboto", sans-serif;
+  position: relative;
+  width: 400px;
+}
+
 </style>

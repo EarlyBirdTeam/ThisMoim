@@ -1,5 +1,5 @@
 <template >
-    <div class="" id="board" @click="cloakMoveable" >
+    <div class="" id="board" @click="cloakMoveable" @mousemove="mouseMoveEvent">
 
 
 
@@ -38,10 +38,9 @@
 
         <div class="bodyBox " ref="whiteBoard" @dblclick="focusAction"
         @click="changeTargetAction"
-        @change="test3"
-        style="
-  height: 75vh;
-  width: 80vw;">
+        
+        @wheel="wheelEvent"
+        style="height: 75vh; width: 80vw;">
 
           <div class="MoveableBox realBoard" >
 
@@ -174,6 +173,7 @@ export default {
     postitList: [],
     token: '',
     userCount: 0,
+    boardScale: 1,
   }),
   methods: {
     // connect() {
@@ -249,7 +249,7 @@ export default {
               target.style.left = '1px'
               document.querySelector('.bodyBox').style.borderLeft = "red 3px solid";
             }
-            else if((lp*-1) + window.innerWidth > boardLength) {
+            else if(((lp*-1) + window.innerWidth ) > (boardLength )) {
               target.style.left = (-boardLength + window.innerWidth)+'px';
               document.querySelector('.bodyBox').style.borderRight = "red 3px solid";
             } 
@@ -339,20 +339,30 @@ export default {
     cloakMoveable() {
       document.querySelector(".moveable-control-box").style.display = "none";
     },
-    test3(){
-      console.log("page is changed!");
-      // console.log(this.$store.state);
-      // console.log("Id : ", this.$store.state.channelData.channelId);
-      // console.log("Name : ", this.$store.state.channelData.channelName);
-      
-      console.log(localStorage.getItem('wsboard.channelId'));
-      console.log(localStorage.getItem('wsboard.channelName'));
+    wheelEvent: function(event) {
+      // console.log(event.deltaY);
+      if (event.deltaY < 0) { 
+        console.log("up!"); 
+        this.boardScale += 0.05;
 
-      this.sendMessage();
+        if(this.boardScale > 1.3) this.boardScale = 1.3;
+
+        console.log(this.boardScale);
+      }
+      else if (event.deltaY > 0) {
+        this.boardScale -= 0.05;
+
+        if(this.boardScale < 0.3) this.boardScale = 0.3;
+
+        console.log(this.boardScale);
+         console.log("down!"); 
+      }
+
+      document.querySelector(".realBoard").style.transform = `scale(${this.boardScale})`;
+      
     },
-    test4({target}){
-      target.style.left = "100px";
-      console.log(this.$store.state)
+    mouseMoveEvent(event){
+      // console.log(event);
     },
     changePITitle: function(value,index){
       console.log("title is changed!",index ,value);
@@ -378,7 +388,6 @@ export default {
         "contents": "content" ,
         "point":null,
       });
-      this.test3();
     },
     createCanvas() {
       event.stopPropagation();
@@ -433,7 +442,8 @@ export default {
         this.board.postits = recv.postits;
         this.counter.textC = recv.postits.length;
         console.log("served postits is : ", this.board.postits);
-    }
+    },
+    
   },
   
 }
