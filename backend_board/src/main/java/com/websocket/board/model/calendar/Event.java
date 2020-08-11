@@ -1,4 +1,4 @@
-package com.websocket.board.model;
+package com.websocket.board.model.calendar;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -6,13 +6,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Builder
-public class Kanban implements Serializable {
-    private String kanbanName;
-    private List<Column> columns;
+public class Event implements Serializable {
+    private String name;
+    private String content;
+    private String start;
+    private String end;
 }

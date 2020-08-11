@@ -1,5 +1,5 @@
 <template>
-  <div class="pa-5">
+  <div class="MoveableBox calendar pa-5">
     <v-row>
       <v-col cols="12" class="mb-4">
         <v-row>
@@ -111,5 +111,8 @@ export default {
 </script>
 
 <style>
+.calendar {
+  border: solid 1px; 
+}
 </style>
 

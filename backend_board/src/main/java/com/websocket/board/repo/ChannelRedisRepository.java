@@ -1,6 +1,8 @@
 package com.websocket.board.repo;
 
 import com.websocket.board.model.SocketBoardMessage;
+import com.websocket.board.model.calendar.Calendar;
+import com.websocket.board.model.kanban.Kanban;
 import lombok.RequiredArgsConstructor;
 import com.websocket.board.dto.Channel;
 import org.springframework.data.redis.core.HashOperations;
@@ -52,6 +54,8 @@ public class ChannelRedisRepository {
                 .builder()
                 .channelId(channelId)
                 .postitList(new ArrayList<>())
+                .kanban(new Kanban())
+                .calendar(new Calendar())
                 .build();
         hashOpsBoard.put(BOARD_STATE, channelId, board);
         return board;
