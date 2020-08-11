@@ -3,6 +3,7 @@ package com.websocket.board.model;
 import com.websocket.board.dto.Postit;
 import com.websocket.board.model.calendar.Calendar;
 import com.websocket.board.model.kanban.Kanban;
+import com.websocket.board.model.poll.Poll;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,15 +27,15 @@ public class SocketBoardMessage implements Serializable {
 
     // 보드 전달 모듈 관련 인자
     private long idCount;
+
     private List<Postit> postitList; // 포스트잇 리스트
-    private Boolean isDelete;
     private Kanban kanban;
     private Boolean isKanban;
     private Calendar calendar;
+    private Poll poll;
+
+    private Boolean isDelete;
     private DeletedModule delete;
-    // List<Calendar> calendarList; // 캘린더 리스트
-    // List<Canvas> canvas; // 캔버스 리스트
-    // List<Map> mapList; // 맵 리스트
     // List<Attendance> attendenceList; // 출석부 리스트
     // List<Attendance> voteList; // 출석부 리스트
 
