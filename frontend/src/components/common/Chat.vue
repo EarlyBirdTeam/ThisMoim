@@ -118,7 +118,9 @@ export default {
     });
 
     this.$socket.on("out", (data) => {
-      if(!(data.from.name).eqauls("undefnied")) $('.chatbox').append('<div class="inout-bubble">'+data.from.name+'님이 나가셨습니다.</div>');
+      console.log("나갔습니다!!");
+      // if(!(data.from.name).eqauls("undefnied")) 
+      $('.chatbox').append('<div class="inout-bubble">'+data.from.name+'님이 나가셨습니다.</div>');
     
     });
 

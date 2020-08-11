@@ -1,7 +1,17 @@
 'use strict';
 
 var app = require('express')();
+const bodyParser = require("body-parser");
+const cors = require("cors");
+const db = require("./app/models");
+// 디비 초기화
+// db.sequelize.sync();
+// db.sequelize.sync({ force: true }).then(() => {
+//     console.log("Drop and re-sync db.");
+//   });
+
 var server = require('http').createServer(app);
+
 // http server를 socket.io server로 upgrade한다
 var io = require('socket.io')(server);
 
@@ -130,51 +140,26 @@ io.on('connection', function(socket) {
     });
 
 
-    // 클라이언트로부터의 메시지가 수신되면
-    socket.on('chatto', function(data) {
-        console.log('to %s from %s', data.id, socket.name);
-        // room 조인
-        socket.join(data.id);
 
-        console.log('(귓속말) 내용 : %s', data.msg);
-        console.log("socketid : "+socket.id);
-        console.log("dataid : "+data.id);
+    //     // 메시지를 전송한 클라이언트를 제외한 모든 클라이언트에게 메시지를 전송한다
+    //     // socket.broadcast.emit('chat', msg);
 
-        // socket.join(data.id);  // 상대 socket.id에 내 id를 조인시킴으로써 같은 room 입장. 이 경우 조인 경우가 꼬일 수 있음.
+    //     // 메시지를 전송한 클라이언트에게만 메시지를 전송한다
+    //     // socket.emit('s2c chat', msg);
 
-        var msg = {
-            to:{
-                name: data.id,
-            },
-            from: {
-                name: socket.name,
-                userid: socket.userid
-            },
-            msg: data.msg,
-            id: data.id,
-            myid: socket.id,
-            yourname: data.name
-        };
+    //     // 접속된 모든 클라이언트에게 메시지를 전송한다
+    //     // io.emit('s2c chat', msg);
 
-        // 메시지를 전송한 클라이언트를 제외한 모든 클라이언트에게 메시지를 전송한다
-        // socket.broadcast.emit('chat', msg);
+    //     // 특정 클라이언트에게만 메시지를 전송한다
+    //     //io.to(data.id).emit('s2c chat', msg);
 
-        // 메시지를 전송한 클라이언트에게만 메시지를 전송한다
-        // socket.emit('s2c chat', msg);
+    //     // room
+    //     var room = socket.room = data.id;
+    //     console.log('('+socket.name+') room : ' + room);
+    //     socket.join(room);
 
-        // 접속된 모든 클라이언트에게 메시지를 전송한다
-        // io.emit('s2c chat', msg);
-
-        // 특정 클라이언트에게만 메시지를 전송한다
-        //io.to(data.id).emit('s2c chat', msg);
-
-        // room
-        var room = socket.room = data.id;
-        console.log('('+socket.name+') room : ' + room);
-        socket.join(room);
-
-        io.to(room).emit('s2c chat', msg);
-    });
+    //     io.to(room).emit('s2c chat', msg);
+    // });
 
     // force client disconnect from server
     socket.on('forceDisconnect', function() {
@@ -185,6 +170,7 @@ io.on('connection', function(socket) {
 
     socket.on('disconnect', function(data) {
         console.log(socket.name + "님이 연결을 끓으셨습니다.");
+        
         var msg = {
             from: {
                 name: socket.name,
@@ -193,17 +179,9 @@ io.on('connection', function(socket) {
             msg: data.msg
         };
 
-        io.emit('out', msg);
-
-        // 연결이 끊긴 client_list 삭제 후 다시 조회
-        for(var i in client_list){
-          if(client_list[i].sockect_id == socket.id){
-            io.emit('deleteUser', client_list[i].nickname);
-            console.log('client_list[i] : '+client_list[i].nickname);
-          }
-        }
-
-//        io.emit('sendList', client_list);
+//        io.emit('out', msg);
+        io.to(room).emit('out', msg);
+       
     });
 
     /////////////////////////////// Cam
