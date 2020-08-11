@@ -1,10 +1,10 @@
 <template>
-    <div class="user" id="joinDone">
+  <div class="user" id="ConfirmDone">
         <div class="wrapC table">
             <div class="middle">
-                <h1>회원가입이 완료되었습니다!</h1>
+                <h1>회원 인증이 완료되었습니다.</h1>
 
-                <h3>회원가입 인증 메일이 발송되었습니다.</h3>
+                <h3>환영합니다!</h3>
                 <router-link v-bind:to="{name:constants.URL_TYPE.POST.MAIN}" class="login-btn">
                 돌아가기 
                 </router-link>  
@@ -12,15 +12,11 @@
         </div> 
 
     </div>
-
-
 </template>
-
 
 <script>
     import '../../assets/css/user.scss'
     import constants from '../../lib/constants'
-
     export default {
         components: {
         },
@@ -31,5 +27,8 @@
         }
 
     }
-
 </script>
+
+<style>
+
+</style>

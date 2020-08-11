@@ -60,7 +60,8 @@ import static org.springframework.web.util.UriComponentsBuilder.newInstance;
 @Controller
 @RequestMapping("/api/auth")
 @Api(value = "Authorization Rest API", description = "Defines endpoints that can be hit only when the user is not logged in. It's not secured by default.")
-@CrossOrigin(origins = "http://localhost:3001")
+// @CrossOrigin(origins = "http://localhost:3001")
+@CrossOrigin(origins = "http://localhost:3000")
 public class AuthController {
 
     private static final Logger logger = Logger.getLogger(AuthController.class);
@@ -119,7 +120,7 @@ public class AuthController {
 
         return authService.registerUser(registrationRequest)
                 .map(user -> {
-                    UriComponentsBuilder urlBuilder = ServletUriComponentsBuilder.newInstance().scheme("http").host("i3a510.p.ssafy.io").port(9004).path("/api/auth/registrationConfirmation");
+                    UriComponentsBuilder urlBuilder = ServletUriComponentsBuilder.newInstance().scheme("http").host("localhost").port(9004).path("/api/auth/registrationConfirmation");
 //                    UriComponentsBuilder urlBuilder = ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/auth/registrationConfirmation");
                     OnUserRegistrationCompleteEvent onUserRegistrationCompleteEvent = new OnUserRegistrationCompleteEvent(user, urlBuilder);
                     applicationEventPublisher.publishEvent(onUserRegistrationCompleteEvent);
@@ -137,7 +138,7 @@ public class AuthController {
 
         return authService.generatePasswordResetToken(passwordResetLinkRequest)
                 .map(passwordResetToken -> {
-                    UriComponentsBuilder urlBuilder = ServletUriComponentsBuilder.newInstance().scheme("http").host("i3a510.p.ssafy.io").port(9004).path("/password/reset");
+                    UriComponentsBuilder urlBuilder = ServletUriComponentsBuilder.newInstance().scheme("http").host("localhost").port(9004).path("/password/reset");
 //                    UriComponentsBuilder urlBuilder = ServletUriComponentsBuilder.fromCurrentContextPath().path("/password/reset");
                     OnGenerateResetLinkEvent generateResetLinkMailEvent = new OnGenerateResetLinkEvent(passwordResetToken,
                             urlBuilder);
@@ -167,9 +168,10 @@ public class AuthController {
     @ApiOperation(value = "Confirms the email verification token that has been generated for the user during registration")
     public String confirmRegistration(@ApiParam(value = "the token that was sent to the user email") @RequestParam("token") String token) {
         if(authService.confirmEmailRegistration(token)!=null){
-            return "redirect:http://i3a510.p.ssafy.io:3001/#/api/auth/registrationConfirmation";
+//            return "redirect:http://i3a510.p.ssafy.io:3000/#/api/auth/registrationConfirmation";
+            return "redirect:http://localhost:3000/api/auth/registrationConfirmation";
         }else{
-            return "redirect:http://i3a510.p.ssafy.io:3001/#/error";
+            return "redirect:http://localhost:3000/error";
         }
     }
 

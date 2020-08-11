@@ -46,7 +46,8 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/api/user")
 @Api(value = "User Rest API", description = "Defines endpoints for the logged in user. It's secured by default")
-@CrossOrigin(origins = "http://localhost:3001")
+@CrossOrigin(origins = "http://localhost:3000")
+// @CrossOrigin(origins = "http://localhost:3001")
 public class UserController {
 
     private static final Logger logger = Logger.getLogger(UserController.class);

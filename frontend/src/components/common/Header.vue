@@ -2,26 +2,12 @@
     <div id="header" v-if="isHeader">
         <h1>
             <router-link v-bind:to="{name:constants.URL_TYPE.POST.MAIN}">
-                당신이 찾는 소모임 - 이거모임
+                SS_log
             </router-link>
         </h1>
         <div class="right">
-            <!-- <div class="search-input">
-                <i class="fas fa-search"></i>
-                <input v-model="keyword" type="text"/>
-            </div>  -->
-            
-            <!-- <router-link v-bind:to="{name:constants.URL_TYPE.USER.LOGIN}" class="login-btn">
-                로그인 
-            </router-link>   -->
-
-            
-            <!-- <button @click="check">
-                store 체크
-            </button> -->
-            <!-- <p>{{this.$store.state.email}}</p> -->
-
-            <template v-if="this.$store.state.email == ''">
+            <!-- <template v-if="this.$store.state.email == ''"> -->
+            <template v-if="this.$store.getters.accessToken == ''">
                 <div class="headBox">
                     <button @click="openModal">
                         로그인
@@ -29,23 +15,27 @@
                 </div>
             </template>
 
-            <template v-if="this.$store.state.email != ''">
+            <template v-else>
                 <div class="headBox">
                     <router-link v-bind:to="{name:constants.URL_TYPE.USER.MYPAGE}" class="btn--text">
-                        {{userData}}
+                        {{this.$store.state.userData.email}}
                     </router-link> 
 
-                
                     <button @click="logout">
                         로그아웃
                     </button>
                 </div>
             </template>
 
+            
+                    <!-- <button @click="check">
+                        스토어 체크
+                    </button> -->
+
         </div>  
         
         
-            <loginModal @close="closeModal" v-if="modal">
+            <loginModal @close="closeModal" v-if="this.$store.getters.modal">
                 
                 
                 <div class="input-wrap">
@@ -57,7 +47,7 @@
                     <div class="input-wrap">
                         <input v-model="password" type="password"
                         id="password"
-                        placeholder="영문, 숫자 혼용 8자 이상"/>
+                        placeholder="비밀번호를 입력해주세요"/>
                     </div>
                 
                 
@@ -84,54 +74,41 @@
             loginModal
         },
         props: ['isHeader'],
-        computed:{
-            userData(){
-                return this.$store.state.email;
-            }
-            // userinfo:{
-            //     get() {
-            //         const arr = document.cookie.split(";");
-            //         console.log("asdfasdfasdf");
-
-            //         arr.forEach(element => {
-            //             if(element.split('=')[0] == 'Logged'){
-            //                 userinfo = element.split('=')[1];
-            //             }
-            //         });
-            //     }
-            // },
-
-        },
         watch: {
             modal: function(val) {
                 console.log(val);
             }
         },
         created() {
+            const arr = document.cookie.split(";");
+            console.log(this.$store.getters.userData);
             // console.log("arr is ");
             // console.log(arr);
-            // const arr = document.cookie.split(";");
-
-            // arr.forEach(element => {
-            //     if(element.split('=')[0] == 'Logged'){
-            //         this.userinfo = element.split('=')[1];
-            //     }
-            // });
+            arr.forEach(element => {
+                if(element.split('=')[0] == 'AccessToken'){
+                    this.userinfo = element.split('=')[1];
+                }
+            });
 
             // if(document.cookie.split(";")[0].split('=')[0])
             // console.log();
 
             
         },
+        computed: {
+            
+        },
         methods : {
             openModal(){
                 this.modal = true;
+                this.$store.commit("toggleModal");
             },
             closeModal(){
                 this.modal = false;
+                this.$store.commit("toggleModal");
             },
             async logout(){
-                this.$store.dispatch(constants.METHODS.LOGOUT_USER);
+                this.$store.commit(constants.METHODS.LOGOUT_USER);
                 try{
                    await this.$router.push('/');
                 } catch(error) {
@@ -161,12 +138,12 @@
 
                     const result = this.$store.dispatch(constants.METHODS.LOGIN_USER, {email, password});
                     console.log(this.userData);this.modal = !this.modal;
-                  
+                    this.email = '';
                 };
 
                     
-                // this.email = '';
-                // this.password = '';
+                    this.password = '';
+                
             },
             
         },
@@ -174,8 +151,10 @@
            return {
                constants,
                keyword : "",
-               modal:this.$store.state.modal,
-               userinfo:this.$store.state.email,
+               modal:this.$store.getters.modal,
+                userinfo: '',
+                email:"",
+                password:"",
            }
         },
 
@@ -183,12 +162,6 @@
 
 
 </script>
-
-<style>
-    #header{
-        border-bottom: 3px solid rgb(223, 223, 223)
-    }
-</style>
 
 
 

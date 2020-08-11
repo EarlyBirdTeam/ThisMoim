@@ -15,14 +15,26 @@
                             <label for="nickName">닉네임 : </label>
                             <input v-model="this.$store.getters.userData.nickname"
                                 id="nickName"
-                                type="text" readonly="readonly"
+                                placeholder="닉네임을 입력해주세요" type="text" readonly="readonly"
                                 />
                         </div>
+
+                        <!-- <div class="info-wrap">
+                            <label for="password">비밀번호 : </label>    
+                            <input v-model="userData.password"
+                                id="password" 
+                                :type="passwordType" readonly="readonly"
+                                placeholder="비밀번호를 입력해주세요"/>
+                            <span :class="{active : passwordType==='text'}">
+                                    <i class="fas fa-eye"></i>
+                            </span>
+                        </div> -->
+
                         <div class="info-wrap">
                             <label for="realName">이름 : </label>
                             <input v-model="this.$store.getters.userData.name" readonly="readonly"
                                 id="realName"
-                                type="text"/>
+                                placeholder="이름을 입력해주세요" type="text"/>
                         </div>
                         <div class="info-wrap">
                              <!-- <button v-on:click="updateUser">회원정보 수정</button> -->
