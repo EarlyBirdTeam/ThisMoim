@@ -216,6 +216,9 @@ export default {
           // this.board.postitList = response.data.postitList;
           // this.board.idCount = response.data.idCount;
           this.board = response.data;
+          this.$store.state.Kanban.columns = response.data.kanban.columns;
+          this.board.Kanban.columns = response.data.kanban.columns;
+
         })
         .catch((e) => {
         });
