@@ -1,7 +1,7 @@
 <template>
   <div class="MoveableBox calendar pa-5">
     <v-row>
-      <v-col cols="12" class="mb-4">
+      <v-col cols="12">
         <v-row>
           <v-col cols="6">
             <v-menu
@@ -58,7 +58,7 @@
     </v-row>
     <Dialog v-if="$store.state.calendar.dialog" />
     <EventDetail v-if="$store.state.calendar.eventDetail" />
-    <v-footer absolute>{{ $store.state.calendar }}</v-footer>
+    <!-- <v-footer absolute>{{ $store.state.calendar }}</v-footer> -->
   </div>
 </template>
 
@@ -112,7 +112,11 @@ export default {
 
 <style>
 .calendar {
-  border: solid 1px; 
+  background-color: white;
+  /* border: solid 2px gray;  */
+  border-radius: 5px;
+  width: 550px;
+  box-shadow: .5rem 1rem 2rem rgba(0,0,0,.3)!important;
 }
 </style>
 

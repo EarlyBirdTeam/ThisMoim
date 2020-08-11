@@ -1,6 +1,6 @@
 <template>
   <div id="app" v-cloak @click="cloakMoveable">
-    <div class="row">
+    <div>
       {{ board }}
       <v-snackbar
         app
@@ -9,7 +9,7 @@
         :timeout="snackbar.timeout"
         :color="snackbar.color"
       >{{ snackbar.text }}</v-snackbar>
-      <div class="col-md-6">
+      <div>
         <h4>
           {{channelName}}
           <span class="badge badge-info badge-pill">{{userCount}}</span>
@@ -19,17 +19,20 @@
       </div>
     </div>
     <v-toolbar class="toolBox">
-      <v-btn icon color="orange" @click="createPostit">
+      <v-btn icon color="orange"  @click="createPostit" draggable="true" @dragend="moduleDragEnd('postit', $event)">
         <v-icon>mdi-message</v-icon>
       </v-btn>
-      <v-btn icon color="orange" @click="createKanban">
+      <v-btn icon color="orange" @click="createKanban" draggable="true" @dragend="moduleDragEnd('kanban', $event)">
         <v-icon>mdi-clipboard-list-outline</v-icon>
       </v-btn>
       <!-- <v-btn icon color="orange" @click="createMap">
         <v-icon>mdi-map</v-icon>
       </v-btn> -->
-      <v-btn icon color="orange" @click="createCalendar">
+      <v-btn icon color="orange" @click="createCalendar" draggable="true" @drag="moduleDragEnd('calendar', $event)">
         <v-icon>mdi-calendar</v-icon>
+      </v-btn>
+      <v-btn icon color="orange" @click="createPoll" draggable="true" @drag="moduleDragEnd('poll', $event)">
+        <v-icon>mdi-vote</v-icon>
       </v-btn>
     </v-toolbar>
 
@@ -70,10 +73,15 @@
         <Map v-if="map.isPresent"/>
       </div>
 
-      <div @click.right="deleteAction">
-        <Calendar v-if="!!board.calendar.left"/>
+      <div class="Calendar" @click.right="deleteAction">
+        <Calendar v-if="!!board.calendar.left" />
       </div>
 
+      <div class="Poll" @click.right="deleteAction">
+        <Poll v-if="isPoll" 
+        :style = "{left: board.poll.left, top: board.poll.top}"
+        />
+      </div>
       <v-dialog width="600px">
       <template v-slot:activator="{ on, attrs }">
         <v-btn
@@ -113,7 +121,7 @@ import Postit from "../../components/module/Postit";
 import Map from "../../components/module/Map";
 import Calendar from "../../components/module/Calendar";
 import Chat from "../../components/common/Chat";
-
+import Poll from "../../components/common/Poll"
 import Kanban from "../../components/module/Kanban";
 
 export default {
@@ -133,6 +141,7 @@ export default {
         isKanban: false,
         kanban: this.$store.state.Kanban,
         calendar: {},
+        poll: {},
         isDelete: false,
         delete: {
           moduleName: '',
@@ -167,6 +176,8 @@ export default {
         text: "",
         timeout: 1000,
       },
+      idc: 0,
+      isPoll: false,
     };
   },
   created() {
@@ -216,6 +227,7 @@ export default {
           // this.board.postitList = response.data.postitList;
           // this.board.idCount = response.data.idCount;
           this.board = response.data;
+          this.board.delete = { moduleName:'', id: -1}
         })
         .catch((e) => {
         });
@@ -234,16 +246,15 @@ export default {
       this.createSnackbar("수정되었습니다", 1000, "warning");
     },
     recvMessage: function (recv) {
-      console.log(recv);
       this.userCount = recv.userCount;
       this.board.idCount = recv.idCount;
       this.board.postitList = recv.postitList;
       this.board.isDelete = false;
-
       this.board.calendar = recv.calendar;
+      this.board.poll = recv.poll;
       this.$store.state.calendar.events = recv.calendar.events;
     },
-    createPostit(event) {
+    createPostit(event, left='500px', top='170px') {
       if(this.board.postitList.length > 20) {
         this.createSnackbar("포스트잇이 너무 많습니다!", 3000, "error")
         return
@@ -308,16 +319,33 @@ export default {
       }
     },    
     createCalendar(event) {
-      this.board.calendar = {
-        // frontCalendarId: 0,
-        left: '500px',
-        top: '170px',
-        events: this.$store.state.calendar.events,
+      if (this.board.calendar.left !== null){
+        this.createSnackbar("이미 달력이 있습니다!", 3000, "error");
+      } else {
+        this.board.calendar = {
+          left: '500px',
+          top: '170px',
+          events: this.$store.state.calendar.events,
+        }
+        console.log("create Calendar");
+        console.log(this.board.calendar);
+        // this.sendMessage();
       }
-      console.log("create Calendar");
-      console.log(this.board.calendar);
-      // this.sendMessage();
     },
+    
+    createPoll(event) {
+      if (this.isPoll){
+        this.createSnackbar("이미 투표가 있습니다!", 3000, "error");
+      } else {
+        this.isPoll = true;
+        const idc = this.board.idCount++;
+        this.board.poll = this.$store.state.poll;
+        console.log("create Poll");
+        console.log(this.board.poll);
+        // this.sendMessage();
+      }
+    },
+
     createSnackbar(text, timeout, color) {
       this.snackbar.isPresent = true;
       this.snackbar.text = text;
@@ -327,14 +355,28 @@ export default {
     handleDrag({ target, left, top }) {
       target.style.left = `${left}px`;
       target.style.top = `${top}px`;
-      this.board.postitList.map((postit) => {
-        if (postit.frontPostitId == target.id) {
-          (postit.left = `${left}px`), (postit.top = `${top}px`);
+      if (target.getAttribute("class") != null) {
+        var clas = target.getAttribute("class").split(" ");
+        for (var cla in clas) {
+          if (clas[cla] == "paper") {
+              this.board.postitList.map((postit) => {
+              if (postit.frontPostitId == target.id) {
+                (postit.left = `${left}px`), (postit.top = `${top}px`);
+              }
+              return {
+                ...postit,
+              };
+            });
+          } else if(clas[cla] == "calendar") {
+            this.board.calendar.left = `${left}px`
+            this.board.calendar.top = `${top}px`
+          } else if(clas[cla] == "Pollx") {
+            this.board.poll.left = `${left}px`
+            this.board.poll.top = `${top}px`
+          }
         }
-        return {
-          ...postit,
-        };
-      });
+      }
+     
     },
     handleDragEnd() {
       this.sendMessage();
@@ -382,6 +424,14 @@ export default {
     },
     deleteAction({target}) {
       if(confirm("요소를 삭제하시겠습니까?") === true) {
+        if (target.getAttribute("class") != null) {
+        var clas = target.getAttribute("class");
+        if (clas == "Calendar") {
+          this.board.calendar = {}
+        } else if (clas == "Poll") {
+          this.board.poll = {}
+        }
+      }
         target.remove();
         this.cloakMoveable();
       }
@@ -392,6 +442,16 @@ export default {
     cloakMoveable() {
       document.querySelector(".moveable-control-box").style.display = "none";
     },
+    moduleDrag(moduleName, {target, left, top}) {
+      switch(moduleName) {
+        case 'postit':
+          this.createPostit(left, top)
+      }
+      console.log(moduleName);
+    },
+    moduleDragEnd(moduleName, {pageX, pageY}) {
+      
+    }
   },
   components: {
     Moveable,
@@ -399,7 +459,8 @@ export default {
     Map,
     Calendar,
     Chat,
-    Kanban
+    Kanban,
+    Poll,
   },
 };
 </script>

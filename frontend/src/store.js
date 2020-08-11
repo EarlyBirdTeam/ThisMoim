@@ -42,17 +42,19 @@ export const store = new Vuex.Store({
         },
         // 캘린더
         calendar: {
-            event: {
-                startDate: '',
-                startTime: '',
-                endDate: '',
-                endTime: '',
-                content: '',
-                title: '',
-            },
-            events: [{ "name": "오프라인", "content": "hello", "start": "2020-08-05T12:30:00", "end": "2020-08-05T18:00:00" }],
-            dialog: false,
-            eventDetail: false,
+          left: '600px',
+          top: '270px',
+          event: {
+              startDate: '',
+              startTime: '',
+              endDate: '',
+              endTime: '',
+              content: '',
+              title: '',
+          },
+          events: [{ "name": "오프라인", "content": "hello", "start": "2020-08-05T12:30:00", "end": "2020-08-05T18:00:00" }],
+          dialog: false,
+          eventDetail: false,
         },
         Kanban:{
             task: {
@@ -79,6 +81,17 @@ export const store = new Vuex.Store({
             frontKanbanId:'', 
             kanban: {}, 
             channel:""
+        },
+        poll: {
+          left: "500px",
+          top: "170px",
+          question: null,
+          answers: [ {answer: "김강현", voted: 0}, {answer: "배민규", voted: 0}, {answer: "정용우 the Master of Frontend", voted: 0}],
+          multipleVotes: false,
+          totalVotes: 0,
+          userVoted: [ ],
+          isSetAll: false,
+          isEnd: false,
         },
         
     },
