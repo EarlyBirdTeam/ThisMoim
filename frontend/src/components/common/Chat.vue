@@ -1,41 +1,75 @@
 <template>
-  <div class="chat-container">
-    <div class="chat-header">
-      <button id="close" class="header-btn"></button>
-      <button id="minimize" class="header-btn"></button>
-      <button id="maximize" class="header-btn"></button>
+<div>
 
-      <!-- <img id="profile-pic" v-bind:src="picture.jpg" > -->
-      <!-- <img id="profile-pic" v-bind:src="picutre.jpg" width="50" height="50"> -->
-      <img id="profile-pic" src='../../assets/img/picture.jpg' width="1">
-      <span id="username">나</span>
+ <div class="chat-container" id="chatContainer">
+   <div v-if="chattingBox">
+        <div class="chat-header" id="chatHeader">
+          <button id="minimize" class="header-btn" @click="minimize"></button>
+          <button id="maximize" class="header-btn" @click="maximize"></button>
+          <img id="profile-pic" src='../../assets/img/picture.jpg' width="1">
+          <span id="username">나</span>
+        </div>
+    
+        <div class="chatbox" id="chatBox">
+          <div class="friend-bubble bubble">
+            매너 채팅 해주세요 :)
+          </div>
+        </div>
+    
+        <form>
+        <div class="text-box" id="textBox">
+          <textarea id="msgForm" placeholder="메시지를 입력해주세요 :)" @keyup="enter" ></textarea>
+          <button id="sendChat" @click=sendChat>전송</button>
+          <div class="clearfix"></div>
+        </div>
+       </form>
+   </div>
+ </div>
+ 
+    <div class="chat-container2" id="chatContainer" v-if="!chattingBox">
+       <div class="chat-header" id="chatHeader">
+          <button id="minimize" class="header-btn" @click="minimize"></button>
+          <button id="maximize" class="header-btn" @click="maximize"></button>
+          <img id="profile-pic" src='../../assets/img/picture.jpg' width="1">
+          <span id="username">나</span>
+        </div>
     </div>
+ </div>
 
-    <div class="chatbox">
-      <div class="friend-bubble bubble">
-        매너 채팅 해주세요 :)
-      </div>
-    </div>
 
-    <form>
-    <div class="text-box">
-      <textarea id="msgForm" placeholder="메시지를 입력해주세요 :)" @keyup="enter" ></textarea>
-      <button id="sendChat" @click=sendChat>전송</button>
-      <div class="clearfix"></div>
-    </div>
-    </form>
-  </div>
+
 </template>
 
 
 
 <script>
-// import ZZ from '../img/picture.jpg';
+
+      // var chatcontainer = document.getElementById("chatContainer");
+      // var chatheader = document.getElementById("chatHeader");
+      // var chatbox = document.getElementById("chatBox");
+      // var textbox = document.getElementById("textBox");
+
+      // $("#minimize").click(function(){
+      //   chatbox.style.display = 'none';
+      //   textbox.style.display = 'none';
+      //   chatcontainer.style.top = '90%';
+      //   //alert("최소화");
+      // });
+
+      // $("#maximize").click(function(){
+      //   chatbox.style.display = 'block';
+      //   textbox.style.display = 'block';
+      //   chatcontainer.style.top = '23%';
+      // })
 
 export default {
   name: "Chat",
   created() {
-
+    var chatcontainer = document.getElementById("chatContainer");
+    var chatheader = document.getElementById("chatHeader");
+    var chatbox = document.getElementById("chatBox");
+    var textbox = document.getElementById("textBox");
+    
     var $msgForm = $('#msgForm').val();
     var myname = this.makeRandomName();
     this.naname = myname;
@@ -87,11 +121,13 @@ export default {
 
     this.$socket.on(() => {});
 
+
+    
   },
 
   data() {
     return {
-      
+      chattingBox: true,
       textarea: "",
       message: "",
       chatmem: [],
@@ -111,10 +147,6 @@ export default {
         var $msgForm = $('#msgForm').val();
         console.log("msgForm : "+$msgForm);
 
-        // if(msgForm){
-        // $('.chatbox').append('<div class="my-bubble bubble">'+$msgForm+'</div>');
-        // $('textarea').val('');
-        // }
 
         this.$socket.emit("chat", {msg: $msgForm});
         $('#msgForm').val("");
@@ -131,30 +163,16 @@ export default {
           else this.sendChat();
         }
 
-        //console.log(code);
     },
 
-    // sendMessage() {
-    //   event.preventDefault();
-    //   var $msgForm = $("#msgForm");
-    //   var $other = $("#other");
-    //   // 서버로 메시지를 전송한다.
-    //   if ($other.val() == "") {
-    //     // 서버로 메시지를 전송한다.
-    //     this.$socket.emit("chat", { msg: $msgForm.val() });
-    //     $msgForm.val("");
-    //   } else {
-    //     console.log("귓속말 대상 : " + $other.val());
-    //     this.$socket.emit("chatto", { msg: $msgForm.val(), id: $other.val() });
-    //     $msgForm.val("");
-    //   }
-    //   $('#chatLogs').scrollTop($('#chatLogs').prop('scrollHeight'));
+    minimize(){
+      this.chattingBox = false;
+      //alert("최소화");
+    },
+    maximize(){
+      this.chattingBox = true;
+    },
 
-    //             setTimeout(function(){
-    //                 $('#chatLogs').scrollTop($('#chatLogs').prop('scrollHeight'));
-    //             }, 300);
-
-    // },
     makeRandomName() {
       var name = "";
       var possible = "abcdefghijklmnopqrstuvwxyz";
@@ -180,15 +198,18 @@ export default {
   }
   
   .chat-container {
-    
-    width: 600px;
     box-shadow: 0 2px 4px 0 rgba(0,0,0,0.50);
     transition: width 0.3s ease;
+    position: absolute;
+    
+    left: 75%;
+    width: 25%;
+    top: 38%;
+
   }
   
   .chat-header {
     background-color: white;
-    position: relative;
     padding: 30px 8px 8px 8px;
   }
   
@@ -232,6 +253,19 @@ export default {
     margin-left: 5px;
     color: #343434;
   }
+
+  /* only header */
+  .chat-container2 {
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,0.50);
+    transition: width 0.3s ease;
+    position: absolute;
+    
+    left: 75%;
+    width: 25%;
+    top: 92%;
+
+  }
+  
   
   /* chat box */
   
