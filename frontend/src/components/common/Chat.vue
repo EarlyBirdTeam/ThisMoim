@@ -65,6 +65,8 @@
 export default {
   name: "Chat",
   created() {
+    //console.log("chanelName : "+ localStorage.getItem("wsboard.channelName")); 채널 이름 가져오는 부분
+    
     var chatcontainer = document.getElementById("chatContainer");
     var chatheader = document.getElementById("chatHeader");
     var chatbox = document.getElementById("chatBox");
@@ -80,6 +82,7 @@ export default {
       //name: this.$store.state.name,
       name: myname,
       userid: myname,
+      channelName : localStorage.getItem("wsboard.channelName"),
     });
 
     this.$socket.on("login", (data) => {
@@ -115,7 +118,7 @@ export default {
     });
 
     this.$socket.on("out", (data) => {
-      $('.chatbox').append('<div class="inout-bubble">'+data.from.name+'님이 나가셨습니다.</div>');
+      if(!(data.from.name).eqauls("undefnied")) $('.chatbox').append('<div class="inout-bubble">'+data.from.name+'님이 나가셨습니다.</div>');
     
     });
 

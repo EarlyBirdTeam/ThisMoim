@@ -33,6 +33,7 @@ app.get('/cam', function(req, res) {
 // connection event handler
 // connection이 수립되면 event handler function의 인자로 socket인 들어온다
 io.on('connection', function(socket) {
+    var room = '';
 
     // socket.on('enter', function(data){
 
@@ -82,12 +83,13 @@ io.on('connection', function(socket) {
 
 
         // room 조인
-        var room = socket.room = data.name;
+        room = socket.room = data.channelName;
         console.log('('+socket.name+')'+ 'room : '+room);
         socket.join(room);
         console.log('socket.id: '+socket.id);
       
-        socket.broadcast.emit('enter', data.name);
+        //socket.broadcast.emit('enter', data.name);
+        io.to(room).emit('enter', data.name);
     });
 
     // 클라이언트로부터의 메시지가 수신되면
@@ -107,11 +109,19 @@ io.on('connection', function(socket) {
         };
 
         // 메시지를 전송한 클라이언트를 제외한 모든 클라이언트에게 메시지를 전송한다
-        socket.broadcast.emit('s2c chat', msg);
-
+        //socket.broadcast.emit('s2c chat', msg);
+        
         // 메시지를 전송한 클라이언트에게만 메시지를 전송한다
+        //socket.emit('s2c chat me', msg);
+        
+        socket.leave(this.room);
+        console.log("나가기 전 room : "+room);
+        io.to(room).emit('s2c chat', msg);
+        
+        socket.join(this.room);
+        console.log("다시 들어갈 room : "+room);
         socket.emit('s2c chat me', msg);
-
+        
         // 접속된 모든 클라이언트에게 메시지를 전송한다
         // io.emit('s2c chat', msg);
 
