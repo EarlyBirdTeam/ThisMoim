@@ -1,6 +1,5 @@
 package com.websocket.board.model;
 
-import com.websocket.board.dto.Calendar;
 import com.websocket.board.dto.Postit;
 import com.websocket.board.model.calendar.Calendar;
 import com.websocket.board.model.kanban.Kanban;
@@ -33,7 +32,6 @@ public class SocketBoardMessage implements Serializable {
     private Boolean isDelete;
     private Kanban kanban;
     private Boolean isKanban;
-    private Calendar calendar;
     private DeletedModule delete;
     // List<Calendar> calendarList; // 캘린더 리스트
     // List<Canvas> canvas; // 캔버스 리스트
