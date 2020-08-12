@@ -18,8 +18,8 @@
     
         <form>
         <div class="text-box" id="textBox">
-          <textarea id="msgForm" placeholder="메시지를 입력해주세요 :)" @keyup="enter" ></textarea>
-          <button id="sendChat" @click=sendChat>전송</button>
+          <textarea v-model="chatlog.message" id="msgForm" placeholder="메시지를 입력해주세요 :)" @keyup="enter" ></textarea>
+          <button id="sendChat" @click="sendChat(); saveChatlog">전송</button>
           <div class="clearfix"></div>
         </div>
        </form>
@@ -61,6 +61,8 @@
       //   textbox.style.display = 'block';
       //   chatcontainer.style.top = '23%';
       // })
+
+import ChatlogDataService from "../../services/ChatlogDataService"
 
 export default {
   name: "Chat",
@@ -141,10 +143,31 @@ export default {
       chatNames: [],
       chatMsgs: [],
       naname: "",
+
+      chatlog: {
+        id: null,
+        message: "",
+      }
+
       
     };
   },
   methods: {
+    saveChatlog(){
+      var data = {
+        message: this.chatlog.message
+      };
+
+      ChatlogDataService.create(data)
+        .then(response => {
+          this.chatlog.id = response.data.id;
+          console.log(response.data);
+        })
+        .catch(e => {
+          console.log(e);
+        });
+    },
+
 
     sendChat() {
       event.preventDefault(); // 줄바꿈 방지?
@@ -165,7 +188,10 @@ export default {
             //console.log("Shift도 눌러짐");
           
           }
-          else this.sendChat();
+          else{
+             this.sendChat();
+             this.saveChatlog();
+          }
         }
 
     },
