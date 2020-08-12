@@ -1,6 +1,8 @@
 package com.websocket.board.controller;
 
 import com.websocket.board.model.SocketBoardMessage;
+import com.websocket.board.model.crud.CRUDModule;
+import com.websocket.board.model.crud.CRUDType;
 import com.websocket.board.repo.ChannelRedisRepository;
 import com.websocket.board.service.BoardService;
 import com.websocket.board.service.DBSyncService;
@@ -44,6 +46,7 @@ public class BoardController {
         boardService.syncSocketBoardStatus(message);
 
         // RDB sync 로직 생성예정
+        dbSyncService.crudModuleSync(message.getCrudModule());
 
         //channelRedisRepository.findBoardByChannelId(message.getChannelId());
         // 채널 포스트잇 카운트 세팅

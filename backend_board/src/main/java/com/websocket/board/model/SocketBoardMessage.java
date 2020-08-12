@@ -29,12 +29,13 @@ public class SocketBoardMessage implements Serializable {
     // 보드 전달 모듈 관련 인자
     private long idCount;
     private List<Postit> postitList; // 포스트잇 리스트
-    private Boolean isDelete;
     private Kanban kanban;
-    private Boolean isKanban;
     private Calendar calendar;
     private Poll poll;
     private CRUDModule crudModule;
+
+    private Boolean isKanban;
+    private Boolean isDelete;
 
     // 멤버, 부착물 관련 인자
     //private final int MAX_FIXTURES = 100; // 최대 부착물 갯수
