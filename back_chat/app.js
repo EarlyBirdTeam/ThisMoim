@@ -1,14 +1,33 @@
 'use strict';
 
-var app = require('express')();
+const express = require("express");
+const app = express();
 const bodyParser = require("body-parser");
+
 const cors = require("cors");
+
 const db = require("./app/models");
+
+app.use(cors({origin: 'http://localhost:8081'}));
+
+//parse requests of content-type - application/json
+app.use(bodyParser.json());
+
+// parse requests of content-type - application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: true }));
+
+
 // 디비 초기화
 // db.sequelize.sync();
 // db.sequelize.sync({ force: true }).then(() => {
 //     console.log("Drop and re-sync db.");
 //   });
+
+require("./app/routes/chatlog.routes.js")(app);
+
+
+
+
 
 var server = require('http').createServer(app);
 

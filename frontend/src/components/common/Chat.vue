@@ -18,8 +18,8 @@
     
         <form>
         <div class="text-box" id="textBox">
-          <textarea id="msgForm" placeholder="메시지를 입력해주세요 :)" @keyup="enter" ></textarea>
-          <button id="sendChat" @click=sendChat>전송</button>
+          <textarea v-model="chatlog.message" id="msgForm" placeholder="메시지를 입력해주세요 :)" @keyup="enter" ></textarea>
+          <button id="sendChat" @click="sendChat(); saveChatlog();">전송</button>
           <div class="clearfix"></div>
         </div>
        </form>
@@ -62,18 +62,19 @@
       //   chatcontainer.style.top = '23%';
       // })
 
+import ChatlogDataService from "../../services/ChatlogDataService"
+ 
 export default {
   name: "Chat",
   created() {
     //console.log("chanelName : "+ localStorage.getItem("wsboard.channelName")); 채널 이름 가져오는 부분
-    
+    var myname = this.makeRandomName();
     var chatcontainer = document.getElementById("chatContainer");
     var chatheader = document.getElementById("chatHeader");
     var chatbox = document.getElementById("chatBox");
     var textbox = document.getElementById("textBox");
-    
+    // var myname = this.makeRandomName();
     var $msgForm = $('#msgForm').val();
-    var myname = this.makeRandomName();
     this.naname = myname;
 
     console.log(this.naname);
@@ -132,6 +133,7 @@ export default {
 
   data() {
     return {
+      
       chattingBox: true,
       textarea: "",
       message: "",
@@ -141,10 +143,38 @@ export default {
       chatNames: [],
       chatMsgs: [],
       naname: "",
+
+      chatlog: {
+        id: null,
+        message: "",
+        userid: "",
+        roomid: "",
+      }
+
       
     };
   },
   methods: {
+    saveChatlog(){
+      var data = {
+        message: this.chatlog.message,
+        userid: this.naname,
+        roomid:  localStorage.getItem("wsboard.channelName"),
+      };
+
+      console.log("나네임 : "+this.naname);
+
+
+      ChatlogDataService.create(data)
+        .then(response => {
+          this.chatlog.id = response.data.id;
+          console.log(response.data);
+        })
+        .catch(e => {
+          console.log(e);
+        });
+    },
+
 
     sendChat() {
       event.preventDefault(); // 줄바꿈 방지?
@@ -165,7 +195,10 @@ export default {
             //console.log("Shift도 눌러짐");
           
           }
-          else this.sendChat();
+          else{
+             this.sendChat();
+             this.saveChatlog();
+          }
         }
 
     },
