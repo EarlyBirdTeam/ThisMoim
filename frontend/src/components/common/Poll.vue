@@ -3,8 +3,10 @@
     <div class="poll-container" v-if="!poll.isSetAll & !poll.isEnd ">
       <div>
         <div class="poll-title" >
-          <label class="lable-25" for="poll-title"><v-icon large>mdi-vote</v-icon> 투표 제목</label>
-          <v-text-field placeholder="제목 입력" v-model="poll.question" style="font-size:1.5rem"></v-text-field>
+          <div class="d-flex">
+            <label class="lable-25 mr-3" for="poll-title"><v-icon large>mdi-vote</v-icon></label>
+            <v-text-field placeholder="투표 제목" v-model="poll.question" style="font-size:1.5rem"></v-text-field>
+          </div>
         </div>
         <div class="poll-contents">
           <label class="label-25" for="poll-content">투표 항목</label>
@@ -32,8 +34,8 @@
           </button><hr>
         </div>
         <div class="poll-footer">
-          <button class="circleScaleBtn" @click="reset">리셋</button>
-          <button class="circleScaleBtn" @click="save">저장</button>
+          <button class="circleScaleBtn" @click="reset"><span>리셋</span></button>
+          <button class="circleScaleBtn" @click="save"><span>저장</span></button>
         </div>
       </div>
     </div>
@@ -70,8 +72,8 @@
           <hr>
         </div>
         <div class="poll-footer">
-          <button class="circleScaleBtn"  @click="vote">투표</button>
-          <button class="circleScaleBtn" @click="end">투표종료</button>
+          <button class="circleScaleBtn" @click="vote"><span>투표</span></button>
+          <button class="circleScaleBtn" @click="end"><span>투표종료</span></button>
         </div>
       </div>
     </div>
@@ -178,14 +180,14 @@ export default {
 .Pollx{
   display: inline-block;
   position: relative;
-  background-color: #F5F5F5;
+  background-color: white;
   padding: 15px;    
   box-shadow: .5rem 1rem 2rem rgba(0,0,0,.4)!important;
   border-radius: 5px;
 }
 
 .poll-container {
-  width: 500px;
+  width: 400px;
   font-size: 20px;
   padding: 5px;
 }
@@ -205,6 +207,7 @@ export default {
 .poll-content {
   margin-bottom: 10px;
   transition: transform 250ms ease-in-out;
+  height: 44px;
 }
 .poll-content:hover {
   transform: scale(1.05);

@@ -1,7 +1,13 @@
 <template>
   <div>
     <v-container fluid>
-      <h2>나의 모임목록</h2>
+      <div class="d-flex justify-content-between">
+        <h2>나의 모임목록</h2>
+        <div class="d-flex">
+          <v-text-field placeholder="채널 제목" v-model="channel_name"></v-text-field>
+          <button @click="createChannel" class="circleScaleBtn"><span>채널 생성</span></button>
+        </div>
+      </div>
       <v-row>
         <v-col
           v-for="card in channels"
@@ -81,6 +87,7 @@ export default {
 };
 </script>
 
+<style src="../../assets/css/my-component.css"></style>
 <style scoped>
 .card-channel {
   cursor: pointer;

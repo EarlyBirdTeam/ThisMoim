@@ -139,6 +139,11 @@ export default {
       board: {
         channelId: "",
         idCount: 1,
+        crudModule: {
+          modulType: 'POSTIT',
+          crudType: 'CREATE',
+          moduleObject: Object,
+        },
         postitList: [],
         isKanban: false,
         kanban: this.$store.state.Kanban,
