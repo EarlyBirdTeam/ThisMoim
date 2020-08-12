@@ -41,7 +41,7 @@
       style="display: none;"
     ></Moveable>
 
-    <div class="MoveableBox bodyBox" ref="whiteBoard" 
+    <div class="bodyBox" ref="whiteBoard" 
     @dblclick="focusAction" 
     @click="changeTargetAction"
     @wheel="wheelEvent"
@@ -150,6 +150,8 @@ export default {
         timeout: 1000,
       },
       boardScale: 1,
+      boardX: boardLength/2,
+      boardY: boardLength/2,
     };
   },
   created() {
@@ -174,8 +176,8 @@ export default {
   methods: {
     init() {
       // var BASE_URL =  "http://i3a510.p.ssafy.io/api"
-      // var BASE_URL = "http://localhost:8080";
-      var BASE_URL = "http://218.146.39.122:8080";
+      var BASE_URL = "http://localhost:8080";
+      // var BASE_URL = "http://218.146.39.122:8080";
       var sock = new SockJS(BASE_URL + "/ws-stomp");
       var ws = Stomp.over(sock);
       this.ws = ws;
@@ -243,8 +245,8 @@ export default {
       // postitList에 새로운 포스트잇 더하기
       this.board.postitList.unshift({
         frontPostitId: idc,
-        left: "500px",
-        top: "170px",
+        left: (this.boardX - 120) + "px",
+        top: (this.boardY - 120) + "px",
         title: "",
         contents: "",
         channel: this.board.channelId,
@@ -282,7 +284,6 @@ export default {
       target.style.top = `${top}px`;
       // console.log(target);
       // console.log(document.querySelector('.bodyBox').style.width);
-      console.log(window.innerWidth * 0.8);
       if(target.getAttribute('class') != null){
         var clas = target.getAttribute('class').split(' ');
         
@@ -292,28 +293,45 @@ export default {
             let lp = target.style.left.replace("px", "");
             let tp = target.style.top.replace("px", "");
             console.log(lp, " , ", tp);
-            if(lp > 0) {
-              target.style.left = '1px'
+
+            this.boardX = (lp*-1) + window.innerWidth * 0.4;
+            this.boardY = (tp*-1) + window.innerHeight * 0.365;
+            
+            
+            // document.querySelector(".realBoard").style.transformOrigin = `${this.boardX}px ${this.boardY}px`;
+            // document.querySelector(".realBoard").style.transformOrigin = `center`; 
+            // console.log("bodyBox height is : ", window.innerHeight * 0.73);
+            // console.log("bodyBox width is : ", window.innerWidth * 0.8);
+            // console.log((-boardLength + (window.innerWidth * 0.8)));
+
+            var limitUnit = (this.boardScale / 0.05) * 75 - (boardLength/2);   
+
+            console.log(lp - limitUnit);         
+
+            if(lp > limitUnit) {
               document.querySelector('.bodyBox').style.borderLeft = "red 3px solid";
+              target.style.left = limitUnit+'px'
             }
-            else if(((lp*-1) + window.innerWidth ) > (boardLength )) {
-              target.style.left = (-boardLength + window.innerWidth)+'px';
+            else if((lp) < (-boardLength + (window.innerWidth * 0.8)) - limitUnit) {
               document.querySelector('.bodyBox').style.borderRight = "red 3px solid";
+              target.style.left = (-boardLength + (window.innerWidth * 0.8) - limitUnit) +'px';
             } 
             else {
-              document.querySelector('.bodyBox').style.border = "1px pink solid";
+              document.querySelector('.bodyBox').style.borderRight = "1px pink solid";
+              document.querySelector('.bodyBox').style.borderLeft = "1px pink solid";
             }
 
-            if(tp > 0) {
-              target.style.top = '1px'
+            if(tp > limitUnit) {
+              target.style.top = limitUnit+'px'
               document.querySelector('.bodyBox').style.borderTop = "red 3px solid";
             }
-            else if ((tp*-1) + window.innerHeight > boardLength) {
-              target.style.top = (-boardLength + window.innerHeight)+'px';
+            else if (tp < (-boardLength + (window.innerHeight * 0.73)) - limitUnit) {
+              target.style.top = (-boardLength + (window.innerHeight * 0.73)) - limitUnit +'px';
               document.querySelector('.bodyBox').style.borderBottom = "red 3px solid";
             }
-            else {
-              document.querySelector('.bodyBox').style.border = "1px pink solid";
+            else {  
+              document.querySelector('.bodyBox').style.borderTop = "1px pink solid";
+              document.querySelector('.bodyBox').style.borderBottom = "1px pink solid";
             }
 
             return ;
@@ -396,7 +414,6 @@ export default {
       }
     },
     wheelEvent: function(event) {
-      // console.log(event.deltaY);
       if (event.deltaY < 0) { 
         console.log("up!"); 
         this.boardScale += 0.05;
@@ -408,7 +425,7 @@ export default {
       else if (event.deltaY > 0) {
         this.boardScale -= 0.05;
 
-        if(this.boardScale < 0.3) this.boardScale = 0.3;
+        if(this.boardScale < 0.65) this.boardScale = 0.65;
 
         console.log(this.boardScale);
          console.log("down!"); 
@@ -470,9 +487,20 @@ export default {
   /* left: -680px;
   top: -680px; */
   border: 1px solid pink;
-  background: rgba(221, 12, 12, 0.507);
+  background: rgb(247, 236, 236);
 
-  background-image: linear-gradient(0deg, transparent 0%, transparent 9px, rgba(255, 255, 255, 0.2) 9px, rgba(255, 255, 255, 0.2) 10px, transparent 10px, transparent 19px, rgba(255, 255, 255, 0.1) 19px, rgba(255, 255, 255, 0.1) 20px, transparent 20px, transparent 29px, rgba(255, 255, 255, 0.1) 29px, rgba(255, 255, 255, 0.1) 30px, transparent 30px, transparent 39px, rgba(255, 255, 255, 0.1) 39px, rgba(255, 255, 255, 0.1) 40px, transparent 40px, transparent 49px, rgba(255, 255, 255, 0.1) 49px, rgba(255, 255, 255, 0.1) 50px), linear-gradient(-90deg, transparent 0%, transparent 9px, rgba(255, 255, 255, 0.2) 9px, rgba(255, 255, 255, 0.2) 10px, transparent 10px, transparent 19px, rgba(255, 255, 255, 0.1) 19px, rgba(255, 255, 255, 0.1) 20px, transparent 20px, transparent 29px, rgba(255, 255, 255, 0.1) 29px, rgba(255, 255, 255, 0.1) 30px, transparent 30px, transparent 39px, rgba(255, 255, 255, 0.1) 39px, rgba(255, 255, 255, 0.1) 40px, transparent 40px, transparent 49px, rgba(255, 255, 255, 0.1) 49px, rgba(255, 255, 255, 0.1) 50px);background-size: 100px 100px;
+  background-image:     
+     linear-gradient(
+        0deg, transparent 0%, 
+        transparent 0px, rgba(104, 104, 104, 0.1) 0px,rgba(104, 104, 104, 0.1) 1px, transparent 1px,
+        transparent 49px, rgba(104, 104, 104, 0.1) 49px,rgba(104, 104, 104, 0.1) 50px, transparent 1px),
+
+    linear-gradient(
+        -90deg, transparent 0%, 
+        transparent 0px, rgba(104, 104, 104, 0.1) 0px, rgba(104, 104, 104, 0.1) 1px, transparent 1px,
+        transparent 49px, rgba(104, 104, 104, 0.1) 49px,rgba(104, 104, 104, 0.1) 50px, transparent 1px);
+               
+    background-size: 50px 50px;
   }
 
 
