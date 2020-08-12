@@ -276,15 +276,15 @@ export default {
       this.createSnackbar("보드가 생성되었습니다", 1500, "success")
       this.board.isKanban=true
       this.$store.state.Kanban.columns=[ {
-                  columnTitle: '할 일',
+                  columnTitle: 'TO DO',
                   tasks: [],
                 },
                 {
-                  columnTitle: "진행중",
+                  columnTitle: "IN PROGRESS",
                   tasks: [],
                 },
                 {
-                  columnTitle: "완료",
+                  columnTitle: "DONE",
                   tasks: [],
                 },]
       this.board.kanban= this.$store.state.Kanban
@@ -296,15 +296,15 @@ export default {
         this.cloakMoveable();
         this.board.isKanban=false;
         this.$store.state.Kanban.columns=[ {
-                  columnTitle: '할 일',
+                  columnTitle: 'TO DO',
                   tasks: [],
                 },
                 {
-                  columnTitle: "진행중",
+                  columnTitle: "IN PROGRESS",
                   tasks: [],
                 },
                 {
-                  columnTitle: "완료",
+                  columnTitle: "DONE",
                   tasks: [],
                 },]
         

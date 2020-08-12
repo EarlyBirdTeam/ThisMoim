@@ -73,15 +73,15 @@ export const store = new Vuex.Store({
               },
               columns: [
                 {
-                  columnTitle: '할 일',
+                  columnTitle: 'TO DO',
                   tasks: [],
                 },
                 {
-                  columnTitle: "진행중",
+                  columnTitle: "IN PROGRESS",
                   tasks: [],
                 },
                 {
-                  columnTitle: "완료",
+                  columnTitle: "DONE",
                   tasks: [],
                 },
               ],

@@ -1,12 +1,12 @@
 <template>
-  <div class="kanban" style="width: 800px">
+  <div class="kanban d-inline-flex">
     <div class="flex justify-center">
       <div class="d-flex">
 
         <div
           v-for="column in this.$store.state.Kanban.columns"
           :key="column.columnTitle"
-          class="bg-gray-100 rounded-lg px-3 py-3 column-width rounded mr-4"
+          class="kanban-column bg-gray-100 rounded-lg px-3 py-3 column-width rounded mr-4"
         >
           <p class="text-gray-700 font-semibold font-sans tracking-wide text-sm">{{column.columnTitle}}</p>
           
@@ -93,15 +93,15 @@ export default {
       },
       columns: [
         {
-          columnTitle: "할 일",
+          columnTitle: "TO DO",
           tasks: [],
         },
         {
-          columnTitle: "진행중",
+          columnTitle: "IN PROGRESS",
           tasks: [],
         },
         {
-          columnTitle: "완료",
+          columnTitle: "DONE",
           tasks: [],
         },
       ],
@@ -178,10 +178,30 @@ but you'd use "@apply border opacity-50 border-blue-500 bg-gray-200" here */
 }
 .kanban 
 {
-  background-color: #F5F5F5;
+  /* background-color: #F5F5F5; */
+  /* background-color: white; */
+  
   padding: 15px;    
-  box-shadow: .5rem 1rem 2rem rgba(0,0,0,.4)!important;
+  /* box-shadow: .5rem 1rem 2rem rgba(0,0,0,.4)!important; */
   border-radius: 5px;
+  /* width: 810px; */
 
+}
+.kanban-column {
+  background-color: #F5F5F5;
+  
+  box-shadow: .5rem 1rem 2rem rgba(0,0,0,.4)!important;
+}
+.pressDownButton {
+  cursor: pointer;
+  background-color: #d6d6d6;
+  color: rgb(68, 68, 68);
+  border-bottom: 0px;
+  transition: all 0.2s ease-in-out;
+}
+
+.pressDownButton:hover {
+  background: rgba(0,0,0,0.4);
+  color: white;
 }
 </style>
