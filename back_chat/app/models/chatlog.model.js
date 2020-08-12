@@ -6,6 +6,12 @@ module.exports = (sequelize, Sequelize) => {
     const Chatlog = sequelize.define("chatlog", {
         message: {
             type: Sequelize.STRING
+        },
+        userid:{
+            type: Sequelize.STRING
+        },
+        roomid:{
+            type: Sequelize.STRING
         }
     });
 

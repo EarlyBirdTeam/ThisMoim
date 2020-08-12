@@ -13,6 +13,8 @@ exports.create = (req, res) =>{
     // Create a Tutorial
     const chatlog = {
         message: req.body.message,
+        userid: req.body.userid,
+        roomid: req.body.roomid
     }
 
     Chatlog.create(chatlog).

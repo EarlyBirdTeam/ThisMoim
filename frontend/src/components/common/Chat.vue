@@ -19,7 +19,7 @@
         <form>
         <div class="text-box" id="textBox">
           <textarea v-model="chatlog.message" id="msgForm" placeholder="메시지를 입력해주세요 :)" @keyup="enter" ></textarea>
-          <button id="sendChat" @click="sendChat(); saveChatlog">전송</button>
+          <button id="sendChat" @click="sendChat(); saveChatlog();">전송</button>
           <div class="clearfix"></div>
         </div>
        </form>
@@ -63,19 +63,18 @@
       // })
 
 import ChatlogDataService from "../../services/ChatlogDataService"
-
+ 
 export default {
   name: "Chat",
   created() {
     //console.log("chanelName : "+ localStorage.getItem("wsboard.channelName")); 채널 이름 가져오는 부분
-    
+    var myname = this.makeRandomName();
     var chatcontainer = document.getElementById("chatContainer");
     var chatheader = document.getElementById("chatHeader");
     var chatbox = document.getElementById("chatBox");
     var textbox = document.getElementById("textBox");
-    
+    // var myname = this.makeRandomName();
     var $msgForm = $('#msgForm').val();
-    var myname = this.makeRandomName();
     this.naname = myname;
 
     console.log(this.naname);
@@ -134,6 +133,7 @@ export default {
 
   data() {
     return {
+      
       chattingBox: true,
       textarea: "",
       message: "",
@@ -147,6 +147,8 @@ export default {
       chatlog: {
         id: null,
         message: "",
+        userid: "",
+        roomid: "",
       }
 
       
@@ -155,8 +157,13 @@ export default {
   methods: {
     saveChatlog(){
       var data = {
-        message: this.chatlog.message
+        message: this.chatlog.message,
+        userid: this.naname,
+        roomid:  localStorage.getItem("wsboard.channelName"),
       };
+
+      console.log("나네임 : "+this.naname);
+
 
       ChatlogDataService.create(data)
         .then(response => {
