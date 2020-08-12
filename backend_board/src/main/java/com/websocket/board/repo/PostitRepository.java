@@ -1,6 +1,6 @@
 package com.websocket.board.repo;
 
-import com.websocket.board.dto.Postit;
+import com.websocket.board.model.postit.Postit;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

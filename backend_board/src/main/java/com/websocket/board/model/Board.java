@@ -1,8 +1,6 @@
 package com.websocket.board.model;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import com.websocket.board.dto.Postit;
+import com.websocket.board.model.postit.Postit;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
