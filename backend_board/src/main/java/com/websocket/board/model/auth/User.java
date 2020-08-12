@@ -1,20 +1,7 @@
-/*
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-package com.accolite.pru.health.AuthApp.model;
+package com.websocket.board.model.auth;
 
-import com.accolite.pru.health.AuthApp.model.audit.DateAudit;
-import com.accolite.pru.health.AuthApp.validation.annotation.NullOrNotBlank;
+import com.websocket.board.model.audit.DateAudit;
+import com.websocket.board.validation.annotation.NullOrNotBlank;
 import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.CascadeType;
@@ -175,3 +162,4 @@ public class User extends DateAudit {
                 + active + ", roles=" + roles + ", isEmailVerified=" + isEmailVerified + '}';
     }
 }
+

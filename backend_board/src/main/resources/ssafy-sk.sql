@@ -15,3 +15,31 @@
 -- # insert into user(uid, email, name, nickname, password) values('2', 'test2@test.com', 'test2_name', 'test2_nick', 'test1234');
 -- #
 
+-- GRANT CREATE PUBLIC DATABASE LINK TO root;
+-- CREATE DATABASE LINK TLINK CONNECT TO root IDENTIFIED BY djfflqjem1! USING
+--     '(DESCRIPTION =
+--       (ADDRESS_LIST =
+--         (ADDRESS =
+--           (PROTOCOL = TCP)
+--           (HOST = 192.168.14.65)
+--           (PORT = 9004)
+--         )
+--       )
+--       (CONNECT_DATA =
+--         (SERVICE_NAME = AUTH)
+--       }
+--     )';
+--
+-- CREATE DATABASE `board`
+-- SELECT * FROM user@TLINK;
+-- CREATE TABLE 'member' (
+--     `id` long NOT null,
+--     `role` varchar(50), NOT NULL,
+--     `create_date` datetime DEFAULT current_timestamp(),
+--     `attendance` int DEFAULT `0`,
+--     `user_id` int NOT NULL,
+--     PRIMARY KEY (`id`),
+--     CONSTRAINT user_user_id uid_fk ,
+--     FOREIGN KEY `user_id`,
+--     REFERENCES user (user_id)
+-- )
