@@ -1,80 +1,78 @@
 <template>
-  <div>
-    <div style="border:solid 1px;">
-      <h3>욕설 금지^^</h3>
-     
-      <div>
-        <p>현재 참석자는 {{chatComes}}</p>
-        <div v-for="(chatMsg, idx) in chatMsgs" :key="idx">
-          <!-- {{chatMsg.substring(0,1)}} -->
+<div>
 
-          <div style="margin:2px" v-if="naname!=chatMsg.name">{{chatMsg.name}}</div>
-          <div style="margin:2px" v-if="naname==chatMsg.name">
-            <br />
-          </div>
-          <div class="d-flex">
-            <div
-            class="ml-auto"
-              v-if="naname==chatMsg.name"
-              style="background-color:rgb(255, 235, 221); border-radius: 5%;  margin-right:4px; min-width:40vw"
-            >{{chatMsg.msg}}</div>
-            <div
-
-            class=" mr-auto"
-              v-if="naname!=chatMsg.name"
-              style="background-color:rgb(255, 235, 221); border-radius: 5%; margin-left:4px; min-width:40vw"
-            >{{chatMsg.msg}}</div>
-          </div>
-          <!-- <br>
-          {{chatMsg.substring(chatMsg.substring(0,1)+1,chatMsg.substring(0,1)+4)}}-->
-          <!-- <p v-for="chatMsg in chatMsgs" style="border:solid 1px; background-color:rgb(255, 235, 221); border-radius: 2%; margin:10px">
-          {{chatMsg}}
-            
-          </p>-->
+ <div class="chat-container" id="chatContainer">
+   <div v-if="chattingBox">
+        <div class="chat-header" id="chatHeader">
+          <button id="minimize" class="header-btn" @click="minimize"></button>
+          <button id="maximize" class="header-btn" @click="maximize"></button>
+          <img id="profile-pic" src='../../assets/img/picture.jpg' width="1">
+          <span id="username">나</span>
         </div>
-      </div>
+    
+        <div class="chatbox" id="chatBox">
+          <div class="friend-bubble bubble">
+            매너 채팅 해주세요 :)
+          </div>
+        </div>
+    
+        <form>
+        <div class="text-box" id="textBox">
+          <textarea id="msgForm" placeholder="메시지를 입력해주세요 :)" @keyup="enter" ></textarea>
+          <button id="sendChat" @click=sendChat>전송</button>
+          <div class="clearfix"></div>
+        </div>
+       </form>
+   </div>
+ </div>
+ 
+    <div class="chat-container2" id="chatContainer" v-if="!chattingBox">
+       <div class="chat-header" id="chatHeader">
+          <button id="minimize" class="header-btn" @click="minimize"></button>
+          <button id="maximize" class="header-btn" @click="maximize"></button>
+          <img id="profile-pic" src='../../assets/img/picture.jpg' width="1">
+          <span id="username">나</span>
+        </div>
     </div>
-    <form style="margin-top:5px  left:0; bottom:0;" class="form-inline">
-      <div class="form-group" style="margin-top:3px; ">
-        <label for="msgForm"></label>
+ </div>
 
-        <input
-          type="text"
-          style="border:solid 1px;"
-          placeholder="귓말 대상"
-          class="form-control d-flex-6"
-          id="other"
-        />
-        <!-- <v-overflow-btn
-        style="margin:0 "
-        background-color="rgb(230,230,230)"          
-        :chatmem="chatmem"
-        label="전체에게"
-         class="form-control btn d-flex-1" id="other"
-         dense
-        >
-        </v-overflow-btn>-->
-        <input
-          type="text"
-          style="border:solid 1px;"
-          placeholder="메시지를 입력해주세요 :)"
-          class="form-control d-flex-3"
-          id="msgForm"
-        />
-        <button style="border:solid 1px;" @click="sendMessage()">작성</button>
-      </div>
-    </form>
-  </div>
+
+
 </template>
 
+
+
 <script>
+
+      // var chatcontainer = document.getElementById("chatContainer");
+      // var chatheader = document.getElementById("chatHeader");
+      // var chatbox = document.getElementById("chatBox");
+      // var textbox = document.getElementById("textBox");
+
+      // $("#minimize").click(function(){
+      //   chatbox.style.display = 'none';
+      //   textbox.style.display = 'none';
+      //   chatcontainer.style.top = '90%';
+      //   //alert("최소화");
+      // });
+
+      // $("#maximize").click(function(){
+      //   chatbox.style.display = 'block';
+      //   textbox.style.display = 'block';
+      //   chatcontainer.style.top = '23%';
+      // })
+
 export default {
   name: "Chat",
   created() {
-    // this.$socket.on('chat', (data)=> {
-    //     this.textarea += data.message + "\n"
-    //     })
-
+    //console.log("chanelName : "+ localStorage.getItem("wsboard.channelName")); 채널 이름 가져오는 부분
+    
+    var chatcontainer = document.getElementById("chatContainer");
+    var chatheader = document.getElementById("chatHeader");
+    var chatbox = document.getElementById("chatBox");
+    var textbox = document.getElementById("textBox");
+    
+    var $msgForm = $('#msgForm').val();
     var myname = this.makeRandomName();
     this.naname = myname;
 
@@ -84,31 +82,57 @@ export default {
       //name: this.$store.state.name,
       name: myname,
       userid: myname,
+      channelName : localStorage.getItem("wsboard.channelName"),
     });
 
     this.$socket.on("login", (data) => {
-      this.chatLogs.push(data.name + "님이 입장하셨습니다");
-      this.chatComes.push(data.name);
+      // this.chatLogs.push(data.name + "님이 접속하셨습니다");
+      // this.chatComes.push(data.name);
+      console.log("입장!");
+      $('.chatbox').append('<div class="inout-bubble">'+data+'님이 입장하셨습니다.</div>');
+    
+    });
+
+     this.$socket.on("enter", (data) => {
+      // this.chatLogs.push(data.name + "님이 접속하셨습니다");
+      // this.chatComes.push(data.name);
+      $('.chatbox').append('<div class="inout-bubble">'+data+'님이 입장하셨습니다.</div>');
+    
     });
 
     this.$socket.on("s2c chat", (data) => {
       var name = data.from.name;
       var msg = data.msg;
-      var chatMsg = {
-        name: data.from.name,
-        msg: data.msg,
-      };
-      this.chatMsgs.push(chatMsg);
+      // var chatMsg = {
+      //   name: data.from.name,
+      //   msg: data.msg,
+      // };
+      //this.chatMsgs.push(chatMsg);
+      $('.chatbox').append('<div class="friend-bubble bubble">('+name+'님) '+msg+'</div>');
+    });
+    this.$socket.on("s2c chat me", (data) => {
+      var name = data.from.name;
+      var msg = data.msg;
+     
+      $('.chatbox').append('<div class="my-bubble bubble">'+msg+'</div>');
     });
 
     this.$socket.on("out", (data) => {
-      this.chatLogs.push(data.from.name + "님이 나가셨습니다.");
-      this.chatComes.pop(data.from.name);
+      console.log("나갔습니다!!");
+      // if(!(data.from.name).eqauls("undefnied")) 
+      $('.chatbox').append('<div class="inout-bubble">'+data.from.name+'님이 나가셨습니다.</div>');
+    
     });
+
     this.$socket.on(() => {});
+
+
+    
   },
+
   data() {
     return {
+      chattingBox: true,
       textarea: "",
       message: "",
       chatmem: [],
@@ -117,30 +141,43 @@ export default {
       chatNames: [],
       chatMsgs: [],
       naname: "",
+      
     };
   },
   methods: {
-    sendMessage() {
-      event.preventDefault();
-      var $msgForm = $("#msgForm");
-      var $other = $("#other");
-      // 서버로 메시지를 전송한다.
-      if ($other.val() == "") {
-        // 서버로 메시지를 전송한다.
-        this.$socket.emit("chat", { msg: $msgForm.val() });
-        $msgForm.val("");
-      } else {
-        console.log("귓속말 대상 : " + $other.val());
-        this.$socket.emit("chatto", { msg: $msgForm.val(), id: $other.val() });
-        $msgForm.val("");
-      }
-      $('#chatLogs').scrollTop($('#chatLogs').prop('scrollHeight'));
 
-                setTimeout(function(){
-                    $('#chatLogs').scrollTop($('#chatLogs').prop('scrollHeight'));
-                }, 300);
+    sendChat() {
+      event.preventDefault(); // 줄바꿈 방지?
+      event.stopPropagation();
+        var $msgForm = $('#msgForm').val();
+        console.log("msgForm : "+$msgForm);
+
+
+        this.$socket.emit("chat", {msg: $msgForm});
+        $('#msgForm').val("");
+    },
+
+     enter() { // 엔터 처리
+       var code = event.keyCode;
+        if(code==13){
+
+          if(event.shiftKey === true){ // Shift + Enter 처리
+            //console.log("Shift도 눌러짐");
+          
+          }
+          else this.sendChat();
+        }
 
     },
+
+    minimize(){
+      this.chattingBox = false;
+      //alert("최소화");
+    },
+    maximize(){
+      this.chattingBox = true;
+    },
+
     makeRandomName() {
       var name = "";
       var possible = "abcdefghijklmnopqrstuvwxyz";
@@ -156,4 +193,164 @@ export default {
 </script>
 
 <style>
+* {
+    box-sizing: border-box;
+  }
+  
+  body {
+    /* background-image: url('../images/background.jpg'); */
+    font-family: 'Noto Sans KR', sans-serif;
+  }
+  
+  .chat-container {
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,0.50);
+    transition: width 0.3s ease;
+    position: absolute;
+    
+    left: 75%;
+    width: 25%;
+    top: 38%;
+
+  }
+  
+  .chat-header {
+    background-color: white;
+    padding: 30px 8px 8px 8px;
+  }
+  
+  .chat-header .header-btn {
+    border-radius: 50%;
+    border: none;
+    width: 12px;
+    height: 12px;
+    cursor: pointer;
+    position: absolute;
+    top: 8px;
+    padding: 0;
+  }
+  
+  .chat-header #close {
+    background-color: #ff6059;
+    left: 8px;
+  }
+  
+  .chat-header #minimize {
+    background-color: #ffbf2f;
+    left: 26px;
+  }
+  
+  .chat-header #maximize {
+    background-color: #29cd42;
+    left: 44px;
+  }
+  
+  .chat-header #profile-pic {
+    vertical-align: middle;
+    border-radius: 50%;
+    width: 5%;
+    height: 5%;
+  }
+  
+  .chat-header #username {
+    vertical-align: middle;
+    font-size: 14px;
+    font-weight: 500;
+    margin-left: 5px;
+    color: #343434;
+  }
+
+  /* only header */
+  .chat-container2 {
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,0.50);
+    transition: width 0.3s ease;
+    position: absolute;
+    
+    left: 75%;
+    width: 25%;
+    top: 92%;
+
+  }
+  
+  
+  /* chat box */
+  
+  .chatbox {
+    height: 400px;
+    background-color: #d7e4f2;
+    padding: 10px;
+    overflow-y: scroll;
+    position: relative;
+  }
+  
+  .bubble {
+    margin: 5px 0;
+    display: inline-block;
+    max-width: 300px;
+    font-size: 14px;
+    position: relative;
+  }
+  
+  .inout-bubble {
+    background-color:lightslategray;
+    border-radius: 14px 14px 14px 14px;
+    padding: 7px 50px 7px 50px;
+    float: left;
+    clear: both;
+
+    margin: 5px 0;
+    max-width: 300px;
+    font-size: 14px;
+    position: relative;
+  }
+
+  .friend-bubble {
+    background-color: white;
+    border-radius: 14px 14px 14px 0;
+    padding: 7px 15px 7px 15px;
+    float: left;
+    clear: both;
+  }
+  
+  .my-bubble {
+    background-color: #fff46d;
+    border-radius: 14px 14px 0px 14px;
+    padding: 7px 15px 7px 15px;
+    float: right;
+    clear: both;
+  }
+  
+  /* text box */
+  
+  .text-box {
+    background-color: #fafafa;
+    padding: 10px;
+  }
+  
+  .text-box textarea {
+    height: 60px;
+    float: left;
+    width: calc(100% - 70px);
+    border-radius: 3px;
+    background-color: #ffffff;
+    border: solid 0.5px #d7d7d7;
+    resize: none;
+    padding: 10px;
+    font-size: 14px;
+  }
+  
+  #sendChat {
+    background-color: orange;
+    width: 60px;
+    height: 60px;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    margin-left: 10px;
+    float: left;
+  }
+  
+  .clearfix {
+    clear: both;
+  }
 </style>

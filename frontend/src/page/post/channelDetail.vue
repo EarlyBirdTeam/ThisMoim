@@ -95,9 +95,7 @@
         </v-card-title>-->
         <v-card-text style="padding:16px">
           <Chat/>
-        </v-card-text>
-      </v-card>
-    </v-dialog>
+       
     </div>
      
 
@@ -234,7 +232,7 @@ export default {
       this.createSnackbar("수정되었습니다", 1000, "warning");
     },
     recvMessage: function (recv) {
-      console.log(recv);
+      
       this.userCount = recv.userCount;
       this.board.idCount = recv.idCount;
       this.board.postitList = recv.postitList;
@@ -244,6 +242,8 @@ export default {
       this.$store.state.calendar.events = recv.calendar.events;
     },
     createPostit(event) {
+      event.stopPropagation();
+      
       if(this.board.postitList.length > 20) {
         this.createSnackbar("포스트잇이 너무 많습니다!", 3000, "error")
         return

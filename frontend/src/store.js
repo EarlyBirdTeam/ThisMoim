@@ -46,6 +46,10 @@ export const store = new Vuex.Store({
         },
         // 캘린더
         calendar: {
+            
+            frontCalendarId: 0,
+            left: '0px',
+            top: '0px',
             event: {
                 startDate: '',
                 startTime: '',
@@ -53,6 +57,7 @@ export const store = new Vuex.Store({
                 endTime: '',
                 content: '',
                 title: '',
+                
             },
             events: [{ "name": "오프라인", "content": "hello", "start": "2020-08-05T12:30:00", "end": "2020-08-05T18:00:00" }],
             dialog: false,
