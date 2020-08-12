@@ -18,7 +18,7 @@ public class BoardController {
     //private final JwtTokenProvider jwtTokenProvider;
     private final ChannelRedisRepository channelRedisRepository;
     private final BoardService boardService;
-    private final DBSyncService dbSyncService;
+//    private final DBSyncService dbSyncService;
 
     /**
      * websocket "/pub/board/message"로 들어오는 메시징을 처리한다.

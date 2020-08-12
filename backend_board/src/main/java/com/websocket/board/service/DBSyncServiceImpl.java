@@ -14,10 +14,14 @@ import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class DBSyncServiceImpl implements DBSyncService {
 
+    @Autowired
     private final PostitRepository postitRepository;
+
+    @Autowired
     private final ChannelRepository channelRepository;
 
     @Override
