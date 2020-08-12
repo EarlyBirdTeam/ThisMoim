@@ -89,7 +89,7 @@ export const store = new Vuex.Store({
         kanban: {
             frontKanbanId:'', 
             kanban: {}, 
-            channel:""
+            channel:"",
         },
         
     },

@@ -1,8 +1,7 @@
 <template>
-  <div class="kanban">
-    <!-- <div class="kanban MoveableBox"> -->
+  <div class="kanban" style="width: 800px">
     <div class="flex justify-center">
-      <div class="min-h-screen d-flex overflow-x-scroll py-12">
+      <div class="d-flex">
 
         <div
           v-for="column in this.$store.state.Kanban.columns"
@@ -14,15 +13,16 @@
           <draggable
             :list="column.tasks"
             :animation="200"
-            style="margin-right:0"
+            style="margin-right:0; min-height:50px;"
             ghost-class="ghost-card"
             group="tasks"
+            
           >
             <!-- Each element from here will be draggable and animated. Note :key is very important here to be unique both for draggable and animations to be smooth & consistent. -->
 
             <div v-for="(task,idx) in column.tasks"
              :key="idx" class="mt-3 cursor-move">
-              <div class="bg-white shadow rounded px-3 pt-3 pb-5 border border-white">
+              <div @click="showTask(column.columnTitle, task)" class="bg-white shadow rounded px-3 pt-3 pb-5 border border-white" style="cursor: pointer;">
                 <div class="d-flex justify-space-between">
                   <p
                     class="text-truncate text-gray-700 font-semibold font-sans text-sm word-break:keep-all;"
@@ -30,12 +30,10 @@
                     
                   >
                   {{task.taskTitle}}
-                  {{idx}}
                   </p>
                  
 
                   <div>
-                    <v-icon>mdi-pencil</v-icon>
                     <v-icon v-on:click="deleteTask(column.columnTitle,task)">mdi-delete</v-icon>
                   </div>
                 </div>
@@ -43,10 +41,36 @@
             </div>
 
           </draggable>
-          <div v-on:click="addTask(column.columnTitle)">+</div>
+          <div v-on:click="addTask(column.columnTitle)" class="pressDownButton mt-3">+ add another card</div>
         </div>
       </div>
     </div>
+    
+    <v-dialog max-width="600px" persistent v-model="dialog">
+      <v-card>
+        <v-card-title>
+          <h3>{{ this.newColumnTitle }} </h3>
+        </v-card-title>
+        <v-card-text>
+          <v-form class="px-3" ref="form">
+            <v-text-field
+              label="제목"
+              prepend-icon="mdi-subtitles"
+              v-model="newTask.taskTitle"
+            ></v-text-field>
+            <v-textarea
+              label="내용"
+              prepend-icon="mdi-pencil"
+              v-model="newTask.taskContents"
+            ></v-textarea>
+            <div class="text-center">
+              <v-btn text class="primary white--text mx-2 mt-3" @click="submit">추가</v-btn>
+              <v-btn text class="primary white--text mx-2 mt-3" @click="close">닫기</v-btn>
+            </div>
+          </v-form>
+        </v-card-text>
+      </v-card>
+    </v-dialog>
   </div>
 </template>
 
@@ -81,24 +105,21 @@ export default {
           tasks: [],
         },
       ],
+      dialog: false,
+      newTask: {
+        taskTitle : "",
+        taskContents : "",
+        taskAssigner : "",
+      },
+      newColumnTitle: '',
     };
   },
   methods: {
     addTask(columnTitle) {
-      const taskTitle = prompt(columnTitle, "");
-      const taskContents = prompt(columnTitle, "");
-      
-      const newTask = {
-                    taskTitle : taskTitle,
-                    taskContents : taskContents,
-                    taskAssigner : ""
-             
-                }
-      this.columns.find((column) => column.columnTitle === columnTitle).tasks.push(newTask);
-      this.$store.state.Kanban.columns.find((column) => column.columnTitle === columnTitle).tasks.push(newTask);
+      this.dialog = true
+      this.newColumnTitle = columnTitle;
     },
     deleteTask(columnTitle, task) {
-      
       var index = this.columns
         .find((column) => column.columnTitle === columnTitle)
         .tasks.indexOf(task);
@@ -112,14 +133,40 @@ export default {
         .find((column) => column.columnTitle === columnTitle)
         .tasks.splice(index, 1);
     },
+    showTask(columnTitle, task) {
+       var index = this.columns
+        .find((column) => column.columnTitle === columnTitle)
+        .tasks.indexOf(task);
+        this.newColumnTitle = columnTitle
+        this.newTask = task;
+        this.dialog = true;
+    },
+    submit() {
+      this.columns.find((column) => column.columnTitle === this.newColumnTitle).tasks.push(this.newTask);
+      this.$store.state.Kanban.columns.find((column) => column.columnTitle === this.newColumnTitle).tasks.push(this.newTask);
+      this.dialog = false;
+      this.newTask = {
+        taskTitle : "",
+        taskContents : "",
+        taskAssigner : "",
+      }
+    },
+    close() {
+      this.dialog = false; 
+      this.newTask = {
+        taskTitle : "",
+        taskContents : "",
+        taskAssigner : "",
+      }
+    }
   },
 };
 </script>
-
+<style src="../../assets/css/my-component.css"></style>
 <style scoped>
 .column-width {
-  min-width: 320px;
-  width: 320px;
+  min-width: 250px;
+  width: 250px;
   margin-right: 0;
 }
 /* Unfortunately @apply cannot be setup in codesandbox, 
@@ -129,7 +176,12 @@ but you'd use "@apply border opacity-50 border-blue-500 bg-gray-200" here */
   background: #f7fafc;
   border: 1px solid #4299e1;
 }
-.kanban {
-  border: 1px solid;
+.kanban 
+{
+  background-color: #F5F5F5;
+  padding: 15px;    
+  box-shadow: .5rem 1rem 2rem rgba(0,0,0,.4)!important;
+  border-radius: 5px;
+
 }
 </style>
