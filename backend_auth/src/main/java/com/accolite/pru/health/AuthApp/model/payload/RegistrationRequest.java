@@ -28,7 +28,7 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Setter
 @ApiModel(value = "Registration Request", description = "The registration request payload")
-public class RegistrationRequest {
+public class  RegistrationRequest {
 
     @NullOrNotBlank(message = "Registration username can be null but not blank")
     @ApiModelProperty(value = "A valid username", allowableValues = "NonEmpty String")
