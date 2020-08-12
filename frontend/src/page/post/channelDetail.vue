@@ -275,7 +275,19 @@ export default {
   
       this.createSnackbar("보드가 생성되었습니다", 1500, "success")
       this.board.isKanban=true
-      this.board.kanban = this.$store.state.Kanban
+      this.$store.state.Kanban.columns=[ {
+                  columnTitle: '할 일',
+                  tasks: [],
+                },
+                {
+                  columnTitle: "진행중",
+                  tasks: [],
+                },
+                {
+                  columnTitle: "완료",
+                  tasks: [],
+                },]
+      this.board.kanban= this.$store.state.Kanban
     },
 
     deleteKanban({target}) {
