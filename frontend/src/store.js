@@ -69,7 +69,7 @@ export const store = new Vuex.Store({
 
         finding:{
             status:"",
-        }
+        },
         Kanban:{
             task: {
                 taskTitle:'',

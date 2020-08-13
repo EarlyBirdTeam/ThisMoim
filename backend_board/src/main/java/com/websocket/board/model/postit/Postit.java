@@ -1,8 +1,7 @@
-package com.websocket.board.dto;
+package com.websocket.board.model.postit;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.websocket.board.model.Channel;
 import lombok.*;
 
 import javax.persistence.*;

@@ -1,18 +1,12 @@
 package com.websocket.board.service;
 
-import com.websocket.board.dto.Channel;
-import com.websocket.board.dto.Postit;
+import com.websocket.board.model.Channel;
 import com.websocket.board.model.Board;
-import com.websocket.board.model.SocketBoardMessage;
 import com.websocket.board.repo.ChannelRepository;
 import com.websocket.board.repo.PostitRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
