@@ -9,7 +9,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.tomcat.jni.Poll;
 
 import java.io.Serializable;
 
@@ -31,16 +30,14 @@ public class SocketBoardMessage implements Serializable {
     private long idCount;
 
     private List<Postit> postitList; // 포스트잇 리스트
+    private Boolean isKanban;
     private Kanban kanban;
     private Scheduler scheduler;
     private Poll poll;
+
     private CRUDModule crudModule;
-
-    private Boolean isKanban;
-    private Poll poll;
-
     private Boolean isDelete;
-    private DeletedModule delete;
+
     // List<Attendance> attendenceList; // 출석부 리스트
     // List<Attendance> voteList; // 출석부 리스트
 
