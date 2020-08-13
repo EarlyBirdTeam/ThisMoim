@@ -1,5 +1,5 @@
 <template>
-    <div class="MoveableBox paper">
+    <postit class="MoveableBox paper">
         <textarea 
         name=""
         class="notMoveBox paperTitle"
@@ -16,7 +16,7 @@
         v-model="postit.contents"
         placeholder="content here.."
         ></textarea>
-    </div>
+    </postit>
 </template>
 
 <script>

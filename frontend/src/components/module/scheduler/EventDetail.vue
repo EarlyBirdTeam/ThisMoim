@@ -23,10 +23,10 @@
         name: "EventDetail",
         computed: {
             dialog() {
-                return this.$store.state.calendar.eventDetail;
+                return this.$store.state.scheduler.eventDetail;
             },
             event() {
-                return this.$store.state.calendar.event;
+                return this.$store.state.scheduler.event;
             }
         },
         methods: {

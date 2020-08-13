@@ -4,8 +4,8 @@
       <div>
         <div class="poll-title" >
           <div class="d-flex">
-            <label class="lable-25 mr-3" for="poll-title"><v-icon large>mdi-vote</v-icon></label>
-            <v-text-field placeholder="투표 제목" v-model="poll.question" style="font-size:1.5rem"></v-text-field>
+            <v-icon large class="mr-2">mdi-vote</v-icon>
+            <v-text-field single-line height=36 placeholder="투표 제목" v-model="poll.question" style="font-size:1.5rem"></v-text-field>
           </div>
         </div>
         <div class="poll-contents">
@@ -179,7 +179,7 @@ export default {
 
 .Pollx{
   display: inline-block;
-  position: relative;
+  position: absolute;
   background-color: white;
   padding: 15px;    
   box-shadow: .5rem 1rem 2rem rgba(0,0,0,.4)!important;

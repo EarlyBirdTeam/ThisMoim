@@ -1,5 +1,5 @@
 <template>
-  <div class="MoveableBox calendar pa-5">
+  <scheduler class="MoveableBox scheduler pa-5">
     <v-row>
       <v-col cols="12">
         <v-row>
@@ -15,7 +15,7 @@
                 <v-text-field
                   v-model="start"
                   label="Start Date"
-                  prepend-icon="mdi-calendar"
+                  prepend-icon="mdi-scheduler"
                   dense
                   readonly
                   outlined
@@ -46,7 +46,7 @@
         <div class="text-center mb-3 display-1">{{start | moment('YYYY MMMM')}}</div>
         <v-sheet height="500">
           <v-calendar
-            ref="calendar"
+            ref="scheduler"
             :start="start"
             :events="events"
             @click:date="open"
@@ -56,25 +56,25 @@
         </v-sheet>
       </v-col>
     </v-row>
-    <Dialog v-if="$store.state.calendar.dialog" />
-    <EventDetail v-if="$store.state.calendar.eventDetail" />
-    <!-- <v-footer absolute>{{ $store.state.calendar }}</v-footer> -->
-  </div>
+    <Dialog v-if="$store.state.scheduler.dialog" />
+    <EventDetail v-if="$store.state.scheduler.eventDetail" />
+    <!-- <v-footer absolute>{{ $store.state.scheduler }}</v-footer> -->
+  </scheduler>
 </template>
 
 <script>
-import Dialog from "./calendar/Dialog";
-import EventDetail from "./calendar/EventDetail";
+import Dialog from "./scheduler/Dialog";
+import EventDetail from "./scheduler/EventDetail";
 
 export default {
-  name: "Calendar",
+  name: "Scheduler",
   components: {
     Dialog,
     EventDetail,
   },
   computed: {
     events() {
-      return this.$store.state.calendar.events;
+      return this.$store.state.scheduler.events;
     },
   },
   created() {
@@ -100,18 +100,18 @@ export default {
   },
   methods: {
     open(date) {
-      this.$store.commit("OPEN_CALENDAR_DIALOG", date);
+      this.$store.commit("OPEN_SCHEDULER_DIALOG", date);
     },
     showEvent(event) {
       console.log(event);
-      this.$store.commit("OPEN_CALENDAR_EVENT", event);
+      this.$store.commit("OPEN_SCHEDULER_EVENT", event);
     },
   },
 };
 </script>
 
 <style>
-.calendar {
+.scheduler {
   background-color: white;
   /* border: solid 2px gray;  */
   border-radius: 5px;

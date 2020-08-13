@@ -27,7 +27,7 @@
       <!-- <v-btn icon color="orange" @click="createMap">
         <v-icon>mdi-map</v-icon>
       </v-btn> -->
-      <v-btn icon color="orange" @click="pleaseDrag" draggable="true" @dragend="moduleDragEnd('calendar', $event)">
+      <v-btn icon color="orange" @click="pleaseDrag" draggable="true" @dragend="moduleDragEnd('scheduler', $event)">
         <v-icon>mdi-calendar</v-icon>
       </v-btn>
       <v-btn icon color="orange" @click="pleaseDrag" draggable="true" @dragend="moduleDragEnd('poll', $event)">
@@ -72,9 +72,9 @@
         <Map v-if="map.isPresent"/>
       </div>
 
-      <div class="Calendar" @click.right="deleteAction">
-        <Calendar v-if="!!board.calendar.left" 
-        :style="{left:board.calendar.left, top:board.calendar.top}"/>
+      <div class="Scheduler" @click.right="deleteAction">
+        <Scheduler v-if="!!board.scheduler.top" 
+        :style="{left:board.scheduler.left, top:board.scheduler.top}"/>
       </div>
 
       <div class="Poll" @click.right="deleteAction">
@@ -107,9 +107,9 @@
       </v-card>
     </v-dialog>
     
+     {{ board }}
       
     </div>
-     {{ board }}
 
   </div>
 </template>
@@ -121,7 +121,7 @@ import http from "../../http-common.js";
 import Moveable from "vue-moveable";
 import Postit from "../../components/module/Postit";
 import Map from "../../components/module/Map";
-import Calendar from "../../components/module/Calendar";
+import Scheduler from "../../components/module/Scheduler";
 import Chat from "../../components/common/Chat";
 import Poll from "../../components/common/Poll"
 import Kanban from "../../components/module/Kanban";
@@ -140,14 +140,14 @@ export default {
         channelId: "",
         idCount: 1,
         crudModule: {
-          modulType: 'POSTIT',
-          crudType: 'CREATE',
+          modulType: '',
+          crudType: '',
           moduleObject: Object,
         },
         postitList: [],
         isKanban: false,
         kanban: this.$store.state.Kanban,
-        calendar: {},
+        scheduler: {},
         poll: {},
         isDelete: false,
         delete: {
@@ -257,9 +257,15 @@ export default {
       this.board.idCount = recv.idCount;
       this.board.postitList = recv.postitList;
       this.board.isDelete = false;
-      this.board.calendar = recv.calendar;
+      this.board.scheduler = recv.scheduler;
       this.board.poll = recv.poll;
-      this.$store.state.calendar.events = recv.calendar.events;
+      this.$store.state.scheduler.events = recv.scheduler.events;
+      //crudModule 초기화
+      this.board.crudModule = {
+        modulType: '',
+        crudType: '',
+        moduleObject: Object,
+      };
     },
     createPostit(left='500px', top='170px') {
       console.log(left, top);
@@ -269,15 +275,17 @@ export default {
       }
       // event.stopPropagation();
       const idc = this.board.idCount++;
-      // postitList에 새로운 포스트잇 더하기
-      this.board.postitList.push({
+      var newPostit = {
         frontPostitId: idc,
         left: left,
         top: top,
         title: "",
         contents: "",
         channel: this.board.channelId,
-      });
+      }
+      this.crudMethod('POSTIT', 'CREATE', newPostit)
+      // postitList에 새로운 포스트잇 더하기
+      this.board.postitList.push(newPostit);
       this.sendMessage();
       // snackbar
       this.createSnackbar("포스트잇이 생성되었습니다!", 1500, "success");
@@ -326,17 +334,17 @@ export default {
         this.map.isPresent = true;
       }
     },    
-    createCalendar(left='600px', top='270px') {
-      if (this.board.calendar.left !== null){
+    createScheduler(left='600px', top='270px') {
+      if (this.board.scheduler.top !== null){
         this.createSnackbar("이미 달력이 있습니다!", 3000, "error");
       } else {
-        this.board.calendar = {
+        this.board.scheduler = {
           left: left,
           top: top,
-          events: this.$store.state.calendar.events,
+          events: this.$store.state.scheduler.events,
         }
-        console.log("create Calendar");
-        console.log(this.board.calendar);
+        console.log("create Scheduler");
+        console.log(this.board.scheduler);
         this.sendMessage();
         // snackbar
         this.createSnackbar("달력이 생성되었습니다!", 1500, "success");
@@ -367,8 +375,8 @@ export default {
       this.snackbar.color = color;
     },
     handleDrag({ target, left, top }) {
-      target.style.left = `${left}px`;
       target.style.top = `${top}px`;
+      target.style.left = `${left}px`;
       if (target.getAttribute("class") != null) {
         var clas = target.getAttribute("class").split(" ");
         for (var cla in clas) {
@@ -381,18 +389,28 @@ export default {
                 ...postit,
               };
             });
-          } else if(clas[cla] == "calendar") {
-            this.board.calendar.left = `${left}px`
-            this.board.calendar.top = `${top}px`
+          } else if(clas[cla] == "scheduler") {
+            this.board.scheduler.left = `${left}px`
+            this.board.scheduler.top = `${top}px`
           } else if(clas[cla] == "Pollx") {
-            this.board.poll.left = `${left}px`
-            this.board.poll.top = `${top}px`
+            // this.board.poll.left = `${left}px`
+            // this.board.poll.top = `${top}px`
           }
         }
       }
      
     },
-    handleDragEnd() {
+    handleDragEnd({target}) {
+      console.log(target);
+      var moduleObj = null;
+      switch(target.nodeName) {
+        case 'POSTIT':
+          moduleObj = this.board.postitList.find(postit => postit.frontPostitId == target.id);
+          break;
+        case 'SCHEDULER':
+          break;
+      }
+      this.crudMethod(target.nodeName, 'UPDATE', moduleObj);
       this.sendMessage();
     },
     handleResize({ target, width, height, delta }) {
@@ -431,6 +449,7 @@ export default {
         this.board.isDelete = true;
         this.board.delete.moduleName = 'postit';
         this.board.delete.id = this.board.postitList[idx].frontPostitId;
+        this.crudMethod('POSTIT', 'CREATE', this.board.postitList[idx])
         this.board.postitList.splice(idx, 1);
         this.sendMessage();
         this.cloakMoveable();
@@ -442,9 +461,9 @@ export default {
           var clas = target.getAttribute("class").split(" ");
           console.log(clas);
           for (var cla in clas) {
-            if (clas[cla] == "calendar") {
-              this.board.calendar = { "left": null, "top": null, "events": [{ "name": "오프라인", "content": "hello", "start": "2020-08-05T12:30:00", "end": "2020-08-05T18:00:00" }] }
-              console.log(this.board.calendar);
+            if (clas[cla] == "scheduler") {
+              this.board.scheduler = { "left": null, "top": null, "events": [{ "name": "오프라인", "content": "hello", "start": "2020-08-05T12:30:00", "end": "2020-08-05T18:00:00" }] }
+              console.log(this.board.scheduler);
             } else if (clas == "Poll") {
               this.board.poll = {}
             }
@@ -466,23 +485,30 @@ export default {
         case 'postit':
           this.createPostit(`${pageX}px`, `${pageY}px`);
           break;
-        case 'calendar':
-          this.createCalendar(`${pageX}px`, `${pageY}px`);
+        case 'scheduler':
+          this.createScheduler(`${pageX}px`, `${pageY}px`);
           break;
         case 'poll':
           this.createPoll(`${pageX}px`, `${pageY}px`);
           break;
       }
     },
-    pleaseDrag(){
+    pleaseDrag() {
       this.createSnackbar('생성하고자 하는 위치로 드래그 해주세요!', 3000, 'default')
-    }
+    },
+    crudMethod(moduleType, crudType, moduleObject) {
+      this.board.crudModule =  {
+        modulType: moduleType,
+        crudType: crudType,
+        moduleObject: moduleObject,
+      }
+    },
   },
   components: {
     Moveable,
     Postit,
     Map,
-    Calendar,
+    Scheduler,
     Chat,
     Kanban,
     Poll,

@@ -1,5 +1,5 @@
 <template>
-  <div class="kanban">
+  <kanban class="kanban">
     <!-- <div class="kanban MoveableBox"> -->
     <div class="flex justify-center">
       <div class="min-h-screen d-flex overflow-x-scroll py-12">
@@ -47,7 +47,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </kanban>
 </template>
 
 <script>

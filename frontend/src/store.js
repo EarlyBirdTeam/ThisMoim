@@ -41,7 +41,7 @@ export const store = new Vuex.Store({
           },
         },
         // 캘린더
-        calendar: {
+        scheduler: {
           left: '600px',
           top: '270px',
           event: {
@@ -86,7 +86,7 @@ export const store = new Vuex.Store({
           left: "500px",
           top: "170px",
           question: null,
-          answers: [ {answer: "김강현", voted: 0}, {answer: "배민규", voted: 0}, {answer: "정용우 the Master of Frontend", voted: 0}],
+          answers: [ {answer: "", voted: 0}, {answer: "", voted: 0},],
           multipleVotes: false,
           totalVotes: 0,
           userVoted: [ ],
@@ -99,7 +99,7 @@ export const store = new Vuex.Store({
         async REQUEST_ADD_EVENT(context, event) {
             try {
                 console.log(event);
-                // const response = await requestAddEvent(calendar);
+                // const response = await requestAddEvent(scheduler);
                 // const addedEvent = makeEvent(response.data);
                 const addedEvent = makeEvent(event);
                 context.commit('ADD_EVENT', addedEvent);
@@ -244,21 +244,21 @@ export const store = new Vuex.Store({
 
     },
     mutations: {
-        OPEN_CALENDAR_DIALOG(state, payload) {
-            state.calendar.event.startDate = payload.date;
-            state.calendar.event.endDate = payload.date;
-            state.calendar.event.startTime = payload.time;
-            state.calendar.dialog = true;
+        OPEN_SCHEDULER_DIALOG(state, payload) {
+            state.scheduler.event.startDate = payload.date;
+            state.scheduler.event.endDate = payload.date;
+            state.scheduler.event.startTime = payload.time;
+            state.scheduler.dialog = true;
         },
-        CLOSE_CALENDAR_DIALOG(state) {
+        CLOSE_SCHEDULER_DIALOG(state) {
             console.log("CLOSE_DIALOG");
-            state.calendar.dialog = false;
+            state.scheduler.dialog = false;
         },
         ADD_EVENT(state, getEvent) {
             console.log("ADD_EVENT");
-            state.calendar.events.push(getEvent);
-            state.calendar.dialog = false;
-            state.calendar.event = {
+            state.scheduler.events.push(getEvent);
+            state.scheduler.dialog = false;
+            state.scheduler.event = {
                 startDate: '',
                 startTime: '',
                 endDate: '',
@@ -267,8 +267,8 @@ export const store = new Vuex.Store({
                 title: '',
             };
         },
-        OPEN_CALENDAR_EVENT(state, payload) {
-            state.calendar.event = {
+        OPEN_SCHEDULER_EVENT(state, payload) {
+            state.scheduler.event = {
                 startDate: payload.eventParsed.start.date,
                 startTime: payload.eventParsed.start.time,
                 endDate: payload.eventParsed.end.date,
@@ -276,10 +276,10 @@ export const store = new Vuex.Store({
                 content: payload.event.content,
                 title: payload.event.name,
             }
-            state.calendar.eventDetail = true;
+            state.scheduler.eventDetail = true;
         },
-        CLOSE_CALENDAR_EVENT(state) {
-            state.calendar.event = {
+        CLOSE_SCHEDULER_EVENT(state) {
+            state.scheduler.event = {
                 startDate: '',
                 startTime: '',
                 endDate: '',
@@ -287,7 +287,7 @@ export const store = new Vuex.Store({
                 content: '',
                 title: '',
             };
-            state.calendar.eventDetail = false;
+            state.scheduler.eventDetail = false;
             
         },
         [constants.METHODS.LOGIN_USER]: (state, payload) => {

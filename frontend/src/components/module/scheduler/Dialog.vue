@@ -8,12 +8,12 @@
         <v-form class="px-3" ref="form">
           <v-text-field
             label="일정"
-            v-model="calendar.event.title"
+            v-model="scheduler.event.title"
             prepend-icon="mdi-folder-marker"
           ></v-text-field>
           <v-textarea
             label="상세설명"
-            v-model="calendar.event.content"
+            v-model="scheduler.event.content"
             prepend-icon="mdi-pencil"
           ></v-textarea>
           <v-row>
@@ -26,11 +26,11 @@
                     readonly
                     prepend-icon="mdi-calendar-month"
                     v-on="on"
-                    :value="calendar.event.startDate"
+                    :value="scheduler.event.startDate"
                     class
                   ></v-text-field>
                 </template>
-                <v-date-picker v-model="calendar.event.startDate"></v-date-picker>
+                <v-date-picker v-model="scheduler.event.startDate"></v-date-picker>
               </v-menu>
             </v-col>
             <v-col cols="6" class="pb-0">
@@ -39,12 +39,12 @@
                   <v-text-field
                     label="시작 시간"
                     readonly
-                    :value="calendar.event.startTime"
+                    :value="scheduler.event.startTime"
                     prepend-icon="mdi-timer"
                     v-on="on"
                   ></v-text-field>
                 </template>
-                <v-time-picker v-if="startTimer" v-model="calendar.event.startTime">
+                <v-time-picker v-if="startTimer" v-model="scheduler.event.startTime">
                   <v-btn class="mx-auto" @click="selectTime">선택</v-btn>
                 </v-time-picker>
               </v-menu>
@@ -61,11 +61,11 @@
                     readonly
                     prepend-icon="mdi-calendar-month"
                     v-on="on"
-                    :value="calendar.event.endDate"
+                    :value="scheduler.event.endDate"
                     class
                   ></v-text-field>
                 </template>
-                <v-date-picker v-model="calendar.event.endDate" :allowed-dates="allowedDates"></v-date-picker>
+                <v-date-picker v-model="scheduler.event.endDate" :allowed-dates="allowedDates"></v-date-picker>
               </v-menu>
             </v-col>
             <v-col cols="6" class="pt-0">
@@ -74,12 +74,12 @@
                   <v-text-field
                     label="종료 시간"
                     readonly
-                    :value="calendar.event.endTime"
+                    :value="scheduler.event.endTime"
                     prepend-icon="mdi-timer"
                     v-on="on"
                   ></v-text-field>
                 </template>
-                <v-time-picker v-if="endTimer" v-model="calendar.event.endTime">
+                <v-time-picker v-if="endTimer" v-model="scheduler.event.endTime">
                   <v-btn class="mx-auto" @click="selectTime">선택</v-btn>
                 </v-time-picker>
               </v-menu>
@@ -106,16 +106,16 @@ export default {
   },
   computed: {
     dialog() {
-      return this.$store.state.calendar.dialog;
+      return this.$store.state.scheduler.dialog;
     },
-    calendar() {
-      return this.$store.state.calendar;
+    scheduler() {
+      return this.$store.state.scheduler;
     }
   },
   methods: {
     submit() {
       if (this.$refs.form.validate()) {
-          this.$store.dispatch('REQUEST_ADD_EVENT', this.calendar.event);
+          this.$store.dispatch('REQUEST_ADD_EVENT', this.scheduler.event);
       }
     },
     // submit() {
@@ -127,7 +127,7 @@ export default {
     //     }
     // },
     close() {
-      this.$store.commit("CLOSE_CALENDAR_DIALOG");
+      this.$store.commit("CLOSE_SCHEDULER_DIALOG");
     },
     selectTime() {
       this.endTimer = false;
@@ -135,7 +135,7 @@ export default {
     },
     allowedDates(val) {
       let endDate = val.split("-").reduce((a, b) => a + b);
-      let startDate = this.calendar.event.startDate
+      let startDate = this.scheduler.event.startDate
         .split("-")
         .reduce((a, b) => a + b);
       return endDate >= startDate;
