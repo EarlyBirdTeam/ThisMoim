@@ -3,7 +3,7 @@
     <v-main id="bg">
       <Header :isHeader="isHeader"/>
       <!-- <Sidebar :isSidebar="isSidebar"/> -->
-      <Sidebar> </Sidebar>
+      <!-- <Sidebar> </Sidebar> -->
       <router-view id="container"/>
     </v-main>
   </v-app>
@@ -96,11 +96,11 @@ export default {
     /* width: 90vw; */
     /* border: solid gray 1px; */
     background-color: white;
-    border-radius: 2%;
-    height: 88%;
-    margin: 25px;
-    padding: 10px;
-    margin-left: 50px;
+    /* border-radius: 2%; */
+    height: 100vh;
+    /* margin: 25px; */
+    /* padding: 10px; */
+    /* margin-left: 50px; */
   }
   #bg{
     background-color: rgba(180, 179, 179, 0.26);

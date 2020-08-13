@@ -1,6 +1,6 @@
 <template>
   <div id="app" v-cloak @click="cloakMoveable">
-    <div>
+    <div class="toolbar">
       <v-snackbar
         app
         top
@@ -37,6 +37,56 @@
       </div>
     </div>
 
+    
+
+    <v-responsive class="vueBox text-center ma-3">
+      
+    </v-responsive>
+
+    <v-responsive>
+      <v-responsive
+        class="userListBadge badge-info text-center lighten-2 rounded-circle d-inline-flex align-center justify-center ma-3"
+        @mouseover="testIn"
+        @mouseout="testOut"
+      >
+
+        <v-img src="@/assets/img/user.png">
+          {{userCount}}
+        </v-img>
+
+      
+        <!-- <v-hover v-slot:default="{ hover }">
+            <v-img src="@/assets/img/user.png">
+              {{userCount}}
+              <v-expand-transition>
+                <div
+                  v-if="hover"
+                  class="d-flex transition-fast-in-fast-out orange darken-2 v-card--reveal display-3 white--text"
+                  style="height: 100%;"
+                >
+                </div>
+              </v-expand-transition>
+              
+            </v-img>
+            
+        </v-hover> -->
+            
+          
+
+
+      </v-responsive>
+      
+      <transition name="slide-fade">
+        <v-responsive id="memberList" class="text-center ma-3 badge-info" 
+        v-if="memberView"
+        align="center"
+        justify="center">
+        김강현, 배민규, 정용우, 최문경, 김동률, 배재원
+        </v-responsive>
+      </transition>
+    </v-responsive>
+    
+
     <Moveable
       ref="moveable"
       class="moveable"
@@ -54,7 +104,7 @@
     @dblclick="focusAction" 
     @click="changeTargetAction"
     @wheel="wheelEvent"
-    style="height: 73vh; width: 80vw;">
+    style="height: 100%; width: 100%;">
       
       
       <div class="MoveableBox realBoard" >
@@ -164,7 +214,7 @@ import Chat from "../../components/common/Chat";
 import Poll from "../../components/common/Poll"
 import Kanban from "../../components/module/Kanban";
 
-const boardLength = 3000;
+const boardLength = 10000;
 export default {
   props:[
 
@@ -225,6 +275,8 @@ export default {
       boardScale: 1,
       boardX: boardLength/2,
       boardY: boardLength/2,
+
+      memberView:false,
       idc: 0,
       isPoll: false,
     };
@@ -462,15 +514,16 @@ export default {
             this.boardX = (lp*-1) + window.innerWidth * 0.4;
             this.boardY = (tp*-1) + window.innerHeight * 0.365;
 
-            var limitUnit = (this.boardScale / 0.05) * 75 - (boardLength/2);   
+            var limitUnit = (this.boardScale / 0.05) * 250 - (boardLength/2);   
+
             console.log(lp - limitUnit);         
             if(lp > limitUnit) {
               document.querySelector('.bodyBox').style.borderLeft = "red 3px solid";
               target.style.left = limitUnit+'px'
             }
-            else if((lp) < (-boardLength + (window.innerWidth * 0.8)) - limitUnit) {
+            else if((lp) < (-boardLength + (window.innerWidth)) - limitUnit) {
               document.querySelector('.bodyBox').style.borderRight = "red 3px solid";
-              target.style.left = (-boardLength + (window.innerWidth * 0.8) - limitUnit) +'px';
+              target.style.left = (-boardLength + (window.innerWidth) - limitUnit) +'px';
             } 
             else {
               document.querySelector('.bodyBox').style.borderRight = "1px pink solid";
@@ -481,8 +534,8 @@ export default {
               target.style.top = limitUnit+'px'
               document.querySelector('.bodyBox').style.borderTop = "red 3px solid";
             }
-            else if (tp < (-boardLength + (window.innerHeight * 0.73)) - limitUnit) {
-              target.style.top = (-boardLength + (window.innerHeight * 0.73)) - limitUnit +'px';
+            else if (tp < (-boardLength + (window.innerHeight)) - limitUnit) {
+              target.style.top = (-boardLength + (window.innerHeight)) - limitUnit +'px';
               document.querySelector('.bodyBox').style.borderBottom = "red 3px solid";
             }
             else {  
@@ -493,6 +546,7 @@ export default {
             return ;
           }
         }
+      }
     },
     handleDragEnd({target}) {
       console.log(target);
@@ -571,7 +625,7 @@ export default {
       else if (event.deltaY > 0) {
         this.boardScale -= 0.05;
 
-        if(this.boardScale < 0.65) this.boardScale = 0.65;
+        if(this.boardScale < 0.3) this.boardScale = 0.3;
 
         console.log(this.boardScale);
          console.log("down!"); 
@@ -629,6 +683,19 @@ export default {
         moduleObject: moduleObject,
       }
     },
+
+    testIn(){
+      if(!this.memberView){
+        this.memberView = true;
+        console.log("hover!");
+      }
+    },
+    testOut(){
+      if(this.memberView){
+        this.memberView = false;
+        console.log("out!");
+      }
+    }
   },
   components: {
     Moveable,
@@ -659,8 +726,8 @@ export default {
 .bodyBox {
   position: relative;
   height: 75vh;
-  /* width: 80vw; */
-  margin: 1% 3%;
+  margin: 0;
+  width: 100vw;
   /* transform: translate(-50%, -50%); */
   /* border: solid 1px; */
   background-color: rgb(255, 255, 255);
@@ -680,14 +747,22 @@ export default {
      linear-gradient(
         0deg, transparent 0%, 
         transparent 0px, rgba(104, 104, 104, 0.1) 0px,rgba(104, 104, 104, 0.1) 1px, transparent 1px,
-        transparent 49px, rgba(104, 104, 104, 0.1) 49px,rgba(104, 104, 104, 0.1) 50px, transparent 1px),
+        transparent 49px, rgba(104, 104, 104, 0.1) 49px,rgba(104, 104, 104, 0.1) 50px, transparent 1px, 
+        transparent 99px, rgba(104, 104, 104, 0.1) 99px,rgba(104, 104, 104, 0.1) 100px, transparent 1px, 
+        transparent 149px, rgba(104, 104, 104, 0.1) 149px,rgba(104, 104, 104, 0.1) 150px, transparent 1px, 
+        transparent 199px, rgba(104, 104, 104, 0.1) 199px,rgba(104, 104, 104, 0.1) 200px, transparent 1px, 
+        transparent 249px, rgba(104, 104, 104, 0.3) 249px,rgba(104, 104, 104, 0.3) 250px, transparent 1px),
 
     linear-gradient(
         -90deg, transparent 0%, 
         transparent 0px, rgba(104, 104, 104, 0.1) 0px, rgba(104, 104, 104, 0.1) 1px, transparent 1px,
-        transparent 49px, rgba(104, 104, 104, 0.1) 49px,rgba(104, 104, 104, 0.1) 50px, transparent 1px);
+        transparent 49px, rgba(104, 104, 104, 0.1) 49px,rgba(104, 104, 104, 0.1) 50px, transparent 1px,
+        transparent 99px, rgba(104, 104, 104, 0.1) 99px,rgba(104, 104, 104, 0.1) 100px, transparent 1px,
+        transparent 149px, rgba(104, 104, 104, 0.1) 149px,rgba(104, 104, 104, 0.1) 150px, transparent 1px, 
+        transparent 199px, rgba(104, 104, 104, 0.1) 199px,rgba(104, 104, 104, 0.1) 200px, transparent 1px, 
+        transparent 249px, rgba(104, 104, 104, 0.3) 249px,rgba(104, 104, 104, 0.3) 250px, transparent 1px);
                
-    background-size: 50px 50px;
+    background-size: 250px 250px;
   }
 
 
@@ -698,8 +773,67 @@ export default {
 
 .toolBox{
   font-family: "Roboto", sans-serif;
-  position: relative;
-  width: 400px;
+  /* position: relative; */
+  position: fixed;
+  z-index: 3;
+  width: 64px;
+  /* height: 1%; */
+  /* transform: rotate(90deg); */
+  bottom: 50%;
+  left: 2%;
+  /* left: -50px;; */
 }
 
+.toolbar{
+  position: fixed;
+  z-index: 3;
+}
+
+.userListBadge{
+  position: fixed;
+  z-index: 3;
+  bottom: 1%;
+  left: 20px;
+
+  /* background-color: white; */
+  /* border-radius: 50%; */
+  width: 64px;
+  height: 64px;
+}
+
+.vueBox{
+  background-color: white;
+  position: fixed;
+  z-index: 3;
+  right: 10%;
+  bottom: 1%;
+  width: 200px;
+  height: 200px;
+}
+
+#memberList{
+  width: auto;
+  height: 40px;
+  position: fixed;
+  z-index: 3;
+  bottom: 1%;
+  left: 120px;
+  /* padding: 5%; */
+  /* vertical-align: middle; */
+  /* background-color: olive; */
+}
+
+
+
+.slide-fade-enter-active {
+  transition: all .4s ease;
+}
+.slide-fade-leave-active {
+  transition: all .4s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
+.slide-fade-enter, .slide-fade-leave-to
+/* .slide-fade-leave-active below version 2.1.8 */ {
+  transform: translateX(-10px);
+  opacity: 0;
+}
 </style>
