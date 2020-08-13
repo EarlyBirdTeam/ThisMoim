@@ -4,9 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="be227e13-619a-489d-8166-3b9497ebcabf" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/../frontend/src/page/post/channelDetail.vue" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/src/page/post/channelDetail.vue" afterDir="false" />
-    </list>
+    <list default="true" id="be227e13-619a-489d-8166-3b9497ebcabf" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />

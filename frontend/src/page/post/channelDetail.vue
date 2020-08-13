@@ -383,9 +383,6 @@ export default {
       event.stopPropagation();
       const idc = this.board.idCount++;
       // postitList에 새로운 포스트잇 더하기
-        channel: this.board.channelId,
-        contents: "",
-        title: "",
       var newPostit = {
         frontPostitId: idc,
         left: (this.boardX - 120) + "px",
