@@ -64,48 +64,17 @@ app.get('/cam', function(req, res) {
 io.on('connection', function(socket) {
     var room = '';
 
-    // socket.on('enter', function(data){
-
-    //   var obj2 = {    
-    //     sockect_id : socket.id,
-    //     nickname : data.name,
-    //     email : data.userid
-    //   };
-
-    //   client_list.push(obj2);
-    //     for(var i in client_list){
-    //       console.log(i+')'+client_list[i].nickname+" ");
-    //     }
-    //     socket.emit('sendList', client_list);
-    // });
 
     // 접속한 클라이언트의 정보가 수신되면
     socket.on('login', function(data) {
         console.log('Client logged-in:\n name: ' + data.name + '\n userid: ' + data.userid);
 
-        // client_List 부분
-        var obj = {    
-          sockect_id : socket.id,
-          nickname : data.name,
-          email : data.userid
-        };
-
-        //client_list.push(obj);
-        // for(var i in client_list){
-        //   console.log(i+')'+client_list[i].nickname+" ");
-        // }
-
-        // socket.emit('sendList', client_list);
-
-
-        // 현재 접속된 유저를 전달, JSON형식으로 보냄 -> userList를 갖고오기 위함
-        // socket.emit('userCnt', JSON.stringify(socket.id));
-        // socket.emit('userList', )
 
         // socket에 클라이언트 정보를 저장한다
         socket.name = data.name;
         socket.userid = data.userid;
-
+        
+        //socket.nickname = data.name;
 
         // socket.id = data.name;
         data.socketid = socket.id;
@@ -119,6 +88,22 @@ io.on('connection', function(socket) {
       
         //socket.broadcast.emit('enter', data.name);
         io.to(room).emit('enter', data.name);
+        
+        
+        //var clients = io.sockets.clients(room); -> 최신버전에서는 작동 x
+        var clientList = new Array();
+        io.of('/').in(room).clients(function(error,roster){
+          //console.log(io.sockets.sockets[roster[0]].name);
+          for(var i=0; i<roster.length; i++){
+            //console.log(io.sockets.sockets[roster[i]]);
+            clientList.push(io.sockets.sockets[roster[i]].name);
+          }
+        });
+        setTimeout(function() {
+          console.log(clientList);
+          io.to(room).emit('clientList', clientList); // 들어가는데에 시간이 조금 걸림.
+        }, 1500);
+        
     });
 
     // 클라이언트로부터의 메시지가 수신되면

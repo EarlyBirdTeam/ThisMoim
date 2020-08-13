@@ -1,13 +1,21 @@
 <template>
 <div>
 
+
  <div class="chat-container" id="chatContainer">
    <div v-if="chattingBox">
+        
+        
         <div class="chat-header" id="chatHeader">
+          <div id="clientList" v-if="isList">User1</div>
           <button id="minimize" class="header-btn" @click="minimize"></button>
           <button id="maximize" class="header-btn" @click="maximize"></button>
           <img id="profile-pic" src='../../assets/img/picture.jpg' width="1">
           <span id="username">나</span>
+
+          <div>
+          <a @click="showList"> 접속자 리스트</a>
+          </div>
         </div>
     
         <div class="chatbox" id="chatBox">
@@ -99,7 +107,15 @@ export default {
       // this.chatLogs.push(data.name + "님이 접속하셨습니다");
       // this.chatComes.push(data.name);
       $('.chatbox').append('<div class="inout-bubble">'+data+'님이 입장하셨습니다.</div>');
-    
+    });
+
+    this.$socket.on("clientList", (data) => {
+      console.log("접속자 : ");
+      this.clientList = data;
+      console.log(this.clientList);
+
+      
+      //$('.chatbox').append('<div class="inout-bubble">'+data+'님이 입장하셨습니다.</div>');
     });
 
     // 내 메시지는 띄우지 말야아함.
@@ -136,6 +152,8 @@ export default {
     return {
       
       chattingBox: true,
+      isList: false,
+      clientList: [],
       textarea: "",
       message: "",
       chatmem: [],
@@ -229,6 +247,11 @@ export default {
       // var name = 1;
       // return name + Math.random()*10;
     },
+
+    showList(){
+      if(this.isList) this.isList=false;
+      else this.isList=true;
+    }
   },
 };
 </script>
