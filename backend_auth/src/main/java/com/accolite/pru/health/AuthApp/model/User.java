@@ -14,23 +14,16 @@
 package com.accolite.pru.health.AuthApp.model;
 
 import com.accolite.pru.health.AuthApp.model.audit.DateAudit;
+import com.accolite.pru.health.AuthApp.model.member.Member;
 import com.accolite.pru.health.AuthApp.validation.annotation.NullOrNotBlank;
 import org.hibernate.annotations.NaturalId;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.SequenceGenerator;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity(name = "USER")
@@ -71,6 +64,9 @@ public class User extends DateAudit {
     @Column(name = "IS_EMAIL_VERIFIED", nullable = false)
     private Boolean isEmailVerified;
 
+    @OneToMany(mappedBy = "user")
+    private List<Member> members = new ArrayList<>();
+
     public User() {
         super();
     }
@@ -80,7 +76,6 @@ public class User extends DateAudit {
         username = user.getUsername();
         password = user.getPassword();
         nickname = user.getNickname();
-//        lastName = user.getLastName();
         email = user.getEmail();
         active = user.getActive();
         roles = user.getRoles();
@@ -180,7 +175,7 @@ public class User extends DateAudit {
     @Override
     public String toString() {
         return "User{" + "id=" + id + ", email='" + email + '\'' + ", username='" + username + '\'' + ", password='"
-                + password + '\'' + ", firstName='" + nickname + '\'' + ", active="
+                + password + '\'' + ", nickName='" + nickname + '\'' + ", active="
                 + active + ", roles=" + roles + ", isEmailVerified=" + isEmailVerified + '}';
     }
 }

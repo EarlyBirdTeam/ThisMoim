@@ -24,6 +24,7 @@ import com.accolite.pru.health.AuthApp.exception.TokenRefreshException;
 import com.accolite.pru.health.AuthApp.exception.UserLoginException;
 import com.accolite.pru.health.AuthApp.exception.UserRegistrationException;
 import com.accolite.pru.health.AuthApp.model.CustomUserDetails;
+import com.accolite.pru.health.AuthApp.model.User;
 import com.accolite.pru.health.AuthApp.model.payload.ApiResponse;
 import com.accolite.pru.health.AuthApp.model.payload.JwtAuthenticationResponse;
 import com.accolite.pru.health.AuthApp.model.payload.LoginRequest;
@@ -35,11 +36,14 @@ import com.accolite.pru.health.AuthApp.model.token.EmailVerificationToken;
 import com.accolite.pru.health.AuthApp.model.token.RefreshToken;
 import com.accolite.pru.health.AuthApp.security.JwtTokenProvider;
 import com.accolite.pru.health.AuthApp.service.AuthService;
+import com.accolite.pru.health.AuthApp.service.UserService;
 import com.sun.jndi.toolkit.url.Uri;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import javassist.NotFoundException;
 import org.apache.log4j.Logger;
+import org.omg.CORBA.UserException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
@@ -52,6 +56,7 @@ import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static org.springframework.web.util.UriComponentsBuilder.newInstance;
@@ -68,9 +73,11 @@ public class AuthController {
     private final AuthService authService;
     private final JwtTokenProvider tokenProvider;
     private final ApplicationEventPublisher applicationEventPublisher;
+    private final UserService userService;
 
     @Autowired
-    public AuthController(AuthService authService, JwtTokenProvider tokenProvider, ApplicationEventPublisher applicationEventPublisher) {
+    public AuthController(UserService userService,AuthService authService, JwtTokenProvider tokenProvider, ApplicationEventPublisher applicationEventPublisher) {
+        this.userService = userService;
         this.authService = authService;
         this.tokenProvider = tokenProvider;
         this.applicationEventPublisher = applicationEventPublisher;
@@ -108,7 +115,8 @@ public class AuthController {
                 .map(RefreshToken::getToken)
                 .map(refreshToken -> {
                     String jwtToken = authService.generateToken(customUserDetails);
-                    return ResponseEntity.ok(new JwtAuthenticationResponse(jwtToken, refreshToken, tokenProvider.getExpiryDuration()));
+                    User user = userService.findByEmail(loginRequest.getEmail()).orElseThrow(() -> new NoSuchElementException());
+                    return ResponseEntity.ok(new JwtAuthenticationResponse(jwtToken, refreshToken, tokenProvider.getExpiryDuration(),user));
                 })
                 .orElseThrow(() -> new UserLoginException("Couldn't create refresh token for: [" + loginRequest + "]"));
     }
