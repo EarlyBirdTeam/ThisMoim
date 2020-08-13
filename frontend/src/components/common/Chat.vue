@@ -7,15 +7,24 @@
         
         
         <div class="chat-header" id="chatHeader">
-          <div id="clientList" v-if="isList">User1</div>
+          <div id="clientList" v-if="isList">
+            <ul>
+                <li id="user"
+                  v-for="(user, index) in clientList"
+                  :key="index"
+                >
+                  {{ user }}
+                </li>
+             </ul>
+          </div>
           <button id="minimize" class="header-btn" @click="minimize"></button>
           <button id="maximize" class="header-btn" @click="maximize"></button>
           <img id="profile-pic" src='../../assets/img/picture.jpg' width="1">
-          <span id="username">나</span>
+          <span>
+            <a id="username">나</a>
+            <a id="userList" @click="showList"> 접속자</a>
+          </span>
 
-          <div>
-          <a @click="showList"> 접속자 리스트</a>
-          </div>
         </div>
     
         <div class="chatbox" id="chatBox">
@@ -39,7 +48,7 @@
           <button id="minimize" class="header-btn" @click="minimize"></button>
           <button id="maximize" class="header-btn" @click="maximize"></button>
           <img id="profile-pic" src='../../assets/img/picture.jpg' width="1">
-          <span id="username">나</span>
+          <span id="username" style="margin-right:80%">나</span>
         </div>
     </div>
  </div>
@@ -320,8 +329,22 @@ export default {
     vertical-align: middle;
     font-size: 17px;
     font-weight: 500;
-    margin-right: 80%;
+    margin-right: 63%;
     color: #343434;
+  }
+
+  .chat-header #userList {
+    margin-right: 2%;
+  }
+  .chat-header #user{
+    margin-left: 80%;
+    margin-bottom: 2%;
+    font-size:13px;
+    background-color:yellowgreen;
+    border-radius: 10px 10px 10px 10px;
+    padding: 7px 15px 7px 15px;
+    float: left;
+    clear: both;
   }
 
   /* only header */
