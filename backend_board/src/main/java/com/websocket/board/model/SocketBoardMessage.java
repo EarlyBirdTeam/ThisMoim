@@ -3,6 +3,7 @@ package com.websocket.board.model;
 import com.websocket.board.model.calendar.Scheduler;
 import com.websocket.board.model.crud.CRUDModule;
 import com.websocket.board.model.kanban.Kanban;
+import com.websocket.board.model.poll.Poll;
 import com.websocket.board.model.postit.Postit;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,6 +29,7 @@ public class SocketBoardMessage implements Serializable {
 
     // 보드 전달 모듈 관련 인자
     private long idCount;
+
     private List<Postit> postitList; // 포스트잇 리스트
     private Kanban kanban;
     private Scheduler scheduler;
@@ -35,7 +37,12 @@ public class SocketBoardMessage implements Serializable {
     private CRUDModule crudModule;
 
     private Boolean isKanban;
+    private Poll poll;
+
     private Boolean isDelete;
+    private DeletedModule delete;
+    // List<Attendance> attendenceList; // 출석부 리스트
+    // List<Attendance> voteList; // 출석부 리스트
 
     // 멤버, 부착물 관련 인자
     //private final int MAX_FIXTURES = 100; // 최대 부착물 갯수
