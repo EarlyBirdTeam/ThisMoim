@@ -23,11 +23,24 @@ spring:
     driver-class-name: org.mariadb.jdbc.Driver
     url: jdbc:mariadb://localhost:3306/ssafy?autoReconnect=true&useUnicode=true&characterEncoding=utf8&serverTimezone=UTC
     username: root
-    password: mariadb
+    password: djfflqjem1!
     initialization-mode: always
     #data: classpath:ssafy-sk.sql
 
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: earlyBird10Team@gmail.com
+    password: earlybird5959!
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.starttls.enable: true
 
+
+  app:
+    velocity:
+      templates:
+        location: /templates/
 
   #spring.jpa.hibernate.ddl-auto=update
   #spring.datasource.driverClassName=com.mysql.jdbc.Driver
