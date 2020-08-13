@@ -96,7 +96,7 @@ export const store = new Vuex.Store({
         poll: {
           left: "500px",
           top: "170px",
-          question: null,
+          question: "",
           answers: [ {answer: "", voted: 0}, {answer: "", voted: 0},],
           multipleVotes: false,
           totalVotes: 0,

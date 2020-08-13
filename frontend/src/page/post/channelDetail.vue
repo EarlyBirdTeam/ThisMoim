@@ -73,7 +73,7 @@
       </div>
 
       <div class="Scheduler" @click.right="deleteAction">
-        <Scheduler v-if="!!board.scheduler.top" 
+        <Scheduler v-if="!!board.scheduler" 
         :style="{left:board.scheduler.left, top:board.scheduler.top}"/>
       </div>
 
@@ -253,12 +253,13 @@ export default {
       this.createSnackbar("수정되었습니다", 1000, "warning");
     },
     recvMessage: function (recv) {
-      
+      console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2")
+      console.log(recv.poll);
       this.userCount = recv.userCount;
       this.board.idCount = recv.idCount;
       this.board.postitList = recv.postitList;
       this.board.isDelete = false;
-      this.board.scheduler = recv.scheduler;
+      if (!!recv.scheduler) this.board.scheduler = recv.scheduler;
       this.board.poll = recv.poll;
       this.$store.state.scheduler.events = recv.scheduler.events;
       //crudModule 초기화
@@ -269,7 +270,6 @@ export default {
       };
     },
     createPostit(left='500px', top='170px') {
-      console.log(left, top);
       if(this.board.postitList.length > 20) {
         this.createSnackbar("포스트잇이 너무 많습니다!", 3000, "error")
         return
@@ -284,10 +284,11 @@ export default {
         contents: "",
         channel: this.board.channelId,
       }
-      this.crudMethod('POSTIT', 'CREATE', newPostit)
       // postitList에 새로운 포스트잇 더하기
       this.board.postitList.push(newPostit);
+      this.crudMethod('POSTIT', 'CREATE', newPostit)
       this.sendMessage();
+      this.crudMethod('', '', null);
       // snackbar
       this.createSnackbar("포스트잇이 생성되었습니다!", 1500, "success");
     },
@@ -336,7 +337,7 @@ export default {
       }
     },    
     createScheduler(left='600px', top='270px') {
-      if (this.board.scheduler.top !== null){
+      if (!!this.board.scheduler){
         this.createSnackbar("이미 달력이 있습니다!", 3000, "error");
       } else {
         this.board.scheduler = {
@@ -361,9 +362,8 @@ export default {
         this.board.poll = this.$store.state.poll;
         this.board.poll.left = left;
         this.board.poll.top = top;
-        console.log("create Poll");
-        console.log(this.board.poll);
-        // this.sendMessage();
+        this.crudMethod('POLL', 'CREATE', this.board.poll);
+        this.sendMessage();
         // snackbar
         this.createSnackbar("투표가 생성되었습니다!", 1500, "success");
       }
@@ -413,6 +413,7 @@ export default {
       }
       this.crudMethod(target.nodeName, 'UPDATE', moduleObj);
       this.sendMessage();
+      this.crudMethod('','',null);
     },
     handleResize({ target, width, height, delta }) {
       delta[0] && (target.style.width = `${width}px`);
@@ -467,6 +468,7 @@ export default {
               console.log(this.board.scheduler);
             } else if (clas == "Poll") {
               this.board.poll = {}
+              this.isPoll = false;
             }
           }
         }

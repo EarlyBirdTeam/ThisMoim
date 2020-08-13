@@ -67,7 +67,6 @@ import Dialog from "./scheduler/Dialog";
 import EventDetail from "./scheduler/EventDetail";
 
 export default {
-  name: "Scheduler",
   components: {
     Dialog,
     EventDetail,
