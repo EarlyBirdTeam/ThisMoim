@@ -14,7 +14,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
       #dialect: MariaDB53Dialect
       use-new-id-generator-mappings: false
     generate-ddl: true
