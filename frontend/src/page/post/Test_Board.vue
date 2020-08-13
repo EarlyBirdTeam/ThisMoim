@@ -1,12 +1,7 @@
 <template >
-    <div class="" id="board" @click="test2">
+    <div class="" id="board" @click="cloakMoveable" @mousemove="mouseMoveEvent">
 
 
-
-        <div class="bodyBox " ref="whiteBoard" @dblclick="focusAction"
-          @click="changeTargetAction"
-          @click.right="test4"
-          @change="test3">
 
           <Moveable
           ref="moveable"
@@ -38,56 +33,51 @@
             <v-btn icon color="orange" @click="createMap">
               <v-icon>mdi-map</v-icon>
             </v-btn>
-
           </v-toolbar>
 
 
-          <!-- <Postit 
-          v-for="(a, idx) in counter.textC"
-          :key="idx"
-          style="position: relative;
-                display: inline-block"
-          :uid="a"
-          :title="board.postits[a].title"
-          :content="board.postits[a].content"
-          v-on:setTitle="changePITitle"
-          v-on:setContent="changePIContent"/> -->
-            
+        <div class="bodyBox " ref="whiteBoard" @dblclick="focusAction"
+        @click="changeTargetAction"
+        
+        @wheel="wheelEvent"
+        style="height: 75vh; width: 80vw;">
 
-          <Postit 
-          v-for="(a, idx) in counter.textC"
-          :key="idx"
-          style="position: relative;
-                display: inline-block"
-          :uid="board.postits[a].boardId"
-          :title="board.postits[a].writer"
-          :content="board.postits[a].contents"
-          v-on:setTitle="changePITitle"
-          v-on:setContent="changePIContent"/> 
+          <div class="MoveableBox realBoard" >
 
-            <Canvas @dblclick="focusAction"
-          @click="changeTargetAction"
-          @click.right="deleteTargetAction"
-          v-for="(a, idx) in counter.canvasC"
-          :key="idx"
-          class="moveable3"  />
+            <Postit 
+            v-for="(a, idx) in counter.textC"
+            :key="idx"
+            style="position: relative;
+                  display: inline-block"
+            :uid="board.postits[a].boardId"
+            :title="board.postits[a].writer"
+            :content="board.postits[a].contents"
+            v-on:setTitle="changePITitle"
+            v-on:setContent="changePIContent"/> 
 
-          <Poll
-          v-for="(a, idx) in counter.pollC"
-          :key="idx"
-          style="position: relative;
-                display: inline-block"
-          />
+              <Canvas @dblclick="focusAction"
+            @click="changeTargetAction"
+            @click.right="deleteTargetAction"
+            v-for="(a, idx) in counter.canvasC"
+            :key="idx"
+            class="moveable3"  />
 
-          <Map 
-          @dblclick="focusAction"
-          @click="changeTargetAction"
-          @click.right="deleteTargetAction"
-          v-for="(a, idx) in counter.mapC"
-          :key="idx"
-          class="moveable2" 
-          />
-          
+            <Poll
+            v-for="(a, idx) in counter.pollC"
+            :key="idx"
+            style="position: relative;
+                  display: inline-block"
+            />
+
+            <Map 
+            @dblclick="focusAction"
+            @click="changeTargetAction"
+            @click.right="deleteTargetAction"
+            v-for="(a, idx) in counter.mapC"
+            :key="idx"
+            class="moveable2" 
+            />
+          </div>
         </div>
         
     </div>
@@ -112,7 +102,7 @@ const pI = `<div  class="moveable" @dblclick="dblclickEv"   @click="clickEv"
                >
                 it's Post it!
                 </div>`
-
+const boardLength = 3000;
 
 export default {
   name: "app",
@@ -136,6 +126,19 @@ export default {
 
     
     // this.init();
+
+
+  },
+  mounted() {
+    document.querySelector('.realBoard').style.height = boardLength+"px";
+    document.querySelector('.realBoard').style.width = boardLength+"px";
+
+    console.log((boardLength/2) - (window.innerWidth * 0.4));
+    document.querySelector('.realBoard').style.left = 
+      -(boardLength/2) + (window.innerWidth * 0.4) + "px";
+      
+    document.querySelector('.realBoard').style.top = 
+      -(boardLength/2) + (window.innerHeight * 0.4) + "px";
   },
   data: () => ({
     moveable: {
@@ -170,6 +173,7 @@ export default {
     postitList: [],
     token: '',
     userCount: 0,
+    boardScale: 1,
   }),
   methods: {
     // connect() {
@@ -230,6 +234,47 @@ export default {
       target.style.left = `${left}px`;
       target.style.top = `${top}px`;
       // console.log(target);
+      // console.log(document.querySelector('.bodyBox').style.width);
+      // console.log(window.innerWidth * 0.8);
+      if(target.getAttribute('class') != null){
+        var clas = target.getAttribute('class').split(' ');
+        
+        for(var cla in clas){
+          if(clas[cla] == 'realBoard'){
+            // console.log(target.style.left, " ",target.style.top);
+            let lp = target.style.left.replace("px", "");
+            let tp = target.style.top.replace("px", "");
+            console.log(lp, " , ", tp);
+            if(lp > 0) {
+              target.style.left = '1px'
+              document.querySelector('.bodyBox').style.borderLeft = "red 3px solid";
+            }
+            else if(((lp*-1) + window.innerWidth ) > (boardLength )) {
+              target.style.left = (-boardLength + window.innerWidth)+'px';
+              document.querySelector('.bodyBox').style.borderRight = "red 3px solid";
+            } 
+            else {
+              document.querySelector('.bodyBox').style.borderLeft = "none";
+              document.querySelector('.bodyBox').style.borderRight = "none";
+            }
+
+            if(tp > 0) {
+              target.style.top = '1px'
+              document.querySelector('.bodyBox').style.borderTop = "red 3px solid";
+            }
+            else if ((tp*-1) + window.innerHeight > boardLength) {
+              target.style.top = (-boardLength + window.innerHeight)+'px';
+              document.querySelector('.bodyBox').style.borderBottom = "red 3px solid";
+            }
+            else {
+              document.querySelector('.bodyBox').style.borderTop = "none";
+              document.querySelector('.bodyBox').style.borderBottom = "none";
+            }
+
+            
+          }
+        }
+      }
     },
     handleResize({ target, width, height, delta }) {
       // console.log("onResize", width, height, delta);
@@ -252,16 +297,8 @@ export default {
         target.focus();
     },
     changeTargetAction({target}){
-      this.test();
+      this.blockMoveable();
 
-      // if(target.getAttribute('class') != null){
-      //   var clas = target.getAttribute('class').split(' ');
-      
-      //   for(var cla in clas){
-      //     // console.log(clas[cla]);
-      //     if(clas[cla] == 'notMoveBox'){return;}
-      //   }
-      // }
       if(target.getAttribute('class') != null){
         var clas = target.getAttribute('class').split(' ');
       
@@ -271,6 +308,13 @@ export default {
             event.stopPropagation();
             target.blur();
             this.$refs.moveable.moveable.target = target;
+          }
+
+          if(clas[cla] == 'realBoard'){
+            event.stopPropagation();
+            target.blur();
+            this.$refs.moveable.moveable.target = target;
+            this.cloakMoveable();
           }
         }
       }
@@ -289,27 +333,36 @@ export default {
         target.remove();
       }
     },
-    test(){
-      document.querySelector('.moveable-control-box').style.display = 'block';
+    blockMoveable() {
+      document.querySelector(".moveable-control-box").style.display = "block";
     },
-    test2(){
-      // console.log("click body!");
-      document.querySelector('.moveable-control-box').style.display = 'none';
+    cloakMoveable() {
+      document.querySelector(".moveable-control-box").style.display = "none";
     },
-    test3(){
-      console.log("page is changed!");
-      // console.log(this.$store.state);
-      // console.log("Id : ", this.$store.state.channelData.channelId);
-      // console.log("Name : ", this.$store.state.channelData.channelName);
-      
-      console.log(localStorage.getItem('wsboard.channelId'));
-      console.log(localStorage.getItem('wsboard.channelName'));
+    wheelEvent: function(event) {
+      // console.log(event.deltaY);
+      if (event.deltaY < 0) { 
+        console.log("up!"); 
+        this.boardScale += 0.05;
 
-      this.sendMessage();
+        if(this.boardScale > 1.3) this.boardScale = 1.3;
+
+        console.log(this.boardScale);
+      }
+      else if (event.deltaY > 0) {
+        this.boardScale -= 0.05;
+
+        if(this.boardScale < 0.3) this.boardScale = 0.3;
+
+        console.log(this.boardScale);
+         console.log("down!"); 
+      }
+
+      document.querySelector(".realBoard").style.transform = `scale(${this.boardScale})`;
+      
     },
-    test4({target}){
-      target.style.left = "100px";
-      console.log(this.$store.state)
+    mouseMoveEvent(event){
+      // console.log(event);
     },
     changePITitle: function(value,index){
       console.log("title is changed!",index ,value);
@@ -335,7 +388,6 @@ export default {
         "contents": "content" ,
         "point":null,
       });
-      this.test3();
     },
     createCanvas() {
       event.stopPropagation();
@@ -390,7 +442,8 @@ export default {
         this.board.postits = recv.postits;
         this.counter.textC = recv.postits.length;
         console.log("served postits is : ", this.board.postits);
-    }
+    },
+    
   },
   
 }
@@ -444,12 +497,24 @@ export default {
 }
 
 .bodyBox {
-  /* position: relative; */
-  height: 100%;
-  width: 80vw;
+  position: relative;
+  height: 75vh;
+  /* width: 80vw; */
   margin: 1% 3%;
   /* transform: translate(-50%, -50%); */
   /* border: solid 1px; */
+  background-color: rgba(102, 255, 255, 0.377);
+  overflow: hidden;
+}
+
+.realBoard {
+  /* boardLength와 동일해야함! */
+  /* height: 2000px;
+  width: 2000px; */
+  /* left: -680px;
+  top: -680px; */
+  border: 1px solid pink;
+  background: rgba(209, 130, 144, 0.507);
 }
 
 img {

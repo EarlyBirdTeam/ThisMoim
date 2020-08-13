@@ -12,12 +12,8 @@
         <h4>
           {{channelName}}
           <span class="badge badge-info badge-pill">{{userCount}}</span>
-          <v-btn @click="sendMessage()">보내기</v-btn>
-        </h4>
-        <br />
-      </div>
-    </div>
-    <v-toolbar class="toolBox">
+
+        <v-toolbar class="toolBox">
       <v-btn icon color="orange" @click="pleaseDrag" draggable="true" @dragenter="dragging=true" @dragend="moduleDragEnd('postit', $event)">
         <v-icon>mdi-message</v-icon>
       </v-btn>
@@ -33,25 +29,37 @@
       <v-btn icon color="orange" @click="pleaseDrag" draggable="true" @dragend="moduleDragEnd('poll', $event)">
         <v-icon>mdi-vote</v-icon>
       </v-btn>
-    </v-toolbar>
+    	</v-toolbar>
 
-    <div class="bodyBox" ref="whiteBoard" @dblclick="focusAction" @click="changeTargetAction">
+		</h4>
+        <br />
+        
+      </div>
+    </div>
+
+    <Moveable
+      ref="moveable"
+      class="moveable"
+      v-bind="moveable"
+      @drag="handleDrag"
+      @dragEnd="handleDragEnd"
+      @resize="handleResize"
+      @scale="handleScale"
+      @rotate="handleRotate"
+      @warp="handleWarp"
+      style="display: none;"
+    ></Moveable>
+
+    <div class="bodyBox" ref="whiteBoard" 
+    @dblclick="focusAction" 
+    @click="changeTargetAction"
+    @wheel="wheelEvent"
+    style="height: 73vh; width: 80vw;">
       
-      <Moveable
-        ref="moveable"
-        class="moveable"
-        v-bind="moveable"
-        @drag="handleDrag"
-        @dragEnd="handleDragEnd"
-        @resize="handleResize"
-        @scale="handleScale"
-        @rotate="handleRotate"
-        @warp="handleWarp"
-        style="display: none;"
-      ></Moveable>
+      
+      <div class="MoveableBox realBoard" >
 
-      <!-- <Postit :id="pi.id" :postit="pi" style="position: relative; display: inline-block"/> -->
-      <div class="postit"
+            <div class="postit"
       v-for="(pi, idx) in this.board.postitList"
       :key="pi.frontPostitId"
       @click.right="deleteTargetAction(idx, $event)">
@@ -109,7 +117,37 @@
     
      {{ board }}
       
-    </div>
+
+      </div>
+        <v-dialog width="600px">
+
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn
+              color="rgb(255,157,91)"
+              style="right:10px; bottom:30px; position:fixed; display:flex"
+              dark
+              fab
+              large
+              v-bind="attrs"
+              v-on="on"
+            >
+              <v-icon>mdi-message-bulleted</v-icon>
+            </v-btn>
+          </template>
+
+          <v-card>
+            <!-- <v-card-title>
+              <span class="headline">채팅</span>
+            </v-card-title>-->
+            <v-card-text style="padding:16px">
+            </v-card-text>
+          </v-card>
+
+        </v-dialog>
+    
+ 
+      <!-- <Postit :id="pi.id" :postit="pi" style="position: relative; display: inline-block"/> -->
+     </div>
 
   </div>
 </template>
@@ -126,6 +164,7 @@ import Chat from "../../components/common/Chat";
 import Poll from "../../components/common/Poll"
 import Kanban from "../../components/module/Kanban";
 
+const boardLength = 3000;
 export default {
   props:[
 
@@ -183,6 +222,9 @@ export default {
         text: "",
         timeout: 1000,
       },
+      boardScale: 1,
+      boardX: boardLength/2,
+      boardY: boardLength/2,
       idc: 0,
       isPoll: false,
     };
@@ -195,10 +237,22 @@ export default {
     };
     this.initRecv();
   },
+  mounted() {
+    document.querySelector('.realBoard').style.height = boardLength+"px";
+    document.querySelector('.realBoard').style.width = boardLength+"px";
+
+    console.log((boardLength/2) - (window.innerWidth * 0.4));
+    document.querySelector('.realBoard').style.left = 
+      -(boardLength/2) + (window.innerWidth * 0.4) + "px";
+      
+    document.querySelector('.realBoard').style.top = 
+      -(boardLength/2) + (window.innerHeight * 0.4) + "px";
+  },
   methods: {
     init() {
       // var BASE_URL =  "http://i3a510.p.ssafy.io/api"
       var BASE_URL = "http://localhost:8080";
+      // var BASE_URL = "http://218.146.39.122:8080";
       var sock = new SockJS(BASE_URL + "/ws-stomp");
       var ws = Stomp.over(sock);
       this.ws = ws;
@@ -274,19 +328,22 @@ export default {
         this.createSnackbar("포스트잇이 너무 많습니다!", 3000, "error")
         return
       }
-      // event.stopPropagation();
+      event.stopPropagation();
       const idc = this.board.idCount++;
+      // postitList에 새로운 포스트잇 더하기
+        channel: this.board.channelId,
+        contents: "",
+        title: "",
       var newPostit = {
         frontPostitId: idc,
-        left: left,
-        top: top,
+        left: (this.boardX - 120) + "px",
+        top: (this.boardY - 120) + "px",
         title: "",
         contents: "",
         channel: this.board.channelId,
       }
-      // postitList에 새로운 포스트잇 더하기
       this.board.postitList.push(newPostit);
-      this.crudMethod('POSTIT', 'CREATE', newPostit)
+      this.crudMethod('POSTIT', 'CREATE', newPostit);
       this.sendMessage();
       this.crudMethod('', '', null);
       // snackbar
@@ -397,9 +454,45 @@ export default {
             // this.board.poll.left = `${left}px`
             // this.board.poll.top = `${top}px`
           }
+          else if(clas[cla] == 'realBoard'){
+            let lp = target.style.left.replace("px", "");
+            let tp = target.style.top.replace("px", "");
+            // console.log(lp, " , ", tp);
+
+            this.boardX = (lp*-1) + window.innerWidth * 0.4;
+            this.boardY = (tp*-1) + window.innerHeight * 0.365;
+
+            var limitUnit = (this.boardScale / 0.05) * 75 - (boardLength/2);   
+            console.log(lp - limitUnit);         
+            if(lp > limitUnit) {
+              document.querySelector('.bodyBox').style.borderLeft = "red 3px solid";
+              target.style.left = limitUnit+'px'
+            }
+            else if((lp) < (-boardLength + (window.innerWidth * 0.8)) - limitUnit) {
+              document.querySelector('.bodyBox').style.borderRight = "red 3px solid";
+              target.style.left = (-boardLength + (window.innerWidth * 0.8) - limitUnit) +'px';
+            } 
+            else {
+              document.querySelector('.bodyBox').style.borderRight = "1px pink solid";
+              document.querySelector('.bodyBox').style.borderLeft = "1px pink solid";
+            }
+
+            if(tp > limitUnit) {
+              target.style.top = limitUnit+'px'
+              document.querySelector('.bodyBox').style.borderTop = "red 3px solid";
+            }
+            else if (tp < (-boardLength + (window.innerHeight * 0.73)) - limitUnit) {
+              target.style.top = (-boardLength + (window.innerHeight * 0.73)) - limitUnit +'px';
+              document.querySelector('.bodyBox').style.borderBottom = "red 3px solid";
+            }
+            else {  
+              document.querySelector('.bodyBox').style.borderTop = "1px pink solid";
+              document.querySelector('.bodyBox').style.borderBottom = "1px pink solid";
+            }
+
+            return ;
+          }
         }
-      }
-     
     },
     handleDragEnd({target}) {
       console.log(target);
@@ -432,15 +525,24 @@ export default {
       target.focus();
     },
     changeTargetAction({ target }) {
-      this.blockMoveable();
-      if (target.getAttribute("class") != null) {
-        var clas = target.getAttribute("class").split(" ");
+       this.blockMoveable();
 
-        for (var cla in clas) {
-          if (clas[cla] == "MoveableBox") {
+      if(target.getAttribute('class') != null){
+        var clas = target.getAttribute('class').split(' ');
+      
+        for(var cla in clas){
+          // console.log(clas[cla]);
+          if(clas[cla] == 'MoveableBox'){
             event.stopPropagation();
             target.blur();
             this.$refs.moveable.moveable.target = target;
+          }
+
+          if(clas[cla] == 'realBoard' || clas[cla] == 'bodyBox'){
+            // event.stopPropagation();
+            // target.blur();
+            // this.$refs.moveable.moveable.target = target;
+            this.cloakMoveable(); 
           }
         }
       }
@@ -456,6 +558,27 @@ export default {
         this.sendMessage();
         this.cloakMoveable();
       }
+    },
+    wheelEvent: function(event) {
+      if (event.deltaY < 0) { 
+        console.log("up!"); 
+        this.boardScale += 0.05;
+
+        if(this.boardScale > 1.3) this.boardScale = 1.3;
+
+        console.log(this.boardScale);
+      }
+      else if (event.deltaY > 0) {
+        this.boardScale -= 0.05;
+
+        if(this.boardScale < 0.65) this.boardScale = 0.65;
+
+        console.log(this.boardScale);
+         console.log("down!"); 
+      }
+
+      document.querySelector(".realBoard").style.transform = `scale(${this.boardScale})`;
+      
     },
     deleteAction({target}) {
       if(confirm("요소를 삭제하시겠습니까?") === true) {
@@ -519,7 +642,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .moveable {
   font-family: "Roboto", sans-serif;
   position: relative;
@@ -532,4 +655,51 @@ export default {
   letter-spacing: 1px;
   /* background-color: yellow; */
 }
+
+.bodyBox {
+  position: relative;
+  height: 75vh;
+  /* width: 80vw; */
+  margin: 1% 3%;
+  /* transform: translate(-50%, -50%); */
+  /* border: solid 1px; */
+  background-color: rgb(255, 255, 255);
+  overflow: hidden;
+}
+
+.realBoard {
+  /* boardLength와 동일해야함! */
+  /* height: 2000px;
+  width: 2000px; */
+  /* left: -680px;
+  top: -680px; */
+  border: 1px solid pink;
+  background: rgb(247, 236, 236);
+
+  background-image:     
+     linear-gradient(
+        0deg, transparent 0%, 
+        transparent 0px, rgba(104, 104, 104, 0.1) 0px,rgba(104, 104, 104, 0.1) 1px, transparent 1px,
+        transparent 49px, rgba(104, 104, 104, 0.1) 49px,rgba(104, 104, 104, 0.1) 50px, transparent 1px),
+
+    linear-gradient(
+        -90deg, transparent 0%, 
+        transparent 0px, rgba(104, 104, 104, 0.1) 0px, rgba(104, 104, 104, 0.1) 1px, transparent 1px,
+        transparent 49px, rgba(104, 104, 104, 0.1) 49px,rgba(104, 104, 104, 0.1) 50px, transparent 1px);
+               
+    background-size: 50px 50px;
+  }
+
+
+.moveable-control-box{
+    display:none;
+  }
+
+
+.toolBox{
+  font-family: "Roboto", sans-serif;
+  position: relative;
+  width: 400px;
+}
+
 </style>
