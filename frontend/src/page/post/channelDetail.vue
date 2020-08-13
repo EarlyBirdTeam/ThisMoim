@@ -284,18 +284,14 @@ export default {
       event.stopPropagation();
       const idc = this.board.idCount++;
       // postitList에 새로운 포스트잇 더하기
-<<<<<<< Updated upstream
-      this.board.postitList.unshift({
-=======
       var newPostit = {
->>>>>>> Stashed changes
         frontPostitId: idc,
         left: (this.boardX - 120) + "px",
         top: (this.boardY - 120) + "px",
         title: "",
         contents: "",
         channel: this.board.channelId,
-      });
+      };
       this.sendMessage();
       // snackbar
       this.createSnackbar("포스트잇이 생성되었습니다!", 1500, "success");
@@ -382,18 +378,6 @@ export default {
             return ;
           }
         }
-<<<<<<< Updated upstream
-        this.board.postitList.map((postit) => {
-        if (postit.frontPostitId == target.id) {
-          (postit.left = `${left}px`), (postit.top = `${top}px`);
-        }
-        return {
-          ...postit,
-        };
-      });
-
-=======
->>>>>>> Stashed changes
       }
     },
     handleDragEnd({target}) {
