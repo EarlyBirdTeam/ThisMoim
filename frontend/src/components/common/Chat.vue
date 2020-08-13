@@ -26,9 +26,11 @@
         </div>
     
         <div class="chatbox" id="chatBox">
-          <div class="friend-bubble bubble">
+
+          <div class="goodchat-bubble bubble">
             매너 채팅 해주세요 :)
           </div>
+
         </div>
     
         <form>
@@ -119,7 +121,9 @@ export default {
      this.$socket.on("enter", (data) => {
       // this.chatLogs.push(data.name + "님이 접속하셨습니다");
       // this.chatComes.push(data.name);
-      $('.chatbox').append('<div class="inout-bubble">'+data+'님이 입장하셨습니다.</div>');
+    setTimeout(function() {
+         $('.chatbox').append('<div class="inout-bubble">'+data+'님이 입장하셨습니다.</div>');
+        }, 800);
     });
 
     this.$socket.on("clientList", (data) => {
@@ -179,7 +183,7 @@ export default {
 
   data() {
     return {
-      
+      chatlogs: [],
       chattingBox: true,
       isList: false,
       clientList: [],
@@ -282,8 +286,40 @@ export default {
     showList(){
       if(this.isList) this.isList=false;
       else this.isList=true;
-    }
+    },
+
+    retrieveChatlogs(){
+      ChatlogDataService.getAll()
+        .then(response =>{
+          var Logs = response.data;
+          console.log("채팅로그 불러오기");
+          console.log("LogRoom : "+Logs[0].roomid);
+          console.log("channelName : "+this.Channel);
+          //console.log(Logs[0]);
+          console.log("logsname : "+Logs[0].userid);
+          console.log("myname : "+this.naname);
+          
+          for(var i=0; i<Logs.length; i++){
+            if(Logs[i].roomid === this.Channel){
+              //console.log(Logs[i].message);
+              //this.chatlogs.push(Logs[i]);
+              if(Logs[i].userid === this.naname) $('.chatbox').append('<div class="my-bubble bubble">'+Logs[i].message+'</div>');
+              else $('.chatbox').append('<div class="friend-bubble bubble">('+Logs[i].userid+'님) '+Logs[i].message+'</div>');
+            }
+          }
+          console.log(Logs);
+
+          
+        })
+        .catch(e =>{
+          console.log(e);
+        });
+    },
   },
+
+  mounted(){
+    this.retrieveChatlogs();
+  }
 };
 </script>
 
@@ -455,6 +491,14 @@ export default {
   .friend-bubble {
     background-color: white;
     border-radius: 14px 14px 14px 0;
+    padding: 7px 15px 7px 15px;
+    float: left;
+    clear: both;
+  }
+
+  .goodchat-bubble {
+    background-color:lightpink;
+    border-radius: 14px 14px 14px 14px;
     padding: 7px 15px 7px 15px;
     float: left;
     clear: both;
