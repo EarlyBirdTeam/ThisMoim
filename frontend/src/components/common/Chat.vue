@@ -19,7 +19,7 @@
         <form>
         <div class="text-box" id="textBox">
           <textarea v-model="chatlog.message" id="msgForm" placeholder="메시지를 입력해주세요 :)" @keyup="enter" ></textarea>
-          <button id="sendChat" @click="sendChat(); saveChatlog();">전송</button>
+          <button id="sendChat" @click=sendChat>전송</button>
           <div class="clearfix"></div>
         </div>
        </form>
@@ -76,6 +76,7 @@ export default {
     // var myname = this.makeRandomName();
     var $msgForm = $('#msgForm').val();
     this.naname = myname;
+    this.Channel = localStorage.getItem("wsboard.channelName");
 
     console.log(this.naname);
     
@@ -83,7 +84,7 @@ export default {
       //name: this.$store.state.name,
       name: myname,
       userid: myname,
-      channelName : localStorage.getItem("wsboard.channelName"),
+      channelName : this.Channel,
     });
 
     this.$socket.on("login", (data) => {
@@ -101,15 +102,15 @@ export default {
     
     });
 
+    // 내 메시지는 띄우지 말야아함.
     this.$socket.on("s2c chat", (data) => {
       var name = data.from.name;
       var msg = data.msg;
-      // var chatMsg = {
-      //   name: data.from.name,
-      //   msg: data.msg,
-      // };
-      //this.chatMsgs.push(chatMsg);
-      $('.chatbox').append('<div class="friend-bubble bubble">('+name+'님) '+msg+'</div>');
+
+     if(name === this.naname){ // 내 이름하고 같을 경우 채팅창에 띄워주지 않는다.
+        console.log("지금 내 이름 : "+this.naname);
+      }
+      else $('.chatbox').append('<div class="friend-bubble bubble">('+name+'님) '+msg+'</div>');
     });
     this.$socket.on("s2c chat me", (data) => {
       var name = data.from.name;
@@ -156,17 +157,20 @@ export default {
   },
   methods: {
     saveChatlog(){
+      event.preventDefault(); // 줄바꿈 방지?
+      event.stopPropagation();
+
       var data = {
         message: this.chatlog.message,
         userid: this.naname,
-        roomid:  localStorage.getItem("wsboard.channelName"),
+        roomid:  this.Channel,
       };
 
       console.log("나네임 : "+this.naname);
 
 
       ChatlogDataService.create(data)
-        .then(response => {
+        .then(response => { 
           this.chatlog.id = response.data.id;
           console.log(response.data);
         })
@@ -179,12 +183,16 @@ export default {
     sendChat() {
       event.preventDefault(); // 줄바꿈 방지?
       event.stopPropagation();
-        var $msgForm = $('#msgForm').val();
-        console.log("msgForm : "+$msgForm);
+      var $msgForm = $('#msgForm').val();
+      console.log("msgForm : "+$msgForm);
+      console.log("channel : "+this.Channel);
 
 
-        this.$socket.emit("chat", {msg: $msgForm});
-        $('#msgForm').val("");
+      this.$socket.emit("chat", {msg: $msgForm});
+      $('#msgForm').val("");
+
+
+        this.saveChatlog();
     },
 
      enter() { // 엔터 처리
@@ -197,7 +205,7 @@ export default {
           }
           else{
              this.sendChat();
-             this.saveChatlog();
+             //this.saveChatlog();
           }
         }
 

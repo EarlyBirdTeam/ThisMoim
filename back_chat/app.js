@@ -143,13 +143,15 @@ io.on('connection', function(socket) {
         // 메시지를 전송한 클라이언트에게만 메시지를 전송한다
         //socket.emit('s2c chat me', msg);
         
-        socket.leave(this.room);
-        console.log("나가기 전 room : "+room);
+        //socket.leave(this.room); --> 그냥 내 메시지 처리는 다른쪽에서 해줘야함. 딜레이가 심함
+        //console.log("나가기 전 room : "+room);
         io.to(room).emit('s2c chat', msg);
+        console.log("상대한테 메시지 보내기 : "+data.msg);
         
-        socket.join(this.room);
-        console.log("다시 들어갈 room : "+room);
+        //socket.join(this.room);
+        //console.log("다시 들어갈 room : "+room);
         socket.emit('s2c chat me', msg);
+        console.log("나한테 메시지 보내기 : "+data.msg);
         
         // 접속된 모든 클라이언트에게 메시지를 전송한다
         // io.emit('s2c chat', msg);

@@ -74,26 +74,6 @@
         <Calendar v-if="!!board.calendar.left"/>
       </div>
 
-      <v-dialog width="600px">
-      <template v-slot:activator="{ on, attrs }">
-        <v-btn
-          color="rgb(255,157,91)"
-          style="right:10px; bottom:30px; position:fixed; display:flex"
-          dark
-          fab
-          large
-          v-bind="attrs"
-          v-on="on"
-
-        >
-          <v-icon>mdi-message-bulleted</v-icon>
-        </v-btn>
-      </template>
-      <v-card>
-        <!-- <v-card-title>
-          <span class="headline">채팅</span>
-        </v-card-title>-->
-        <v-card-text style="padding:16px">
           <Chat/>
        
     </div>
