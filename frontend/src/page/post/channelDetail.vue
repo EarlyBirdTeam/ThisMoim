@@ -284,7 +284,11 @@ export default {
       event.stopPropagation();
       const idc = this.board.idCount++;
       // postitList에 새로운 포스트잇 더하기
+<<<<<<< Updated upstream
       this.board.postitList.unshift({
+=======
+      var newPostit = {
+>>>>>>> Stashed changes
         frontPostitId: idc,
         left: (this.boardX - 120) + "px",
         top: (this.boardY - 120) + "px",
@@ -378,6 +382,7 @@ export default {
             return ;
           }
         }
+<<<<<<< Updated upstream
         this.board.postitList.map((postit) => {
         if (postit.frontPostitId == target.id) {
           (postit.left = `${left}px`), (postit.top = `${top}px`);
@@ -387,6 +392,8 @@ export default {
         };
       });
 
+=======
+>>>>>>> Stashed changes
       }
     },
     handleDragEnd({target}) {
