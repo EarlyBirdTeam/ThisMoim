@@ -160,12 +160,20 @@ export default {
         this.notread += 1;
         console.log("안읽은 메시지 수 : "+this.notread);
       }
+
+      setTimeout(function(){
+                    $('.chatbox').scrollTop($('.chatbox').prop('scrollHeight'));
+                }, 50);
     });
     this.$socket.on("s2c chat me", (data) => {
       var name = data.from.name;
       var msg = data.msg;
      
       $('.chatbox').append('<div class="my-bubble bubble">'+msg+'</div>');
+
+      setTimeout(function(){
+              $('.chatbox').scrollTop($('.chatbox').prop('scrollHeight'));
+          }, 50);
     });
 
     this.$socket.on("out", (data) => {
