@@ -277,26 +277,27 @@ export default {
   
   .chat-header #minimize {
     background-color: #ffbf2f;
-    left: 26px;
+    left: 10px;
   }
   
   .chat-header #maximize {
     background-color: #29cd42;
-    left: 44px;
+    left: 28px;
   }
   
   .chat-header #profile-pic {
     vertical-align: middle;
     border-radius: 50%;
-    width: 5%;
-    height: 5%;
+    width: 12%;
+    height: 12%;
+    margin-right: 2%
   }
   
   .chat-header #username {
     vertical-align: middle;
-    font-size: 14px;
+    font-size: 17px;
     font-weight: 500;
-    margin-left: 5px;
+    margin-right: 80%;
     color: #343434;
   }
 
