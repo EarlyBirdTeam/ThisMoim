@@ -14,8 +14,11 @@ import java.util.List;
 @Builder
 public class Poll implements Serializable {
 
+    private String left;
+    private String top;
     private String question;
     private List<Answer> answers;
+
     private boolean multipleVotes;
     private int totalVotes;
     private List<String> userVoted;

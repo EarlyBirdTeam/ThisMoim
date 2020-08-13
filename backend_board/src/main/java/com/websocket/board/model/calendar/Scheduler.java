@@ -21,6 +21,7 @@ import java.util.List;
 public class Scheduler implements Serializable {
 
     @Id
+    @Column(nullable = false, name = "scheduler_id")
     private String id;
     @Column(name = "\"left\"")
     private String left;
