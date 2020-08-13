@@ -1,6 +1,6 @@
 package com.websocket.board.model;
 
-import com.websocket.board.model.calendar.Calendar;
+import com.websocket.board.model.calendar.Scheduler;
 import com.websocket.board.model.crud.CRUDModule;
 import com.websocket.board.model.kanban.Kanban;
 import com.websocket.board.model.postit.Postit;
@@ -30,7 +30,7 @@ public class SocketBoardMessage implements Serializable {
     private long idCount;
     private List<Postit> postitList; // 포스트잇 리스트
     private Kanban kanban;
-    private Calendar calendar;
+    private Scheduler scheduler;
     private Poll poll;
     private CRUDModule crudModule;
 

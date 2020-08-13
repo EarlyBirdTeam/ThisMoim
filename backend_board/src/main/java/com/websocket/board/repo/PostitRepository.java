@@ -9,7 +9,6 @@ import java.util.Optional;
 
 @Repository
 public interface PostitRepository extends JpaRepository<Postit, Long> {
-    Optional<Postit> save(Postit postit);
     List<Postit> findAllByChannel(String channelId);
     Optional<Postit> findByFrontPostitId(Long frontPostitId);
     Postit findPostitByChannel_ChannelIdAndFrontPostitId(String channel_channelId, Long frontPostitId);

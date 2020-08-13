@@ -1,10 +1,10 @@
 package com.websocket.board.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.websocket.board.model.calendar.Scheduler;
 import com.websocket.board.model.member.Member;
 import com.websocket.board.model.postit.Postit;
 import lombok.*;
-import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -32,6 +32,10 @@ public class Channel implements Serializable {
     @OneToMany(mappedBy = "channel")
     @JsonManagedReference
     private List<Postit> postitList = new ArrayList<>();
+
+    @OneToOne(mappedBy = "channel")
+    @JsonManagedReference
+    private Scheduler scheduler;
 
     @OneToMany(mappedBy = "channel")
     @JsonManagedReference

@@ -1,16 +1,14 @@
 package com.websocket.board.service;
 
 import com.websocket.board.model.Channel;
-import com.websocket.board.model.calendar.Calendar;
+import com.websocket.board.model.calendar.Scheduler;
 import com.websocket.board.model.crud.CRUDModule;
 import com.websocket.board.model.crud.CRUDType;
 import com.websocket.board.model.crud.ModuleType;
-import com.websocket.board.model.kanban.Kanban;
 import com.websocket.board.model.postit.Postit;
 import com.websocket.board.model.SocketBoardMessage;
 import com.websocket.board.repo.*;
 import lombok.RequiredArgsConstructor;
-import org.apache.tomcat.jni.Poll;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -22,10 +20,10 @@ public class DBSyncServiceImpl implements DBSyncService {
 
     private final ChannelRepository channelRepository;
     private final PostitRepository postitRepository;
-    private final CalendarRepository calendarRepository;
+    private final SchedulerRepository schedulerRepository;
     private final EventRepository eventRepository;
-    private final PollRepository pollRepository;
-    private final KanbanRepository kanbanRepository;
+    //private final PollRepository pollRepository;
+    //private final KanbanRepository kanbanRepository;
     //private final TaskRepository taskRepository;
 
     @Override
@@ -66,13 +64,13 @@ public class DBSyncServiceImpl implements DBSyncService {
                 ok = postitSync(crudType, (Postit) crudModule.getModuleObject());
                 break;
             case CALENDAR:
-                ok = calendarSync(crudType, (Calendar)crudModule.getModuleObject());
+                ok = schedulerSync(crudType, (Scheduler)crudModule.getModuleObject());
                 break;
-            case POLL:
-                ok = pollSync(crudType, (Poll)crudModule.getModuleObject());
-                break;
+//            case POLL:
+//                ok = pollSync(crudType, (Poll)crudModule.getModuleObject());
+//                break;
             case KANBAN:
-                ok = kanbanSync(crudType, (Kanban)crudModule.getModuleObject());
+                //ok = kanbanSync(crudType, (Kanban)crudModule.getModuleObject());
                 break;
         }
         return ok;
@@ -85,11 +83,11 @@ public class DBSyncServiceImpl implements DBSyncService {
         boolean ok = false;
         switch (crudType) {
             case CREATE:
-                ok = postitRepository.save(postit).isPresent();
+                ok = postitRepository.save(postit) != null ? true : false;
                 break;
             case UPDATE:
                 // 해당 포스트잇 아이디 찾아오는 코드 있어야
-                ok = postitRepository.save(postit).isPresent();
+                ok = postitRepository.save(postit) != null ? true : false;
                 break;
             case DELETE:
                 postitRepository.delete(postit);
@@ -99,58 +97,58 @@ public class DBSyncServiceImpl implements DBSyncService {
     }
 
     @Override
-    public boolean calendarSync(CRUDType crudType, Calendar calendar) {
+    public boolean schedulerSync(CRUDType crudType, Scheduler scheduler) {
         boolean ok = false;
         switch (crudType) {
             case CREATE:
-                ok = calendarRepository.save(calendar).isPresent();
+                ok = schedulerRepository.save(scheduler) != null ? true : false;
                 break;
             case UPDATE:
                 // 해당 포스트잇 아이디 찾아오는 코드 있어야
-                ok = calendarRepository.save(calendar).isPresent();
+                ok = schedulerRepository.save(scheduler) != null ? true : false;
                 break;
             case DELETE:
-                calendarRepository.delete(calendar);
+                schedulerRepository.delete(scheduler);
                 break;
         }
         return ok;
     }
 
-    @Override
-    public boolean pollSync(CRUDType crudType, Poll poll) {
-        boolean ok = false;
-        switch (crudType) {
-            case CREATE:
-                ok = pollRepository.save(poll).isPresent();
-                break;
-            case UPDATE:
-                // 해당 포스트잇 아이디 찾아오는 코드 있어야
-                ok = pollRepository.save(poll).isPresent();
-                break;
-            case DELETE:
-                pollRepository.delete(poll);
-                break;
-        }
-        return ok;
-    }
+//    @Override
+//    public boolean pollSync(CRUDType crudType, Poll poll) {
+//        boolean ok = false;
+//        switch (crudType) {
+//            case CREATE:
+//                ok = pollRepository.save(poll).isPresent();
+//                break;
+//            case UPDATE:
+//                // 해당 포스트잇 아이디 찾아오는 코드 있어야
+//                ok = pollRepository.save(poll).isPresent();
+//                break;
+//            case DELETE:
+//                pollRepository.delete(poll);
+//                break;
+//        }
+//        return ok;
+//    }
 
-    @Override
-    public boolean kanbanSync(CRUDType crudType, Kanban kanban) {
-        boolean ok = false;
-        switch (crudType) {
-            case CREATE:
-                ok = kanbanRepository.save(kanban).isPresent();
-                break;
-            case UPDATE:
-                // 해당 포스트잇 아이디 찾아오는 코드 있어야
-                ok = kanbanRepository.save(kanban).isPresent();
-                break;
-            case DELETE:
-                kanbanRepository.delete(kanban);
-                break;
-        }
-        return ok;
-    }
+//    @Override
+//    public boolean kanbanSync(CRUDType crudType, Kanban kanban) {
+//        boolean ok = false;
+//        switch (crudType) {
+//            case CREATE:
+//                ok = kanbanRepository.save(kanban) != null ? true : false;
+//                break;
+//            case UPDATE:
+//                // 해당 포스트잇 아이디 찾아오는 코드 있어야
+//                ok = kanbanRepository.save(kanban) != null ? true : false;
+//                break;
+//            case DELETE:
+//                kanbanRepository.delete(kanban);
+//                break;
+//        }
+//        return ok;
+//    }
 
     @Override
     public void channelDBIdCountSync(String channelId, Long idCount) {

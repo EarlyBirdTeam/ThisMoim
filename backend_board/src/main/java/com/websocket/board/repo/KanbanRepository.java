@@ -7,8 +7,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-@Repository
-public interface KanbanRepository extends JpaRepository<Kanban, Long> {
-
-    Optional<Kanban> save(Kanban kanban);
-}
+//@Repository
+//public interface KanbanRepository extends JpaRepository<Kanban, Long> {
+//}
