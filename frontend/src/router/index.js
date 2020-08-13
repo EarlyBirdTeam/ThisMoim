@@ -25,7 +25,7 @@ import Board from '../page/post/Test_Board.vue'
 // test
 import Poll from '../components/common/Poll.vue'
 import Map from '../components/module/Map.vue'
-import Calendar from '../components/module/Calendar.vue'
+import Scheduler from '../components/module/Scheduler.vue'
 
 Vue.use(Router) 
 Vue.use(Vuex)
@@ -127,9 +127,9 @@ export default new Router({
       component: Map,
     },
     { 
-      path: '/calendar',
-      name: 'Calendar',
-      component: Calendar,
+      path: '/scheduler',
+      name: 'Scheduler',
+      component: Scheduler,
     },
   ]
 })

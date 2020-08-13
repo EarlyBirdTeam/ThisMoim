@@ -1,12 +1,15 @@
 <template>
-  <div class="Poll MoveableBox">
-    <div class="poll-container" v-if="!isSetAll & !isEnd ">
+  <div class="Pollx MoveableBox shadow-lg">
+    <div class="poll-container" v-if="!poll.isSetAll & !poll.isEnd ">
       <div>
         <div class="poll-title" >
-          <strong>Q. </strong> <input v-model="poll.question" type="text" placeholder="Your Question..." />
-          <hr />
+          <div class="d-flex">
+            <v-icon large class="mr-2">mdi-vote</v-icon>
+            <v-text-field single-line height=36 placeholder="투표 제목" v-model="poll.question" style="font-size:1.5rem"></v-text-field>
+          </div>
         </div>
-        <div class="poll-content">
+        <div class="poll-contents">
+          <label class="label-25" for="poll-content">투표 항목</label>
           <div
             v-for="(answer, index) in poll.answers"
             :key="index"
@@ -14,44 +17,44 @@
             :style="{zIndex: poll.answers.length - index}"
           >
           
-            <div class="d-flex">
+            <div class="poll-content d-flex justify-content-between form-control">
               <input
-                :placeholder="'Answer ' + (index + 1)"
+                placeholder="항목 입력"
                 v-model="poll.answers[index].answer"
                 type="text"
               />
               <div class="d-flex" @click="deleteInput(index)">
-                <v-icon>mdi-minus-circle-outline</v-icon>
-                <h3>삭제</h3>
+                <v-icon style="cursor: pointer">mdi-minus-circle-outline</v-icon>
               </div>
             </div>
           </div>
-          <v-btn class="d-flex" @click="createNewInput()">
+          <button class="pressDownButton" @click="createNewInput()">
             <v-icon>mdi-plus-circle-outline</v-icon>
             <h3>항목 추가</h3>
-          </v-btn><hr>
+          </button><hr>
         </div>
         <div class="poll-footer">
-          <v-btn @click="reset">리셋</v-btn>
-          <v-btn @click="save">저장</v-btn>
+          <button class="circleScaleBtn" @click="reset"><span>리셋</span></button>
+          <button class="circleScaleBtn" @click="save"><span>저장</span></button>
         </div>
       </div>
     </div>
 
-    <div class="poll-container" v-if="isSetAll & !isEnd">
+    <div class="poll-container" v-if="poll.isSetAll & !poll.isEnd">
       <div>
         <div class="poll-title">
-          <strong>Q. </strong> <input readonly="readonly" v-model="poll.question" type="text" placeholder="Your Question..." />
+          <strong>Q. {{poll.question}} </strong>
           <hr />
         </div>
-        <div class="poll-content">
-
+        <div class="poll-contents">
+          
           <v-radio-group v-model="voted" v-if="!didYou">
             <v-radio
               v-for="(answer, index) in poll.answers"
               :key="index"
               :label="`${answer.answer}`"
               :value="index"
+              class="form-control poll-content"
             ></v-radio>
           </v-radio-group>  
 
@@ -62,35 +65,39 @@
               :label="`${answer.answer}`"
               :value="index"
               :disabled=true
+              class="form-control"
             ></v-radio>
           </v-radio-group>  
 
           <hr>
         </div>
         <div class="poll-footer">
-          <v-btn @click="vote">투표</v-btn>
-          <v-btn @click="end">투표종료</v-btn>
+          <button class="circleScaleBtn" @click="vote"><span>투표</span></button>
+          <button class="circleScaleBtn" @click="end"><span>투표종료</span></button>
         </div>
       </div>
     </div>
 
 
-    <div class="poll-container" v-if="isSetAll & isEnd">
+    <div class="poll-container" v-if="poll.isSetAll & poll.isEnd">
       <div>
         <div class="poll-title">
-          <strong>Q. </strong> <input readonly="readonly" v-model="poll.question" type="text" placeholder="Your Question..." />
-          <hr />
+          <strong>Q.{{ poll.question }}</strong><hr />
         </div>
-        <div class="poll-content">
+        <div class="poll-contents">
           <div
             v-for="(answer, index) in poll.answers"
             :key="index"
-            class="answer"
+            class="answer form-control"
             :style="{zIndex: poll.answers.length - index}"
+            style="margin-bottom: 10px;"
           >
-            <div>
-              {{ answer.answer }}
-              {{ answer.voted }}
+            <div class="d-flex justify-content-between">
+              <div>{{ answer.answer }}</div>
+              <div>
+                <v-icon>mdi-account</v-icon>
+                {{ answer.voted }}
+              </div>
             </div>
           </div>
         </div><hr>
@@ -108,12 +115,6 @@
         </div>
       </div>
     </div> 
-    
-    
-    <!-- <div>
-      {{ this.poll }}
-      {{ this.result }}
-    </div><br><br> -->
   </div>
 </template>
 
@@ -124,46 +125,18 @@ export default {
   },
   data() {
     return {
-      poll: {
-        question: "프론트 팀장은 누가 좋을까요?",
-        answers: [ {answer: "김강현", voted: 0}, {answer: "배민규", voted: 0}, {answer: "정용우 the Master of Frontend", voted: 0}],
-        multipleVotes: false,
-        totalVotes: 0,
-        userVoted: [ ],
-      },
-      isSetAll: false,
-      isEnd: false,
+      poll: this.$store.state.poll,
       test: [],
       voted: '',
       didYou: false,
       result: [],
     };
   },
-  create:{
-    // isUserAlreadyVoted: function(){
-    //   let my = this.$store.state.email;
-    //   if(this.poll.userVoted.length == 0) {
-    //   console.log("no vote yet !")
-    //   // return true;
-    //   }
-    //   for( var userVoteData in this.poll.userVoted){
-    //     if(userVoteData.user == my){
-    //       // return false;
-    //       console.log("you already voted!")
-    //     }
-    //   }
-    //   // return true;
-    //   console.log("you have to vote !")
-    // }
-  },
-  computed:{
-    
-  },
-  watch:{
-  },
   methods: {
     createNewInput() {
-      this.poll.answers.push({answer: "", voted: 0});
+      if (this.poll.answers.length > 10) {
+        alert('투표 문항은 10개까지 생성 가능합니다.')
+      } else this.poll.answers.push({answer: "", voted: 0});
     },
     deleteInput(index) {
       if (index > 0 || this.poll.answers.length > 1) {
@@ -171,15 +144,12 @@ export default {
       }
     },
     reset() {
-      this.poll = {
-        question: "",
-        answers: [{answer:"", voted: 0}],
-        multipleVotes: false,
-      }
+      this.$store.state.poll.quest = ""
+      this.$store.state.poll.answers = [{answer: "", voted: 0}]
     },
     save() {
       //서버로 보내서 투표 저장
-      this.isSetAll = true;
+      this.poll.isSetAll = true;
     },
     vote() {
       if(this.didYou) {return;}
@@ -189,7 +159,7 @@ export default {
       this.didYou = true;
     },
     end(){
-      this.isEnd = true;
+      this.poll.isEnd = true;
       let base = 0;
       let list = this.poll.answers
 
@@ -199,52 +169,67 @@ export default {
           this.result.push(list[i]); 
         }
       }
+
     },
   },
 };
 </script>
-
+<style src="../../assets/css/my-component.css"></style>
 <style scoped>
 
-.Poll{
+.Pollx{
   display: inline-block;
-  position: relative;
-  padding: 1%;
-}
-.poll-container {
-  width: 500px;
-  border: 2px solid gray;
+  position: absolute;
+  background-color: white;
+  padding: 15px;    
+  box-shadow: .5rem 1rem 2rem rgba(0,0,0,.4)!important;
   border-radius: 5px;
-  font-size: 20px;
-  padding: 1%;
 }
 
-
-.form-check-input {
-  width: 20px;
-  height: 20px;
-  color: black;
+.poll-container {
+  width: 400px;
+  font-size: 20px;
+  padding: 5px;
 }
 
 .poll-title{
   font-size: 30px;
-  padding: 1%;
+  padding: 10px;
 }
 
-/* .poll-content{
-} */
-
+.poll-contents{
+  padding: 10px;
+  /* border: 1px solid gray;
+  border-radius: 2px;
+  margin-bottom: 10px;
+  padding: 3px; */
+}
+.poll-content {
+  margin-bottom: 10px;
+  transition: transform 250ms ease-in-out;
+  height: 44px;
+}
+.poll-content:hover {
+  transform: scale(1.05);
+  border: 1px solid hsl(243, 80%, 62%);
+}
 .poll-footer {
   text-align: center;
+  margin-bottom: 15px;
 }
 
 .poll-footer > button{
   /* margin-left: 5%;
   margin-right: 5%; */
-  margin: 2% 10%;
+  margin: 5px 15px;
 }
 
 h3{
   display: inline;
+}
+
+.label-25 {
+  font-size: 25px; 
+  margin-bottom: 5px;
 }
 </style>
