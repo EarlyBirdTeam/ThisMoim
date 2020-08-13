@@ -2,7 +2,6 @@ package com.websocket.board.model.kanban;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.websocket.board.model.Channel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,18 +17,19 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 @Builder
-public class Kanban implements Serializable {
+public class State implements Serializable {
 
     @Id
+    @Column(nullable = false, name = "state_id")
     private String id;
-    private String kanbanName;
+    private String columnTitle;
 
-    @OneToMany(mappedBy = "kanban")
+    @OneToMany(mappedBy = "state")
     @JsonManagedReference
-    private List<State> states = new ArrayList<>();
+    private List<Task> tasks = new ArrayList<>();
 
-    @OneToOne
-    @JoinColumn(name = "channel_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "kanban_id")
     @JsonBackReference
-    private Channel channel;
+    private Kanban kanban;
 }

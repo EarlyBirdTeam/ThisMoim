@@ -2,6 +2,7 @@ package com.websocket.board.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.websocket.board.model.calendar.Scheduler;
+import com.websocket.board.model.kanban.Kanban;
 import com.websocket.board.model.member.Member;
 import com.websocket.board.model.postit.Postit;
 import lombok.*;
@@ -36,6 +37,10 @@ public class Channel implements Serializable {
     @OneToOne(mappedBy = "channel")
     @JsonManagedReference
     private Scheduler scheduler;
+
+    @OneToOne(mappedBy = "channel")
+    @JsonManagedReference
+    private Kanban kanban;
 
     @OneToMany(mappedBy = "channel")
     @JsonManagedReference
