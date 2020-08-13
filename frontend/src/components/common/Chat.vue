@@ -3,9 +3,7 @@
 
 
  <div class="chat-container" id="chatContainer">
-   <div v-if="chattingBox">
-        
-        
+   <div id="chattingBox" v-show="chattingBox">
         <div class="chat-header" id="chatHeader">
           <div id="clientList" v-if="isList">
             <ul>
@@ -48,7 +46,13 @@
           <button id="minimize" class="header-btn" @click="minimize"></button>
           <button id="maximize" class="header-btn" @click="maximize"></button>
           <img id="profile-pic" src='../../assets/img/picture.jpg' width="1">
-          <span id="username" style="margin-right:80%">나</span>
+          <span>
+            <a id="username" style="margin-right:52%">나</a>
+            <img class="bell">
+            {{notread}}
+              
+          </span>
+          
         </div>
     </div>
  </div>
@@ -146,6 +150,12 @@ export default {
         console.log("지금 내 이름 : "+this.naname);
       }
       else $('.chatbox').append('<div class="friend-bubble bubble">('+name+'님) '+msg+'</div>');
+
+      if(!this.chattingBox){
+        
+        this.notread += 1;
+        console.log("안읽은 메시지 수 : "+this.notread);
+      }
     });
     this.$socket.on("s2c chat me", (data) => {
       var name = data.from.name;
@@ -181,6 +191,7 @@ export default {
       chatNames: [],
       chatMsgs: [],
       naname: "",
+      notread: 0,
 
       chatlog: {
         id: null,
@@ -254,6 +265,7 @@ export default {
     },
     maximize(){
       this.chattingBox = true;
+      this.notread = 0;
     },
 
     makeRandomName() {
@@ -342,6 +354,36 @@ export default {
       height: 15%;
       margin-right: 2%;
       cursor: pointer;
+    }
+
+  .chat-header #bell-pic {
+      vertical-align: middle;
+      border-radius: 50%;
+      width: 17%;
+      height: 17%;
+      margin-right: 2%;
+      cursor: pointer;
+    }
+
+   .bell{
+        position: relative;
+        background-image: url('../../assets/img/bell.png');                                                               
+        height: 50px;
+        width: 50px;
+        border-radius: 50%;
+        background-size: cover;
+        vertical-align: middle;
+    }
+
+    .content{
+         position: absolute;
+         top:10%;
+         left:5%;
+         transform: translate(-50%, -50%);                                                                   
+         font-size:10px;
+         color:red;
+         z-index: 2;
+         text-align: center;
     }
 
   .chat-header #username {
