@@ -22,7 +22,7 @@
           <img id="profile-pic" src='../../assets/img/picture.jpg' width="1">
           <span>
             <a id="username">나</a>
-            <a id="userList" @click="showList"> 접속자</a>
+            <img title="접속자 보기" id="showList-pic" src='../../assets/img/2.jpg' @click="showList"/>
           </span>
 
         </div>
@@ -120,7 +120,17 @@ export default {
 
     this.$socket.on("clientList", (data) => {
       console.log("접속자 : ");
-      this.clientList = data;
+      var exceptme = [];
+      //this.clientList = data;
+      for(var i=0; i<data.length; i++){
+        if(data[i] === myname){
+          continue;
+        }
+        else exceptme.push(data[i]);
+      }
+      this.clientList = exceptme;
+
+
       console.log(this.clientList);
 
       
@@ -325,6 +335,15 @@ export default {
     margin-right: 2%
   }
   
+  .chat-header #showList-pic {
+      vertical-align: middle;
+      border-radius: 50%;
+      width: 15%;
+      height: 15%;
+      margin-right: 2%;
+      cursor: pointer;
+    }
+
   .chat-header #username {
     vertical-align: middle;
     font-size: 17px;
@@ -334,7 +353,7 @@ export default {
   }
 
   .chat-header #userList {
-    margin-right: 2%;
+    margin-right: 5%;
   }
   .chat-header #user{
     margin-left: 80%;
