@@ -37,10 +37,6 @@ public class MemberService {
         memberRepository.delete(member);
     }
 
-//    public Member createMember(UserToMemberRequest userToMemberRequest) {
-//        Member newMember = new Member();
-//
-//        return newMember;
-//    }
+    public void setUserId(Member member, Long userId){member.setUserId(userId);}
 
 }

@@ -13,5 +13,8 @@
 -- #
 -- # insert into user(uid, email, name, nickname, password) values('1', 'test@test.com', 'test_name', 'test_nick', '1234');
 -- # insert into user(uid, email, name, nickname, password) values('2', 'test2@test.com', 'test2_name', 'test2_nick', 'test1234');
--- #
+-- #    ,
+--
 
+INSERT INTO `test`.`member_role` (`memberrole_id`, `memberrole_name`) VALUES ('1', 'MEMBER_NORMAL');
+INSERT INTO `test`.`member_role` (`memberrole_id`, `memberrole_name`) VALUES ('2', 'MEMBER_PRESIDENT');

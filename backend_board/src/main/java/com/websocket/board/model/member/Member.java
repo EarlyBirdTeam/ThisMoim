@@ -2,10 +2,7 @@ package com.websocket.board.model.member;
 
 import com.websocket.board.model.Group.Circle;
 import com.websocket.board.model.audit.DateAudit;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -44,4 +41,6 @@ public class Member extends DateAudit {
 //    @ManyToOne
 //    @JoinColumn(name = "USER_ID")
 //    private User user;
+    @Column(name = "USER_ID")
+    private Long userId;
 }
