@@ -46,7 +46,7 @@ public class BoardController {
         boardService.syncSocketBoardStatus(message);
 
         // RDB sync 로직 생성예정
-        //dbSyncService.crudModuleSync(message.getCrudModule());
+        dbSyncService.crudModuleSync(message.getCrudModule());
 
         //channelRedisRepository.findBoardByChannelId(message.getChannelId());
         // 채널 포스트잇 카운트 세팅

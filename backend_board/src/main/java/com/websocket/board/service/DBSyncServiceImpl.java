@@ -6,6 +6,7 @@ import com.websocket.board.model.crud.CRUDModule;
 import com.websocket.board.model.crud.CRUDType;
 import com.websocket.board.model.crud.ModuleType;
 import com.websocket.board.model.kanban.Kanban;
+import com.websocket.board.model.poll.Poll;
 import com.websocket.board.model.postit.Postit;
 import com.websocket.board.model.SocketBoardMessage;
 import com.websocket.board.repo.*;
@@ -23,9 +24,9 @@ public class DBSyncServiceImpl implements DBSyncService {
     private final PostitRepository postitRepository;
     private final SchedulerRepository schedulerRepository;
     private final EventRepository eventRepository;
-    //private final PollRepository pollRepository;
+    private final PollRepository pollRepository;
     private final KanbanRepository kanbanRepository;
-    //private final TaskRepository taskRepository;
+    private final TaskRepository taskRepository;
 
     @Override
     public void postitDBSync(SocketBoardMessage board) {
@@ -67,11 +68,11 @@ public class DBSyncServiceImpl implements DBSyncService {
             case CALENDAR:
                 ok = schedulerSync(crudType, (Scheduler)crudModule.getModuleObject());
                 break;
-//            case POLL:
-//                ok = pollSync(crudType, (Poll)crudModule.getModuleObject());
-//                break;
+            case POLL:
+                ok = pollSync(crudType, (Poll)crudModule.getModuleObject());
+                break;
             case KANBAN:
-                //ok = kanbanSync(crudType, (Kanban)crudModule.getModuleObject());
+                ok = kanbanSync(crudType, (Kanban)crudModule.getModuleObject());
                 break;
         }
         return ok;
@@ -115,23 +116,23 @@ public class DBSyncServiceImpl implements DBSyncService {
         return ok;
     }
 
-//    @Override
-//    public boolean pollSync(CRUDType crudType, Poll poll) {
-//        boolean ok = false;
-//        switch (crudType) {
-//            case CREATE:
-//                ok = pollRepository.save(poll).isPresent();
-//                break;
-//            case UPDATE:
-//                // 해당 포스트잇 아이디 찾아오는 코드 있어야
-//                ok = pollRepository.save(poll).isPresent();
-//                break;
-//            case DELETE:
-//                pollRepository.delete(poll);
-//                break;
-//        }
-//        return ok;
-//    }
+    @Override
+    public boolean pollSync(CRUDType crudType, Poll poll) {
+        boolean ok = false;
+        switch (crudType) {
+            case CREATE:
+                ok = pollRepository.save(poll) != null ? true : false;
+                break;
+            case UPDATE:
+                // 해당 포스트잇 아이디 찾아오는 코드 있어야
+                ok = pollRepository.save(poll) != null ? true : false;
+                break;
+            case DELETE:
+                pollRepository.delete(poll);
+                break;
+        }
+        return ok;
+    }
 
     @Override
     public boolean kanbanSync(CRUDType crudType, Kanban kanban) {
