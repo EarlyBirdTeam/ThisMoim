@@ -168,27 +168,6 @@ export const store = new Vuex.Store({
                     store.dispatch("throwError", exp);
                 });
         },
-        /**
-         * 유저 프로필 업데이트. 미구현. => 구현이 필요한가?
-         */
-        // [constants.METHODS.UPDATE_USER] : (store, payload) =>{
-        //     http.put('http://localhost:8080/account',
-        //             {
-        //                 email: payload.email,
-        //                 password: payload.password,
-        //                 nickname: payload.nickName,
-        //                 name: payload.realName
-        //             }
-        //         )
-        //         .then(() => {
-        //             console.log("update req success");
-        //             alert("수정되었습니다.");
-        //     })
-        //         .catch(exp => {
-        //             store.dispatch("throwError", exp);
-        //         });
-        // },
-
 
         /**
             회원 로그인 메소드

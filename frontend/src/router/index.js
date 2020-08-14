@@ -56,7 +56,7 @@ export default new Router({
       component: Login
     },
     {
-      path: '/user/join',
+      path: '/user/signup',
       name: constants.URL_TYPE.USER.JOIN,
       component: Join
     },
@@ -65,13 +65,8 @@ export default new Router({
       name: constants.URL_TYPE.USER.JOINDONE,
       component: JoinDone
     },
-    {
-      path:'/user/MyPage',
-      name: constants.URL_TYPE.USER.MYPAGE,
-      component: MyPage
-    },
     { // 유저 정보 - 가입 확인
-      path: '/api/auth/registrationConfirmation',
+      path: '/user/signup/done/registrationConfirmation',
       name: constants.URL_TYPE.USER.CONFIRMDONE,
       component: ConfirmDone
     },
@@ -89,6 +84,11 @@ export default new Router({
       path: '/user/DeleteAccount',
       name: constants.URL_TYPE.USER.DELETEUSER,
       component: DeleteUser
+    },
+    { // 유저 정보 - 마이 페이지
+      path:'/user/info/*',
+      name: constants.URL_TYPE.USER.MYPAGE,
+      component: MyPage
     },
     // 포스트
     { 

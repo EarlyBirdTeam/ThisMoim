@@ -9,53 +9,48 @@
         :color="snackbar.color"
       >{{ snackbar.text }}</v-snackbar>
       <div>
-        <h4>
-          {{channelName}}
-          <span class="badge badge-info badge-pill">{{userCount}}</span>
-
-          <v-toolbar class="toolBox">
-            <v-btn
-              icon
-              color="orange"
-              @click="pleaseDrag"
-              draggable="true"
-              @dragenter="dragging=true"
-              @dragend="moduleDragEnd('postit', $event)"
-            >
-              <v-icon>mdi-message</v-icon>
-            </v-btn>
-            <v-btn
-              icon
-              color="orange"
-              @click="createKanban"
-              draggable="true"
-              @dragend="moduleDragEnd('kanban', $event)"
-            >
-              <v-icon>mdi-clipboard-list-outline</v-icon>
-            </v-btn>
-            <!-- <v-btn icon color="orange" @click="createMap">
-        <v-icon>mdi-map</v-icon>
-            </v-btn>-->
-            <v-btn
-              icon
-              color="orange"
-              @click="pleaseDrag"
-              draggable="true"
-              @dragend="moduleDragEnd('scheduler', $event)"
-            >
-              <v-icon>mdi-calendar</v-icon>
-            </v-btn>
-            <v-btn
-              icon
-              color="orange"
-              @click="pleaseDrag"
-              draggable="true"
-              @dragend="moduleDragEnd('poll', $event)"
-            >
-              <v-icon>mdi-vote</v-icon>
-            </v-btn>
-          </v-toolbar>
-        </h4>
+        <div class="toolBox">
+          <v-btn
+            icon
+            color="orange"
+            @click="pleaseDrag"
+            draggable="true"
+            @dragenter="dragging=true"
+            @dragend="moduleDragEnd('postit', $event)"
+          >
+            <v-icon>mdi-message</v-icon>
+          </v-btn>
+          <v-btn
+            icon
+            color="orange"
+            @click="pleaseDrag"
+            draggable="true"
+            @dragend="moduleDragEnd('kanban', $event)"
+          >
+            <v-icon>mdi-clipboard-list-outline</v-icon>
+          </v-btn>
+          <!-- <v-btn icon color="orange" @click="createMap">
+          <v-icon>mdi-map</v-icon>
+          </v-btn>-->
+          <v-btn
+            icon
+            color="orange"
+            @click="pleaseDrag"
+            draggable="true"
+            @dragend="moduleDragEnd('scheduler', $event)"
+          >
+            <v-icon>mdi-calendar</v-icon>
+          </v-btn>
+          <v-btn
+            icon
+            color="orange"
+            @click="pleaseDrag"
+            draggable="true"
+            @dragend="moduleDragEnd('poll', $event)"
+          >
+            <v-icon>mdi-vote</v-icon>
+          </v-btn>
+        </div>
         <br />
       </div>
     </div>
@@ -69,22 +64,6 @@
         @mouseout="testOut"
       >
         <v-img src="@/assets/img/user.png">{{userCount}}</v-img>
-
-        <!-- <v-hover v-slot:default="{ hover }">
-            <v-img src="@/assets/img/user.png">
-              {{userCount}}
-              <v-expand-transition>
-                <div
-                  v-if="hover"
-                  class="d-flex transition-fast-in-fast-out orange darken-2 v-card--reveal display-3 white--text"
-                  style="height: 100%;"
-                >
-                </div>
-              </v-expand-transition>
-              
-            </v-img>
-            
-        </v-hover>-->
       </v-responsive>
 
       <transition name="slide-fade">
@@ -119,7 +98,7 @@
       @wheel="wheelEvent"
       style="height: 100%; width: 100%;"
     >
-      <div class="MoveableBox realBoard">
+      <div class="MoveableBox realBoard" @click.right="test3">
         <div
           class="postit"
           v-for="(pi, idx) in this.board.postitList"
@@ -176,7 +155,6 @@ import Chat from "../../components/common/Chat";
 import Poll from "../../components/common/Poll";
 import Kanban from "../../components/module/Kanban";
 
-const boardLength = 10000;
 export default {
   computed: {
     poll() {
@@ -235,9 +213,14 @@ export default {
         text: "",
         timeout: 1000,
       },
+      boardLength: 10000,
       boardScale: 1,
-      boardX: boardLength / 2,
-      boardY: boardLength / 2,
+      boardX: this.boardLength / 2,
+      boardY: this.boardLength / 2,
+      lp: 0,
+      tp: 0,
+      lastBX: this.boardX,
+      lastBY: this.boardY,
 
       memberView: false,
       idc: 0,
@@ -249,18 +232,22 @@ export default {
       // 우클릭 default이벤트 차단
       return false;
     };
-    this.initRecv();
+    // this.initRecv();
   },
   mounted() {
-    document.querySelector(".realBoard").style.height = boardLength + "px";
-    document.querySelector(".realBoard").style.width = boardLength + "px";
+    document.querySelector(".realBoard").style.height = this.boardLength + "px";
+    document.querySelector(".realBoard").style.width = this.boardLength + "px";
 
-    console.log(boardLength / 2 - window.innerWidth * 0.4);
+    // console.log((boardLength/2) - (window.innerWidth * 0.4));
     document.querySelector(".realBoard").style.left =
-      -(boardLength / 2) + window.innerWidth * 0.4 + "px";
+      -(this.boardLength / 2) + window.innerWidth * 0.5 + "px";
 
     document.querySelector(".realBoard").style.top =
-      -(boardLength / 2) + window.innerHeight * 0.4 + "px";
+      -(this.boardLength / 2) + window.innerHeight * 0.5 + "px";
+
+    document.querySelector(".realBoard").style.transformOrigin = `${
+      this.boardLength / 2
+    }px ${this.boardLength / 2}px`;
   },
   methods: {
     init() {
@@ -438,7 +425,6 @@ export default {
         this.board.poll = this.$store.state.poll;
         this.board.poll.left = left;
         this.board.poll.top = top;
-        
         this.crudMethod("POLL", "CREATE", this.board.poll);
         this.sendMessage();
         // snackbar
@@ -471,56 +457,51 @@ export default {
             this.board.scheduler.left = `${left}px`;
             this.board.scheduler.top = `${top}px`;
           } else if (clas[cla] == "Pollx") {
-            this.board.poll.left = `${left}px`;
-            this.board.poll.top = `${top}px`;
-          } else if (clas[cla] == "kanban") {
-            this.board.kanban.left = `${left}px`;
-            this.board.kanban.top = `${top}px`;
+            // this.board.poll.left = `${left}px`
+            // this.board.poll.top = `${top}px`
           } else if (clas[cla] == "realBoard") {
-            let lp = target.style.left.replace("px", "");
-            let tp = target.style.top.replace("px", "");
-            // console.log(lp, " , ", tp);
+            this.lp = target.style.left.replace("px", "");
+            this.tp = target.style.top.replace("px", "");
+            // console.log();
 
-            this.boardX = lp * -1 + window.innerWidth * 0.4;
-            this.boardY = tp * -1 + window.innerHeight * 0.365;
+            this.boardX = this.lp * -1 + window.innerWidth / 2;
+            this.boardY = this.tp * -1 + window.innerHeight / 2;
 
-            var limitUnit = (this.boardScale / 0.05) * 250 - boardLength / 2;
+            var limitUnit =
+              (this.boardScale / 0.05) * 250 - this.boardLength / 2;
 
-            // console.log(lp - limitUnit);
-            if (lp > limitUnit) {
-              document.querySelector(".bodyBox").style.borderLeft =
-                "red 3px solid";
-              target.style.left = limitUnit + "px";
-            } else if (lp < -boardLength + window.innerWidth - limitUnit) {
-              document.querySelector(".bodyBox").style.borderRight =
-                "red 3px solid";
-              target.style.left =
-                -boardLength + window.innerWidth - limitUnit + "px";
-            } else {
-              document.querySelector(".bodyBox").style.borderRight =
-                "1px pink solid";
-              document.querySelector(".bodyBox").style.borderLeft =
-                "1px pink solid";
-            }
+            // console.log("origin : ", document.querySelector('.realBoard').style.transformOrigin);
+            // if(this.lp > limitUnit) {
+            //   document.querySelector('.bodyBox').style.borderLeft = "red 3px solid";
+            //   target.style.left = limitUnit+'px'
+            // }
+            // else if((this.lp) < (-this.boardLength + (window.innerWidth)) - limitUnit) {
+            //   document.querySelector('.bodyBox').style.borderRight = "red 3px solid";
+            //   target.style.left = (-this.boardLength + (window.innerWidth) - limitUnit) +'px';
+            // }
+            // else {
+            //   document.querySelector('.bodyBox').style.borderRight = "1px pink solid";
+            //   document.querySelector('.bodyBox').style.borderLeft = "1px pink solid";
+            // }
 
-            if (tp > limitUnit) {
-              target.style.top = limitUnit + "px";
-              document.querySelector(".bodyBox").style.borderTop =
-                "red 3px solid";
-            } else if (tp < -boardLength + window.innerHeight - limitUnit) {
-              target.style.top =
-                -boardLength + window.innerHeight - limitUnit + "px";
-              document.querySelector(".bodyBox").style.borderBottom =
-                "red 3px solid";
-            } else {
-              document.querySelector(".bodyBox").style.borderTop =
-                "1px pink solid";
-              document.querySelector(".bodyBox").style.borderBottom =
-                "1px pink solid";
-            }
+            // if(this.tp > limitUnit) {
+            //   target.style.top = limitUnit+'px'
+            //   document.querySelector('.bodyBox').style.borderTop = "red 3px solid";
+            // }
+            // else if (this.tp < (-this.boardLength + (window.innerHeight)) - limitUnit) {
+            //   target.style.top = (-this.boardLength + (window.innerHeight)) - limitUnit +'px';
+            //   document.querySelector('.bodyBox').style.borderBottom = "red 3px solid";
+            // }
+            // else {
+            //   document.querySelector('.bodyBox').style.borderTop = "1px pink solid";
+            //   document.querySelector('.bodyBox').style.borderBottom = "1px pink solid";
+            // }
 
             return;
           }
+
+          // document.querySelector('.testerDot').style.top = this.boardY + 'px';
+          // document.querySelector('.testerDot').style.left = this.boardX  + 'px';
         }
       }
     },
@@ -539,6 +520,56 @@ export default {
       }
       this.crudMethod(target.nodeName, "UPDATE", moduleObj);
       this.sendMessage();
+
+      if (target.getAttribute("class") != null) {
+        var clas = target.getAttribute("class").split(" ");
+        for (var cla in clas) {
+          if (clas[cla] == "realBoard") {
+            //  console.log("its realBoard!");
+
+            //  console.log("before : ", this.lastBX, ", ", this.lastBY);
+
+            //  let diffX = this.lastBX - this.boardX;
+            //  let diffY = this.lastBY - this.boardY;
+            //  console.log("diff : ", diffX, ", ", diffY);
+            //  console.log("after : ", this.boardX, ", ", this.boardY);
+
+            //  this.boardX = this.lastBX + (diffX / this.boardScale);
+            //  this.boardY = this.lastBY + (diffY / this.boardScale);
+
+            //  this.lastBX = this.boardX;
+            //  this.lastBY = this.boardY;
+
+            //  document.querySelector('.testerDot').style.top = this.boardY + 'px';
+            //  document.querySelector('.testerDot').style.left = this.boardX  + 'px';
+            document.querySelector(
+              ".realBoard"
+            ).style.transformOrigin = `${event.offsetX}px ${event.offsetY}px`;
+
+            document.querySelector(".testerDot").style.top =
+              event.offsetY + "px";
+            document.querySelector(".testerDot").style.left =
+              event.offsetX + "px";
+            //  target.style.transformOrigin = `${event.offsetX}px ${event.offsetY}px`
+            this.crudMethod(target.nodeName, "UPDATE", moduleObj);
+            this.sendMessage();
+            this.crudMethod("", "", null);
+            console.log("ltp : ", this.lp, ",", this.tp);
+            console.log(
+              "bodyBox wh : ",
+              window.innerWidth,
+              ", ",
+              window.innerHeight
+            );
+            console.log("boardXY  : ", this.boardX, ", ", this.boardY);
+            console.log(
+              "origin : ",
+              document.querySelector(".realBoard").style.transformOrigin
+            );
+            console.log("event : ", event);
+          }
+        }
+      }
     },
     handleResize({ target, width, height, delta }) {
       delta[0] && (target.style.width = `${width}px`);
@@ -596,17 +627,57 @@ export default {
         console.log("up!");
         this.boardScale += 0.05;
 
-        if (this.boardScale > 1.3) this.boardScale = 1.3;
-
-        // console.log(this.boardScale);
+        if (this.boardScale > 1.3) {
+          this.boardScale = 1.3;
+          return;
+        }
       } else if (event.deltaY > 0) {
         this.boardScale -= 0.05;
 
-        if (this.boardScale < 0.3) this.boardScale = 0.3;
-
-        // console.log(this.boardScale);
-        console.log("down!");
+        if (this.boardScale < 0.6) {
+          this.boardScale = 0.6;
+          return 0;
+        }
       }
+      console.log(this.boardScale);
+      let lastOriginX = document
+        .querySelector(".realBoard")
+        .style.transformOrigin.split(" ")[0];
+      let lastOriginY = document
+        .querySelector(".realBoard")
+        .style.transformOrigin.split(" ")[1];
+
+      console.log("LastOrigin : ", lastOriginX, " ", lastOriginY);
+
+      let diffX = lastOriginX.replace("px", "") - event.offsetX;
+      let diffY = lastOriginY.replace("px", "") - event.offsetY;
+
+      console.log("Diff : ", diffX, ",", diffY);
+
+      document.querySelector(
+        ".realBoard"
+      ).style.transformOrigin = `${event.offsetX}px ${event.offsetY}px`;
+
+      document.querySelector(".testerDot").style.top = event.offsetY + "px";
+      document.querySelector(".testerDot").style.left = event.offsetX + "px";
+
+      let leftPoint =
+        document.querySelector(".realBoard").style.left.replace("px", "") * 1;
+      let topPoint =
+        document.querySelector(".realBoard").style.top.replace("px", "") * 1;
+
+      console.log("realBoard left and top : ", leftPoint, ", ", topPoint);
+      console.log("so its now  :  ", leftPoint + diffX, ", ", topPoint + diffY);
+
+      // if(this.boardScale != 1){
+      // document.querySelector('.realBoard').style.left = (leftPoint + diffX)+'px';
+      // document.querySelector('.realBoard').style.top =  (topPoint + diffY)+'px';
+      // }
+
+      console.log(
+        "origin : ",
+        document.querySelector(".realBoard").style.transformOrigin
+      );
 
       document.querySelector(
         ".realBoard"
@@ -649,16 +720,16 @@ export default {
     cloakMoveable() {
       document.querySelector(".moveable-control-box").style.display = "none";
     },
-    moduleDragEnd(moduleName, { pageX, pageY }) {
+    moduleDragEnd(moduleName, { offsetX, offsetY }) {
       switch (moduleName) {
         case "postit":
-          this.createPostit(`${pageX}px`, `${pageY}px`);
+          this.createPostit(`${offsetX}px`, `${offsetY}px`);
           break;
         case "scheduler":
-          this.createScheduler(`${pageX}px`, `${pageY}px`);
+          this.createScheduler(`${offsetX}px`, `${offsetY}px`);
           break;
         case "poll":
-          this.createPoll(`${pageX}px`, `${pageY}px`);
+          this.createPoll(`${offsetX}px`, `${offsetY}px`);
           break;
       }
     },
@@ -680,14 +751,32 @@ export default {
     testIn() {
       if (!this.memberView) {
         this.memberView = true;
-        console.log("hover!");
       }
     },
     testOut() {
       if (this.memberView) {
         this.memberView = false;
-        console.log("out!");
       }
+    },
+    test3(event) {
+      // let lastOriginX = document.querySelector('.realBoard').style.transformOrigin.split(" ")[0];
+      // let lastOriginY = document.querySelector('.realBoard').style.transformOrigin.split(" ")[1];
+      // console.log("LastOrigin : ", lastOriginX, " ", lastOriginY);
+      // let diffX = lastOriginX.replace("px", "") - event.offsetX;
+      // let diffY = lastOriginY.replace("px", "") - event.offsetY;
+      // console.log("Diff : ", diffX, "," , diffY);
+      // document.querySelector('.realBoard').style.transformOrigin = `${event.offsetX}px ${event.offsetY}px`;
+      // document.querySelector('.testerDot').style.top = event.offsetY + 'px';
+      // document.querySelector('.testerDot').style.left = event.offsetX + 'px';
+      // let leftPoint = document.querySelector('.realBoard').style.left.replace("px", "") * 1;
+      // let topPoint = document.querySelector('.realBoard').style.top.replace("px", "") * 1;
+      // console.log("realBoard left and top : ", leftPoint, ", ", topPoint);
+      // console.log("so its now  :  ", (leftPoint + diffX),", ", (topPoint + diffY));
+      // // if(this.boardScale != 1){
+      // document.querySelector('.realBoard').style.left = (leftPoint + diffX)+'px';
+      // document.querySelector('.realBoard').style.top =  (topPoint + diffY)+'px';
+      // // }
+      // console.log("origin : ", document.querySelector('.realBoard').style.transformOrigin);
     },
   },
   components: {
@@ -806,11 +895,13 @@ export default {
   position: fixed;
   z-index: 3;
   width: 64px;
-  /* height: 1%; */
-  /* transform: rotate(90deg); */
   bottom: 50%;
   left: 2%;
-  /* left: -50px;; */
+  padding: 10px;
+  display: inline;
+  background-color: white;
+  text-align: center;
+  vertical-align: middle;
 }
 
 .toolbar {
@@ -832,6 +923,7 @@ export default {
 
 .vueBox {
   background-color: white;
+  border: 1px solid black;
   position: fixed;
   z-index: 3;
   right: 10%;
@@ -844,12 +936,12 @@ export default {
   width: auto;
   height: 40px;
   position: fixed;
-  z-index: 3;
+  z-index: 2;
   bottom: 1%;
-  left: 120px;
-  /* padding: 5%; */
-  /* vertical-align: middle; */
-  /* background-color: olive; */
+  left: 50px;
+  text-align: right;
+  padding-right: 1%;
+  padding-left: 5%;
 }
 
 .slide-fade-enter-active {
@@ -862,5 +954,17 @@ export default {
 /* .slide-fade-leave-active below version 2.1.8 */ {
   transform: translateX(-10px);
   opacity: 0;
+}
+
+.testerDot {
+  height: 4px;
+  width: 4px;
+  background-color: black;
+  position: fixed;
+  z-index: 4;
+  display: none;
+}
+.testBox {
+  display: inline;
 }
 </style>

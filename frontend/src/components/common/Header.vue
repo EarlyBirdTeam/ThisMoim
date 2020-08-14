@@ -17,8 +17,9 @@
 
             <template v-else>
                 <div class="headBox">
+                    환영합니다! 
                     <router-link v-bind:to="{name:constants.URL_TYPE.USER.MYPAGE}" class="btn--text">
-                        {{this.$store.state.userData.email}}
+                        {{this.$store.getters.userData.nickname}}
                     </router-link> 
 
                     <button @click="logout">
