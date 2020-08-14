@@ -24,26 +24,20 @@ public class OnInvitationCompleteListener implements ApplicationListener<OnInvit
         this.mailService = mailService;
     }
 
-    /**
-     * As soon as a registration event is complete, invoke the email verification
-     * asynchronously in an another thread pool
-     */
+
     @Override
     @Async
     public void onApplicationEvent(OnInvitationCompleteEvent onInvitationCompleteEvent) {
         sendEmailVerification(onInvitationCompleteEvent);
     }
 
-    /**
-     * Send email verification to the user and persist the token in the database.
-     */
     private void sendEmailVerification(OnInvitationCompleteEvent event) {
         User user = event.getMember().getUser();
 
         String recipientAddress = user.getEmail();
         String emailConfirmationUrl =
                 event.getRedirectUrl().toUriString();
-
+        System.out.println("--------------------");
         try {
             mailService.sendInviteEmail(emailConfirmationUrl, recipientAddress);
         } catch (IOException | TemplateException | MessagingException e) {
