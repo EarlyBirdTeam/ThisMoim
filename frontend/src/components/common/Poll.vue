@@ -73,7 +73,7 @@
         </div>
         <div class="poll-footer">
           <button class="circleScaleBtn" @click="vote"><span>투표</span></button>
-          <button class="circleScaleBtn" @click="end"><span>투표종료</span></button>
+          <button class="circleScaleBtn" @click="isEnd"><span>투표종료</span></button>
         </div>
       </div>
     </div>
@@ -123,9 +123,14 @@ export default {
   props:{
     
   },
+  computed: {
+    poll() {
+      return this.$store.state.poll
+    }
+  },
   data() {
     return {
-      poll: this.$store.state.poll,
+      // poll: this.$store.state.poll,
       test: [],
       voted: '',
       didYou: false,
@@ -158,7 +163,7 @@ export default {
       // console.log(this.$store.state.email);
       this.didYou = true;
     },
-    end(){
+    isEnd(){
       this.poll.isEnd = true;
       let base = 0;
       let list = this.poll.answers
