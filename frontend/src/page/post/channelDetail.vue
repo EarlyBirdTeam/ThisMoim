@@ -1,5 +1,5 @@
 <template>
-  <div id="app" v-cloak @click="cloakMoveable">
+  <div id="app" class="board" v-cloak @click="cloakMoveable">
     <div class="row">
       {{ board }}
       <v-snackbar
@@ -405,6 +405,16 @@ export default {
 </script>
 
 <style>
+ .board{
+    /* width: 90vw; */
+    /* border: solid gray 1px; */
+    background-color: white;
+    border-radius: 2%;
+    height: 90%;
+    margin: 25px;
+    padding: 10px;
+    margin-left: 50px;
+  }
 .moveable {
   font-family: "Roboto", sans-serif;
   position: relative;
