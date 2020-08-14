@@ -534,9 +534,11 @@ export default {
           break;
         case "SCHEDULER":
           break;
+        case "DIV":
+          return;
       }
       this.crudMethod(target.nodeName, "UPDATE", moduleObj);
-      // this.sendMessage();
+      this.sendMessage();
     },
     handleResize({ target, width, height, delta }) {
       delta[0] && (target.style.width = `${width}px`);
