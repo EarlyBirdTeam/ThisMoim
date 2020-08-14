@@ -5,7 +5,6 @@ import com.websocket.board.model.calendar.Scheduler;
 import com.websocket.board.model.crud.CRUDModule;
 import com.websocket.board.model.crud.CRUDType;
 import com.websocket.board.model.kanban.Kanban;
-import com.websocket.board.model.poll.Poll;
 import com.websocket.board.model.postit.Postit;
 
 public interface DBSyncService {

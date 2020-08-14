@@ -1,14 +1,12 @@
-package com.websocket.board.model.client;
+package com.websocket.board.model.dto.client;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.apache.catalina.connector.Response;
 
 import java.io.Serializable;
 
-@Data
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -18,6 +16,6 @@ public class LoginResponse extends Response implements Serializable {
     private String refreshToken;
     private String tokenType;
     private Long expiryDuration;
-    private User user;
+    private UserInfoResponse userInfoResponse;
 
 }

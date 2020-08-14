@@ -29,6 +29,7 @@ public class Scheduler implements Serializable {
 
     @OneToMany(mappedBy = "scheduler")
     @JsonManagedReference
+    @Builder.Default
     private List<Event> events = new ArrayList<>();
 
     @OneToOne

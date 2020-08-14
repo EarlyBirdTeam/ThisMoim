@@ -40,7 +40,7 @@
         
 - Spring websocket chatting server(5) – 채팅방 입장/퇴장 이벤트 처리, 인원수 표시
     - Document
-        - https://daddyprogrammer.org/post/5290/spring-websocket-chatting-server-enter-qut-event-view-user-count/
+        - https://daddyprogrammer.org/post/5290/spring-websocket-chatting-server-enter-qut-event-view-userInfoResponse-count/
     - Git
         - https://github.com/codej99/websocket-chat-server/tree/feature/developchatroom
 - Spring websocket chatting server(6) – Nginx+Certbot 무료 SSL인증서로 WSS(Websocket Secure) 구축하기
