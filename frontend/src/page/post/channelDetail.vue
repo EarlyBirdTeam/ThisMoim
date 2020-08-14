@@ -293,6 +293,9 @@ export default {
           // this.board.idCount = response.data.idCount;
           this.board = response.data;
           this.board.delete = { moduleName:'', id: -1}
+          this.$store.state.Kanban.columns = response.data.kanban.columns;
+          this.board.Kanban.columns = response.data.kanban.columns;
+
         })
         .catch((e) => {
         });
@@ -359,7 +362,19 @@ export default {
   
       this.createSnackbar("보드가 생성되었습니다", 1500, "success")
       this.board.isKanban=true
-      this.board.kanban = this.$store.state.Kanban
+      this.$store.state.Kanban.columns=[ {
+                  columnTitle: 'TO DO',
+                  tasks: [],
+                },
+                {
+                  columnTitle: "IN PROGRESS",
+                  tasks: [],
+                },
+                {
+                  columnTitle: "DONE",
+                  tasks: [],
+                },]
+      this.board.kanban= this.$store.state.Kanban
     },
 
     deleteKanban({target}) {
@@ -368,15 +383,15 @@ export default {
         this.cloakMoveable();
         this.board.isKanban=false;
         this.$store.state.Kanban.columns=[ {
-                  columnTitle: '할 일',
+                  columnTitle: 'TO DO',
                   tasks: [],
                 },
                 {
-                  columnTitle: "진행중",
+                  columnTitle: "IN PROGRESS",
                   tasks: [],
                 },
                 {
-                  columnTitle: "완료",
+                  columnTitle: "DONE",
                   tasks: [],
                 },]
         
