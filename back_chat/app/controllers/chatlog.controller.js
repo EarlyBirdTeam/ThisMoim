@@ -14,7 +14,7 @@ exports.create = (req, res) =>{
     const chatlog = {
         message: req.body.message,
         userid: req.body.userid,
-        roomid: req.body.roomid
+        roomid: req.body.roomid,
     }
 
     Chatlog.create(chatlog).
