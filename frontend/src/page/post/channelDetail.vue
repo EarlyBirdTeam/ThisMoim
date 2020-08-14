@@ -21,7 +21,7 @@
       <v-btn icon color="orange" @click="pleaseDrag" draggable="true" @dragenter="dragging=true" @dragend="moduleDragEnd('postit', $event)">
         <v-icon>mdi-message</v-icon>
       </v-btn>
-      <v-btn icon color="orange" @click="pleaseDrag" draggable="true" @dragend="moduleDragEnd('kanban', $event)">
+      <v-btn icon color="orange" @click="createKanban" draggable="true" @dragend="moduleDragEnd('kanban', $event)">
         <v-icon>mdi-clipboard-list-outline</v-icon>
       </v-btn>
       <!-- <v-btn icon color="orange" @click="createMap">
@@ -78,8 +78,8 @@
       </div>
 
       <div class="Poll" @click.right="deleteAction">
-        <Poll v-if="isPoll" 
-        :style = "{left: board.poll.left, top: board.poll.top}"
+        <Poll v-if="!!board.poll" 
+        :style = "{left: $store.state.poll.left, top: $store.state.poll.top}"
         />
       </div>
       <v-dialog width="600px">
@@ -107,7 +107,8 @@
       </v-card>
     </v-dialog>
     
-     {{ board }}
+    board : {{ board.poll }}<br><br><br>
+    store : {{ $store.state.poll }}
       
     </div>
 
@@ -127,10 +128,11 @@ import Poll from "../../components/common/Poll"
 import Kanban from "../../components/module/Kanban";
 
 export default {
-  props:[
-
-  ]
-  ,
+  computed: {
+    poll() {
+      return this.$store.state.poll;
+    },
+  },
   data() {
     return {
       ws: null,
@@ -148,7 +150,7 @@ export default {
         isKanban: false,
         kanban: this.$store.state.Kanban,
         scheduler: {},
-        poll: {},
+        // poll: {},
         isDelete: false,
         delete: {
           moduleName: '',
@@ -184,7 +186,6 @@ export default {
         timeout: 1000,
       },
       idc: 0,
-      isPoll: false,
     };
   },
   created() {
@@ -253,20 +254,21 @@ export default {
       this.createSnackbar("수정되었습니다", 1000, "warning");
     },
     recvMessage: function (recv) {
-      console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2")
-      console.log(recv.poll);
       this.userCount = recv.userCount;
       this.board.idCount = recv.idCount;
       this.board.postitList = recv.postitList;
       this.board.isDelete = false;
-      if (!!recv.scheduler) this.board.scheduler = recv.scheduler;
+      if (!!recv.scheduler) {
+        this.board.scheduler = recv.scheduler;
+        this.$store.state.scheduler.events = recv.scheduler.events;
+      }
       this.board.poll = recv.poll;
-      this.$store.state.scheduler.events = recv.scheduler.events;
+      this.$store.state.poll = recv.poll;
       //crudModule 초기화
       this.board.crudModule = {
         modulType: '',
         crudType: '',
-        moduleObject: Object,
+        moduleObject: null,
       };
     },
     createPostit(left='500px', top='170px') {
@@ -354,10 +356,9 @@ export default {
     },
     
     createPoll(left='500px', top='170px') {
-      if (this.isPoll){
+      if (!!this.board.poll){
         this.createSnackbar("이미 투표가 있습니다!", 3000, "error");
       } else {
-        this.isPoll = true;
         const idc = this.board.idCount++;
         this.board.poll = this.$store.state.poll;
         this.board.poll.left = left;
@@ -394,6 +395,8 @@ export default {
             this.board.scheduler.left = `${left}px`
             this.board.scheduler.top = `${top}px`
           } else if(clas[cla] == "Pollx") {
+            this.board.poll.left = `${left}px`
+            this.board.poll.top = `${top}px`
             // this.board.poll.left = `${left}px`
             // this.board.poll.top = `${top}px`
           }
@@ -412,7 +415,7 @@ export default {
           break;
       }
       this.crudMethod(target.nodeName, 'UPDATE', moduleObj);
-      this.sendMessage();
+      // this.sendMessage();
       this.crudMethod('','',null);
     },
     handleResize({ target, width, height, delta }) {
@@ -466,9 +469,8 @@ export default {
             if (clas[cla] == "scheduler") {
               this.board.scheduler = { "left": null, "top": null, "events": [{ "name": "오프라인", "content": "hello", "start": "2020-08-05T12:30:00", "end": "2020-08-05T18:00:00" }] }
               console.log(this.board.scheduler);
-            } else if (clas == "Poll") {
-              this.board.poll = {}
-              this.isPoll = false;
+            } else if (clas == "poll") {
+              this.board.poll = null
             }
           }
         }
