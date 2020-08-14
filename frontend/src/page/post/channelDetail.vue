@@ -3,7 +3,7 @@
     <div class="toolbar">
       <v-snackbar
         app
-        top
+        bottom
         v-model="snackbar.isPresent"
         :timeout="snackbar.timeout"
         :color="snackbar.color"
@@ -13,35 +13,54 @@
           {{channelName}}
           <span class="badge badge-info badge-pill">{{userCount}}</span>
 
-        <v-toolbar class="toolBox">
-      <v-btn icon color="orange" @click="pleaseDrag" draggable="true" @dragenter="dragging=true" @dragend="moduleDragEnd('postit', $event)">
-        <v-icon>mdi-message</v-icon>
-      </v-btn>
-      <v-btn icon color="orange" @click="createKanban" draggable="true" @dragend="moduleDragEnd('kanban', $event)">
-        <v-icon>mdi-clipboard-list-outline</v-icon>
-      </v-btn>
-      <!-- <v-btn icon color="orange" @click="createMap">
+          <v-toolbar class="toolBox">
+            <v-btn
+              icon
+              color="orange"
+              @click="pleaseDrag"
+              draggable="true"
+              @dragenter="dragging=true"
+              @dragend="moduleDragEnd('postit', $event)"
+            >
+              <v-icon>mdi-message</v-icon>
+            </v-btn>
+            <v-btn
+              icon
+              color="orange"
+              @click="createKanban"
+              draggable="true"
+              @dragend="moduleDragEnd('kanban', $event)"
+            >
+              <v-icon>mdi-clipboard-list-outline</v-icon>
+            </v-btn>
+            <!-- <v-btn icon color="orange" @click="createMap">
         <v-icon>mdi-map</v-icon>
-      </v-btn> -->
-      <v-btn icon color="orange" @click="pleaseDrag" draggable="true" @dragend="moduleDragEnd('scheduler', $event)">
-        <v-icon>mdi-calendar</v-icon>
-      </v-btn>
-      <v-btn icon color="orange" @click="pleaseDrag" draggable="true" @dragend="moduleDragEnd('poll', $event)">
-        <v-icon>mdi-vote</v-icon>
-      </v-btn>
-    	</v-toolbar>
-
-		</h4>
+            </v-btn>-->
+            <v-btn
+              icon
+              color="orange"
+              @click="pleaseDrag"
+              draggable="true"
+              @dragend="moduleDragEnd('scheduler', $event)"
+            >
+              <v-icon>mdi-calendar</v-icon>
+            </v-btn>
+            <v-btn
+              icon
+              color="orange"
+              @click="pleaseDrag"
+              draggable="true"
+              @dragend="moduleDragEnd('poll', $event)"
+            >
+              <v-icon>mdi-vote</v-icon>
+            </v-btn>
+          </v-toolbar>
+        </h4>
         <br />
-        
       </div>
     </div>
 
-    
-
-    <v-responsive class="vueBox text-center ma-3">
-      
-    </v-responsive>
+    <v-responsive class="vueBox text-center ma-3"></v-responsive>
 
     <v-responsive>
       <v-responsive
@@ -49,12 +68,8 @@
         @mouseover="testIn"
         @mouseout="testOut"
       >
+        <v-img src="@/assets/img/user.png">{{userCount}}</v-img>
 
-        <v-img src="@/assets/img/user.png">
-          {{userCount}}
-        </v-img>
-
-      
         <!-- <v-hover v-slot:default="{ hover }">
             <v-img src="@/assets/img/user.png">
               {{userCount}}
@@ -69,23 +84,19 @@
               
             </v-img>
             
-        </v-hover> -->
-            
-          
-
-
+        </v-hover>-->
       </v-responsive>
-      
+
       <transition name="slide-fade">
-        <v-responsive id="memberList" class="text-center ma-3 badge-info" 
-        v-if="memberView"
-        align="center"
-        justify="center">
-        김강현, 배민규, 정용우, 최문경, 김동률, 배재원
-        </v-responsive>
+        <v-responsive
+          id="memberList"
+          class="text-center ma-3 badge-info"
+          v-if="memberView"
+          align="center"
+          justify="center"
+        >김강현, 배민규, 정용우, 최문경, 김동률, 배재원</v-responsive>
       </transition>
     </v-responsive>
-    
 
     <Moveable
       ref="moveable"
@@ -100,58 +111,56 @@
       style="display: none;"
     ></Moveable>
 
-    <div class="bodyBox" ref="whiteBoard" 
-    @dblclick="focusAction" 
-    @click="changeTargetAction"
-    @wheel="wheelEvent"
-    style="height: 100%; width: 100%;">
-      
-      
-      <div class="MoveableBox realBoard" >
+    <div
+      class="bodyBox"
+      ref="whiteBoard"
+      @dblclick="focusAction"
+      @click="changeTargetAction"
+      @wheel="wheelEvent"
+      style="height: 100%; width: 100%;"
+    >
+      <div class="MoveableBox realBoard">
+        <div
+          class="postit"
+          v-for="(pi, idx) in this.board.postitList"
+          :key="pi.frontPostitId"
+          @click.right="deleteTargetAction(idx, $event)"
+        >
+          <Postit :id="pi.frontPostitId" :postit="pi" :style="{left: pi.left, top: pi.top}" />
+        </div>
 
-            <div class="postit"
-      v-for="(pi, idx) in this.board.postitList"
-      :key="pi.frontPostitId"
-      @click.right="deleteTargetAction(idx, $event)">
-          <Postit
-          :id="pi.frontPostitId"
-          :postit="pi"
-          :style="{left: pi.left, top: pi.top}"
+        <div class="kanban" @click.right="deleteKanban">
+          <Kanban v-if="board.isKanban" :style="{left:board.kanban.left, top:board.kanban.top}"/>
+        </div>
+        <div class="map" @click.right="deleteAction">
+          <Map v-if="map.isPresent" />
+        </div>
+
+        <div class="Scheduler" @click.right="deleteAction">
+          <Scheduler
+            v-if="!!board.scheduler"
+            :style="{left:board.scheduler.left, top:board.scheduler.top}"
           />
+        </div>
 
+        <div class="Poll" @click.right="deleteAction">
+          <Poll
+            v-if="!!board.poll"
+            :style="{left: $store.state.poll.left, top: $store.state.poll.top}"
+          />
+        </div>
+        {{ board.isKanban}}<br>
+        board : {{ board.kanban }} 
+        <br />
+        <br />
+        <br />
+
+        store : {{ $store.state.Kanban }}
       </div>
 
-      <div class="kanban" v-if="board.isKanban" @click.right="deleteKanban" >
-        <Kanban/>
-      
- 
-      </div>
-      <div class="map" @click.right="deleteAction">
-        <Map v-if="map.isPresent"/>
-      </div>
-
-      <div class="Scheduler" @click.right="deleteAction">
-        <Scheduler v-if="!!board.scheduler" 
-        :style="{left:board.scheduler.left, top:board.scheduler.top}"/>
-      </div>
-
-      <div class="Poll" @click.right="deleteAction">
-        <Poll v-if="!!board.poll" 
-        :style = "{left: $store.state.poll.left, top: $store.state.poll.top}"
-        />
-      </div>
-     
-    
-    board : {{ board.poll }}<br><br><br>
-    store : {{ $store.state.poll }}
-      
-
-      </div>
-       
- 
       <!-- <Postit :id="pi.id" :postit="pi" style="position: relative; display: inline-block"/> -->
-     </div>
- <Chat/>
+    </div>
+    <Chat />
   </div>
 </template>
 
@@ -164,7 +173,7 @@ import Postit from "../../components/module/Postit";
 import Map from "../../components/module/Map";
 import Scheduler from "../../components/module/Scheduler";
 import Chat from "../../components/common/Chat";
-import Poll from "../../components/common/Poll"
+import Poll from "../../components/common/Poll";
 import Kanban from "../../components/module/Kanban";
 
 const boardLength = 10000;
@@ -183,8 +192,8 @@ export default {
         channelId: "",
         idCount: 1,
         crudModule: {
-          modulType: '',
-          crudType: '',
+          modulType: "",
+          crudType: "",
           moduleObject: Object,
         },
         postitList: [],
@@ -194,7 +203,7 @@ export default {
         // poll: {},
         isDelete: false,
         delete: {
-          moduleName: '',
+          moduleName: "",
           id: -1,
         },
       },
@@ -213,7 +222,7 @@ export default {
         throttleRotate: 0,
         origin: false,
       },
-      
+
       map: {
         isPresent: false,
         left: "",
@@ -227,10 +236,10 @@ export default {
         timeout: 1000,
       },
       boardScale: 1,
-      boardX: boardLength/2,
-      boardY: boardLength/2,
+      boardX: boardLength / 2,
+      boardY: boardLength / 2,
 
-      memberView:false,
+      memberView: false,
       idc: 0,
     };
   },
@@ -243,15 +252,15 @@ export default {
     this.initRecv();
   },
   mounted() {
-    document.querySelector('.realBoard').style.height = boardLength+"px";
-    document.querySelector('.realBoard').style.width = boardLength+"px";
+    document.querySelector(".realBoard").style.height = boardLength + "px";
+    document.querySelector(".realBoard").style.width = boardLength + "px";
 
-    console.log((boardLength/2) - (window.innerWidth * 0.4));
-    document.querySelector('.realBoard').style.left = 
-      -(boardLength/2) + (window.innerWidth * 0.4) + "px";
-      
-    document.querySelector('.realBoard').style.top = 
-      -(boardLength/2) + (window.innerHeight * 0.4) + "px";
+    console.log(boardLength / 2 - window.innerWidth * 0.4);
+    document.querySelector(".realBoard").style.left =
+      -(boardLength / 2) + window.innerWidth * 0.4 + "px";
+
+    document.querySelector(".realBoard").style.top =
+      -(boardLength / 2) + window.innerHeight * 0.4 + "px";
   },
   methods: {
     init() {
@@ -270,12 +279,13 @@ export default {
         ws.connect(
           { token: _this.token },
           function (frame) {
-            ws.subscribe("/sub/board/channel/" + _this.board.channelId, function (
-              message
-            ) {
-              var recv = JSON.parse(message.body);
-              _this.recvMessage(recv);
-            });
+            ws.subscribe(
+              "/sub/board/channel/" + _this.board.channelId,
+              function (message) {
+                var recv = JSON.parse(message.body);
+                _this.recvMessage(recv);
+              }
+            );
           },
           function (error) {
             alert("서버 연결에 실패 하였습니다. 다시 접속해 주십시요.");
@@ -289,18 +299,20 @@ export default {
       http
         .get(`/board/${this.board.channelId}`)
         .then((response) => {
-          console.log(response.data)
+          console.log('initRecv@@@@');
+          console.log(response.data);
           // this.board.postitList = response.data.postitList;
           // this.board.idCount = response.data.idCount;
           this.board = response.data;
-          this.board.delete = { moduleName:'', id: -1}
-          this.$store.state.Kanban.columns = response.data.kanban.columns;
-          this.board.Kanban.columns = response.data.kanban.columns;
-
+          this.board.delete = { moduleName: "", id: -1 };
+          this.$store.state.Kanban.states = response.data.kanban.states;
+          // this.board.Kanban.columns = response.data.kanban.columns;
         })
         .catch((e) => {
+          console.log('initRecv 실패')
+          console.log(e);
         });
-      this.createSnackbar(
+        this.createSnackbar(
         `'${this.channelName}' 채널에 입장하였습니다!`,
         3000,
         "info"
@@ -325,118 +337,109 @@ export default {
       }
       this.board.poll = recv.poll;
       this.$store.state.poll = recv.poll;
+      this.board.kanban = recv.kanban;
+      this.$store.state.Kanban = recv.kanban;
       //crudModule 초기화
       this.board.crudModule = {
-        modulType: '',
-        crudType: '',
+        modulType: "",
+        crudType: "",
         moduleObject: null,
       };
     },
-    createPostit(left='500px', top='170px') {
-      if(this.board.postitList.length > 20) {
-        this.createSnackbar("포스트잇이 너무 많습니다!", 3000, "error")
-        return
+    createPostit(left = "500px", top = "170px") {
+      if (this.board.postitList.length > 20) {
+        this.createSnackbar("포스트잇이 너무 많습니다!", 3000, "error");
+        return;
       }
       event.stopPropagation();
       const idc = this.board.idCount++;
       // postitList에 새로운 포스트잇 더하기
       var newPostit = {
         frontPostitId: idc,
-        left: (this.boardX - 120) + "px",
-        top: (this.boardY - 120) + "px",
+        left: this.boardX - 120 + "px",
+        top: this.boardY - 120 + "px",
         title: "",
         contents: "",
         channel: this.board.channelId,
-      }
+      };
       this.board.postitList.push(newPostit);
-      this.crudMethod('POSTIT', 'CREATE', newPostit);
+      this.crudMethod("POSTIT", "CREATE", newPostit);
       this.sendMessage();
-      this.crudMethod('', '', null);
       // snackbar
       this.createSnackbar("포스트잇이 생성되었습니다!", 1500, "success");
     },
 
     createKanban(event) {
-      if(this.board.isKanban==true){
-        this.createSnackbar("보드가 이미 생성되어 있습니다", 3000, "error")
-        return
+      if (this.board.isKanban == true) {
+        this.createSnackbar("보드가 이미 생성되어 있습니다", 3000, "error");
+        return;
       }
-  
-      this.createSnackbar("보드가 생성되었습니다", 1500, "success")
-      this.board.isKanban=true
-      this.$store.state.Kanban.columns=[ {
-                  columnTitle: 'TO DO',
-                  tasks: [],
-                },
-                {
-                  columnTitle: "IN PROGRESS",
-                  tasks: [],
-                },
-                {
-                  columnTitle: "DONE",
-                  tasks: [],
-                },]
-      this.board.kanban= this.$store.state.Kanban
+
+      this.createSnackbar("보드가 생성되었습니다", 1500, "success");
+      this.board.isKanban = true;
+      this.board.kanban = this.$store.state.Kanban;
+      this.crudMethod("KANBAN", "CREATE", this.board.kanban);
+      this.sendMessage();
     },
 
-    deleteKanban({target}) {
-      if(confirm("요소를 삭제하시겠습니까?") === true) {
+    deleteKanban({ target }) {
+      if (confirm("요소를 삭제하시겠습니까?") === true) {
         target.remove();
         this.cloakMoveable();
-        this.board.isKanban=false;
-        this.$store.state.Kanban.columns=[ {
-                  columnTitle: 'TO DO',
-                  tasks: [],
-                },
-                {
-                  columnTitle: "IN PROGRESS",
-                  tasks: [],
-                },
-                {
-                  columnTitle: "DONE",
-                  tasks: [],
-                },]
-        
+        this.board.isKanban = false;
+        this.crudMethod("KANBAN", "DELETE", this.board.kanban);
+        this.$store.state.Kanban.states = [
+          {
+            columnTitle: "TO DO",
+            tasks: [],
+          },
+          {
+            columnTitle: "IN PROGRESS",
+            tasks: [],
+          },
+          {
+            columnTitle: "DONE",
+            tasks: [],
+          },
+        ];
+        this.sendMessage();
       }
     },
 
-
-
-
-
-    createMap(event) {
-      if (this.map.isPresent) {
-        this.createSnackbar("이미 카카오맵이 있습니다!", 3000, "error");
-      } else {
-        this.map.isPresent = true;
-      }
-    },    
-    createScheduler(left='600px', top='270px') {
-      if (!!this.board.scheduler){
+    // createMap(event) {
+    //   if (this.map.isPresent) {
+    //     this.createSnackbar("이미 카카오맵이 있습니다!", 3000, "error");
+    //   } else {
+    //     this.map.isPresent = true;
+    //   }
+    // },
+    createScheduler(left = "600px", top = "270px") {
+      if (!!this.board.scheduler) {
         this.createSnackbar("이미 달력이 있습니다!", 3000, "error");
       } else {
         this.board.scheduler = {
           left: left,
           top: top,
           events: this.$store.state.scheduler.events,
-        }
+        };
         console.log("create Scheduler");
-        console.log(this.board.scheduler);
+        this.crudMethod("SCHEDULER", "CREATE", this.board.scheduler);
         this.sendMessage();
         // snackbar
         this.createSnackbar("달력이 생성되었습니다!", 1500, "success");
       }
     },
-    
-    createPoll(left='500px', top='170px') {
-      if (!!this.board.poll){
+
+    createPoll(left = "500px", top = "170px") {
+      if (!!this.board.poll) {
         this.createSnackbar("이미 투표가 있습니다!", 3000, "error");
       } else {
         const idc = this.board.idCount++;
         this.board.poll = this.$store.state.poll;
         this.board.poll.left = left;
         this.board.poll.top = top;
-        this.crudMethod('POLL', 'CREATE', this.board.poll);
+        
+        this.crudMethod("POLL", "CREATE", this.board.poll);
         this.sendMessage();
         // snackbar
         this.createSnackbar("투표가 생성되었습니다!", 1500, "success");
@@ -456,7 +459,7 @@ export default {
         var clas = target.getAttribute("class").split(" ");
         for (var cla in clas) {
           if (clas[cla] == "paper") {
-              this.board.postitList.map((postit) => {
+            this.board.postitList.map((postit) => {
               if (postit.frontPostitId == target.id) {
                 (postit.left = `${left}px`), (postit.top = `${top}px`);
               }
@@ -464,70 +467,76 @@ export default {
                 ...postit,
               };
             });
-          } else if(clas[cla] == "scheduler") {
-            this.board.scheduler.left = `${left}px`
-            this.board.scheduler.top = `${top}px`
-          } else if(clas[cla] == "Pollx") {
-            this.board.poll.left = `${left}px`
-            this.board.poll.top = `${top}px`
-            // this.board.poll.left = `${left}px`
-            // this.board.poll.top = `${top}px`
-          }
-          else if(clas[cla] == 'realBoard'){
+          } else if (clas[cla] == "scheduler") {
+            this.board.scheduler.left = `${left}px`;
+            this.board.scheduler.top = `${top}px`;
+          } else if (clas[cla] == "Pollx") {
+            this.board.poll.left = `${left}px`;
+            this.board.poll.top = `${top}px`;
+          } else if (clas[cla] == "kanban") {
+            this.board.kanban.left = `${left}px`;
+            this.board.kanban.top = `${top}px`;
+          } else if (clas[cla] == "realBoard") {
             let lp = target.style.left.replace("px", "");
             let tp = target.style.top.replace("px", "");
             // console.log(lp, " , ", tp);
 
-            this.boardX = (lp*-1) + window.innerWidth * 0.4;
-            this.boardY = (tp*-1) + window.innerHeight * 0.365;
+            this.boardX = lp * -1 + window.innerWidth * 0.4;
+            this.boardY = tp * -1 + window.innerHeight * 0.365;
 
-            var limitUnit = (this.boardScale / 0.05) * 250 - (boardLength/2);   
+            var limitUnit = (this.boardScale / 0.05) * 250 - boardLength / 2;
 
-            console.log(lp - limitUnit);         
-            if(lp > limitUnit) {
-              document.querySelector('.bodyBox').style.borderLeft = "red 3px solid";
-              target.style.left = limitUnit+'px'
-            }
-            else if((lp) < (-boardLength + (window.innerWidth)) - limitUnit) {
-              document.querySelector('.bodyBox').style.borderRight = "red 3px solid";
-              target.style.left = (-boardLength + (window.innerWidth) - limitUnit) +'px';
-            } 
-            else {
-              document.querySelector('.bodyBox').style.borderRight = "1px pink solid";
-              document.querySelector('.bodyBox').style.borderLeft = "1px pink solid";
-            }
-
-            if(tp > limitUnit) {
-              target.style.top = limitUnit+'px'
-              document.querySelector('.bodyBox').style.borderTop = "red 3px solid";
-            }
-            else if (tp < (-boardLength + (window.innerHeight)) - limitUnit) {
-              target.style.top = (-boardLength + (window.innerHeight)) - limitUnit +'px';
-              document.querySelector('.bodyBox').style.borderBottom = "red 3px solid";
-            }
-            else {  
-              document.querySelector('.bodyBox').style.borderTop = "1px pink solid";
-              document.querySelector('.bodyBox').style.borderBottom = "1px pink solid";
+            // console.log(lp - limitUnit);
+            if (lp > limitUnit) {
+              document.querySelector(".bodyBox").style.borderLeft =
+                "red 3px solid";
+              target.style.left = limitUnit + "px";
+            } else if (lp < -boardLength + window.innerWidth - limitUnit) {
+              document.querySelector(".bodyBox").style.borderRight =
+                "red 3px solid";
+              target.style.left =
+                -boardLength + window.innerWidth - limitUnit + "px";
+            } else {
+              document.querySelector(".bodyBox").style.borderRight =
+                "1px pink solid";
+              document.querySelector(".bodyBox").style.borderLeft =
+                "1px pink solid";
             }
 
-            return ;
+            if (tp > limitUnit) {
+              target.style.top = limitUnit + "px";
+              document.querySelector(".bodyBox").style.borderTop =
+                "red 3px solid";
+            } else if (tp < -boardLength + window.innerHeight - limitUnit) {
+              target.style.top =
+                -boardLength + window.innerHeight - limitUnit + "px";
+              document.querySelector(".bodyBox").style.borderBottom =
+                "red 3px solid";
+            } else {
+              document.querySelector(".bodyBox").style.borderTop =
+                "1px pink solid";
+              document.querySelector(".bodyBox").style.borderBottom =
+                "1px pink solid";
+            }
+
+            return;
           }
         }
       }
     },
-    handleDragEnd({target}) {
-      console.log(target);
+    handleDragEnd({ target }) {
       var moduleObj = null;
-      switch(target.nodeName) {
-        case 'POSTIT':
-          moduleObj = this.board.postitList.find(postit => postit.frontPostitId == target.id);
+      switch (target.nodeName) {
+        case "POSTIT":
+          moduleObj = this.board.postitList.find(
+            (postit) => postit.frontPostitId == target.id
+          );
           break;
-        case 'SCHEDULER':
+        case "SCHEDULER":
           break;
       }
-      this.crudMethod(target.nodeName, 'UPDATE', moduleObj);
+      this.crudMethod(target.nodeName, "UPDATE", moduleObj);
       // this.sendMessage();
-      this.crudMethod('','',null);
     },
     handleResize({ target, width, height, delta }) {
       delta[0] && (target.style.width = `${width}px`);
@@ -546,24 +555,24 @@ export default {
       target.focus();
     },
     changeTargetAction({ target }) {
-       this.blockMoveable();
+      this.blockMoveable();
 
-      if(target.getAttribute('class') != null){
-        var clas = target.getAttribute('class').split(' ');
-      
-        for(var cla in clas){
+      if (target.getAttribute("class") != null) {
+        var clas = target.getAttribute("class").split(" ");
+
+        for (var cla in clas) {
           // console.log(clas[cla]);
-          if(clas[cla] == 'MoveableBox'){
+          if (clas[cla] == "MoveableBox") {
             event.stopPropagation();
             target.blur();
             this.$refs.moveable.moveable.target = target;
           }
 
-          if(clas[cla] == 'realBoard' || clas[cla] == 'bodyBox'){
+          if (clas[cla] == "realBoard" || clas[cla] == "bodyBox") {
             // event.stopPropagation();
             // target.blur();
             // this.$refs.moveable.moveable.target = target;
-            this.cloakMoveable(); 
+            this.cloakMoveable();
           }
         }
       }
@@ -572,46 +581,58 @@ export default {
       if (confirm("요소를 삭제하시겠습니까?") === true) {
         target.remove();
         this.board.isDelete = true;
-        this.board.delete.moduleName = 'postit';
+        this.board.delete.moduleName = "postit";
         this.board.delete.id = this.board.postitList[idx].frontPostitId;
-        this.crudMethod('POSTIT', 'CREATE', this.board.postitList[idx])
+        this.crudMethod("POSTIT", "DELETE", this.board.postitList[idx]);
         this.board.postitList.splice(idx, 1);
         this.sendMessage();
         this.cloakMoveable();
       }
     },
-    wheelEvent: function(event) {
-      if (event.deltaY < 0) { 
-        console.log("up!"); 
+    wheelEvent: function (event) {
+      if (event.deltaY < 0) {
+        console.log("up!");
         this.boardScale += 0.05;
 
-        if(this.boardScale > 1.3) this.boardScale = 1.3;
+        if (this.boardScale > 1.3) this.boardScale = 1.3;
 
-        console.log(this.boardScale);
-      }
-      else if (event.deltaY > 0) {
+        // console.log(this.boardScale);
+      } else if (event.deltaY > 0) {
         this.boardScale -= 0.05;
 
-        if(this.boardScale < 0.3) this.boardScale = 0.3;
+        if (this.boardScale < 0.3) this.boardScale = 0.3;
 
-        console.log(this.boardScale);
-         console.log("down!"); 
+        // console.log(this.boardScale);
+        console.log("down!");
       }
 
-      document.querySelector(".realBoard").style.transform = `scale(${this.boardScale})`;
-      
+      document.querySelector(
+        ".realBoard"
+      ).style.transform = `scale(${this.boardScale})`;
     },
-    deleteAction({target}) {
-      if(confirm("요소를 삭제하시겠습니까?") === true) {
+    deleteAction({ target }) {
+      if (confirm("요소를 삭제하시겠습니까?") === true) {
         if (target.getAttribute("class") != null) {
           var clas = target.getAttribute("class").split(" ");
           console.log(clas);
           for (var cla in clas) {
             if (clas[cla] == "scheduler") {
-              this.board.scheduler = { "left": null, "top": null, "events": [{ "name": "오프라인", "content": "hello", "start": "2020-08-05T12:30:00", "end": "2020-08-05T18:00:00" }] }
-              console.log(this.board.scheduler);
+              this.crudMethod("SCHEDULER", "DELETE", this.board.scheduler);
+              this.board.scheduler = {
+                left: null,
+                top: null,
+                events: [
+                  {
+                    name: "오프라인 미팅",
+                    content: "예시 일정입니다.",
+                    start: "2020-08-05T08:30:00",
+                    end: "2020-08-05T18:00:00",
+                  },
+                ],
+              };
+            
             } else if (clas == "poll") {
-              this.board.poll = null
+              this.board.poll = null;
             }
           }
         }
@@ -626,42 +647,46 @@ export default {
     cloakMoveable() {
       document.querySelector(".moveable-control-box").style.display = "none";
     },
-    moduleDragEnd(moduleName, {pageX, pageY}) {
-      switch(moduleName) {
-        case 'postit':
+    moduleDragEnd(moduleName, { pageX, pageY }) {
+      switch (moduleName) {
+        case "postit":
           this.createPostit(`${pageX}px`, `${pageY}px`);
           break;
-        case 'scheduler':
+        case "scheduler":
           this.createScheduler(`${pageX}px`, `${pageY}px`);
           break;
-        case 'poll':
+        case "poll":
           this.createPoll(`${pageX}px`, `${pageY}px`);
           break;
       }
     },
     pleaseDrag() {
-      this.createSnackbar('생성하고자 하는 위치로 드래그 해주세요!', 3000, 'default')
+      this.createSnackbar(
+        "생성하고자 하는 위치로 드래그 해주세요!",
+        3000,
+        "default"
+      );
     },
     crudMethod(moduleType, crudType, moduleObject) {
-      this.board.crudModule =  {
-        modulType: moduleType,
+      this.board.crudModule = {
+        moduleType: moduleType,
         crudType: crudType,
         moduleObject: moduleObject,
-      }
+      };
     },
 
-    testIn(){
-      if(!this.memberView){
+    testIn() {
+      if (!this.memberView) {
         this.memberView = true;
         console.log("hover!");
       }
     },
-    testOut(){
-      if(this.memberView){
+    testOut() {
+      if (this.memberView) {
         this.memberView = false;
         console.log("out!");
       }
-    }
+    },
   },
   components: {
     Moveable,
@@ -709,35 +734,71 @@ export default {
   border: 1px solid pink;
   background: rgb(247, 236, 236);
 
-  background-image:     
-     linear-gradient(
-        0deg, transparent 0%, 
-        transparent 0px, rgba(104, 104, 104, 0.1) 0px,rgba(104, 104, 104, 0.1) 1px, transparent 1px,
-        transparent 49px, rgba(104, 104, 104, 0.1) 49px,rgba(104, 104, 104, 0.1) 50px, transparent 1px, 
-        transparent 99px, rgba(104, 104, 104, 0.1) 99px,rgba(104, 104, 104, 0.1) 100px, transparent 1px, 
-        transparent 149px, rgba(104, 104, 104, 0.1) 149px,rgba(104, 104, 104, 0.1) 150px, transparent 1px, 
-        transparent 199px, rgba(104, 104, 104, 0.1) 199px,rgba(104, 104, 104, 0.1) 200px, transparent 1px, 
-        transparent 249px, rgba(104, 104, 104, 0.3) 249px,rgba(104, 104, 104, 0.3) 250px, transparent 1px),
-
+  background-image: linear-gradient(
+      0deg,
+      transparent 0%,
+      transparent 0px,
+      rgba(104, 104, 104, 0.1) 0px,
+      rgba(104, 104, 104, 0.1) 1px,
+      transparent 1px,
+      transparent 49px,
+      rgba(104, 104, 104, 0.1) 49px,
+      rgba(104, 104, 104, 0.1) 50px,
+      transparent 1px,
+      transparent 99px,
+      rgba(104, 104, 104, 0.1) 99px,
+      rgba(104, 104, 104, 0.1) 100px,
+      transparent 1px,
+      transparent 149px,
+      rgba(104, 104, 104, 0.1) 149px,
+      rgba(104, 104, 104, 0.1) 150px,
+      transparent 1px,
+      transparent 199px,
+      rgba(104, 104, 104, 0.1) 199px,
+      rgba(104, 104, 104, 0.1) 200px,
+      transparent 1px,
+      transparent 249px,
+      rgba(104, 104, 104, 0.3) 249px,
+      rgba(104, 104, 104, 0.3) 250px,
+      transparent 1px
+    ),
     linear-gradient(
-        -90deg, transparent 0%, 
-        transparent 0px, rgba(104, 104, 104, 0.1) 0px, rgba(104, 104, 104, 0.1) 1px, transparent 1px,
-        transparent 49px, rgba(104, 104, 104, 0.1) 49px,rgba(104, 104, 104, 0.1) 50px, transparent 1px,
-        transparent 99px, rgba(104, 104, 104, 0.1) 99px,rgba(104, 104, 104, 0.1) 100px, transparent 1px,
-        transparent 149px, rgba(104, 104, 104, 0.1) 149px,rgba(104, 104, 104, 0.1) 150px, transparent 1px, 
-        transparent 199px, rgba(104, 104, 104, 0.1) 199px,rgba(104, 104, 104, 0.1) 200px, transparent 1px, 
-        transparent 249px, rgba(104, 104, 104, 0.3) 249px,rgba(104, 104, 104, 0.3) 250px, transparent 1px);
-               
-    background-size: 250px 250px;
-  }
+      -90deg,
+      transparent 0%,
+      transparent 0px,
+      rgba(104, 104, 104, 0.1) 0px,
+      rgba(104, 104, 104, 0.1) 1px,
+      transparent 1px,
+      transparent 49px,
+      rgba(104, 104, 104, 0.1) 49px,
+      rgba(104, 104, 104, 0.1) 50px,
+      transparent 1px,
+      transparent 99px,
+      rgba(104, 104, 104, 0.1) 99px,
+      rgba(104, 104, 104, 0.1) 100px,
+      transparent 1px,
+      transparent 149px,
+      rgba(104, 104, 104, 0.1) 149px,
+      rgba(104, 104, 104, 0.1) 150px,
+      transparent 1px,
+      transparent 199px,
+      rgba(104, 104, 104, 0.1) 199px,
+      rgba(104, 104, 104, 0.1) 200px,
+      transparent 1px,
+      transparent 249px,
+      rgba(104, 104, 104, 0.3) 249px,
+      rgba(104, 104, 104, 0.3) 250px,
+      transparent 1px
+    );
 
+  background-size: 250px 250px;
+}
 
-.moveable-control-box{
-    display:none;
-  }
+.moveable-control-box {
+  display: none;
+}
 
-
-.toolBox{
+.toolBox {
   font-family: "Roboto", sans-serif;
   /* position: relative; */
   position: fixed;
@@ -750,12 +811,12 @@ export default {
   /* left: -50px;; */
 }
 
-.toolbar{
+.toolbar {
   position: fixed;
   z-index: 3;
 }
 
-.userListBadge{
+.userListBadge {
   position: fixed;
   z-index: 3;
   bottom: 1%;
@@ -767,7 +828,7 @@ export default {
   height: 64px;
 }
 
-.vueBox{
+.vueBox {
   background-color: white;
   position: fixed;
   z-index: 3;
@@ -777,7 +838,7 @@ export default {
   height: 200px;
 }
 
-#memberList{
+#memberList {
   width: auto;
   height: 40px;
   position: fixed;
@@ -789,13 +850,11 @@ export default {
   /* background-color: olive; */
 }
 
-
-
 .slide-fade-enter-active {
-  transition: all .4s ease;
+  transition: all 0.4s ease;
 }
 .slide-fade-leave-active {
-  transition: all .4s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+  transition: all 0.4s cubic-bezier(1, 0.5, 0.8, 1);
 }
 .slide-fade-enter, .slide-fade-leave-to
 /* .slide-fade-leave-active below version 2.1.8 */ {

@@ -1,12 +1,12 @@
 <template>
-  <kanban class="kanban d-inline-flex">
-    <!-- <div class="kanban MoveableBox"> -->
+  <kanban class="kanban">
     <div class="flex justify-center">
       <div class="d-flex">
 
         <div
-          v-for="column in this.$store.state.Kanban.columns"
+          v-for="column in this.$store.state.Kanban.states"
           :key="column.columnTitle"
+          @click="kanbanClickEvent"
           class="kanban-column bg-gray-100 rounded-lg px-3 py-3 column-width rounded mr-4"
         >
           <p class="text-gray-700 font-semibold font-sans tracking-wide text-sm">{{column.columnTitle}}</p>
@@ -14,17 +14,17 @@
           <draggable
             :list="column.tasks"
             :animation="200"
-            style="margin-right:0; min-height:50px;"
+            class="draggable-box"
             ghost-class="ghost-card"
             group="tasks"
-            
+
           >
             <!-- Each element from here will be draggable and animated. Note :key is very important here to be unique both for draggable and animations to be smooth & consistent. -->
 
             <div v-for="(task,idx) in column.tasks"
-             :key="idx" class="mt-3 cursor-move">
+             :key="idx" class="cursor-move mb-3">
               <div @click="showTask(column.columnTitle, task)" class="bg-white shadow rounded px-3 pt-3 pb-5 border border-white" style="cursor: pointer;">
-                <div class="d-flex justify-space-between">
+                <div class="d-flex justify-space-between ">
                   <p
                     class="text-truncate text-gray-700 font-semibold font-sans text-sm word-break:keep-all;"
                     style="word-break:keep-all; "
@@ -92,7 +92,7 @@ export default {
         taskContents:"",
         taskAssigner:"",
       },
-      columns: [
+      states: [
         {
           columnTitle: "TO DO",
           tasks: [],
@@ -121,21 +121,21 @@ export default {
       this.newColumnTitle = columnTitle;
     },
     deleteTask(columnTitle, task) {
-      var index = this.columns
+      var index = this.states
         .find((column) => column.columnTitle === columnTitle)
         .tasks.indexOf(task);
 
       // var index = tasks.indexOf(task);
 
-      this.columns
+      this.states
         .find((column) => column.columnTitle === columnTitle)
         .tasks.splice(index, 1);
-      this.$store.state.Kanban.columns
+      this.$store.state.Kanban.states
         .find((column) => column.columnTitle === columnTitle)
         .tasks.splice(index, 1);
     },
     showTask(columnTitle, task) {
-       var index = this.columns
+       var index = this.states
         .find((column) => column.columnTitle === columnTitle)
         .tasks.indexOf(task);
         this.newColumnTitle = columnTitle
@@ -143,8 +143,8 @@ export default {
         this.dialog = true;
     },
     submit() {
-      this.columns.find((column) => column.columnTitle === this.newColumnTitle).tasks.push(this.newTask);
-      this.$store.state.Kanban.columns.find((column) => column.columnTitle === this.newColumnTitle).tasks.push(this.newTask);
+      this.states.find((column) => column.columnTitle === this.newColumnTitle).tasks.push(this.newTask);
+      this.$store.state.Kanban.states.find((column) => column.columnTitle === this.newColumnTitle).tasks.push(this.newTask);
       this.dialog = false;
       this.newTask = {
         taskTitle : "",
@@ -159,6 +159,10 @@ export default {
         taskContents : "",
         taskAssigner : "",
       }
+    },
+    kanbanClickEvent({target}){
+      console.log(target);
+      target.focus();
     }
   },
 };
@@ -204,5 +208,11 @@ but you'd use "@apply border opacity-50 border-blue-500 bg-gray-200" here */
 .pressDownButton:hover {
   background: rgba(0,0,0,0.4);
   color: white;
+}
+
+.draggable-box {
+  margin-right: 0; 
+  min-height: 50px;
+  border: dashed 2px #d6d6d6;
 }
 </style>
