@@ -1,7 +1,36 @@
 'use strict';
 
-var app = require('express')();
+const express = require("express");
+const app = express();
+const bodyParser = require("body-parser");
+
+const cors = require("cors");
+
+const db = require("./app/models");
+
+app.use(cors({origin: 'http://localhost:8081'}));
+
+//parse requests of content-type - application/json
+app.use(bodyParser.json());
+
+// parse requests of content-type - application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: true }));
+
+
+// 디비 초기화
+// db.sequelize.sync();
+// db.sequelize.sync({ force: true }).then(() => {
+//     console.log("Drop and re-sync db.");
+//   });
+
+require("./app/routes/chatlog.routes.js")(app);
+
+
+
+
+
 var server = require('http').createServer(app);
+
 // http server를 socket.io server로 upgrade한다
 var io = require('socket.io')(server);
 
@@ -33,62 +62,48 @@ app.get('/cam', function(req, res) {
 // connection event handler
 // connection이 수립되면 event handler function의 인자로 socket인 들어온다
 io.on('connection', function(socket) {
+    var room = '';
 
-    // socket.on('enter', function(data){
-
-    //   var obj2 = {    
-    //     sockect_id : socket.id,
-    //     nickname : data.name,
-    //     email : data.userid
-    //   };
-
-    //   client_list.push(obj2);
-    //     for(var i in client_list){
-    //       console.log(i+')'+client_list[i].nickname+" ");
-    //     }
-    //     socket.emit('sendList', client_list);
-    // });
 
     // 접속한 클라이언트의 정보가 수신되면
     socket.on('login', function(data) {
         console.log('Client logged-in:\n name: ' + data.name + '\n userid: ' + data.userid);
 
-        // client_List 부분
-        var obj = {    
-          sockect_id : socket.id,
-          nickname : data.name,
-          email : data.userid
-        };
-
-        client_list.push(obj);
-        for(var i in client_list){
-          console.log(i+')'+client_list[i].nickname+" ");
-        }
-
-        socket.emit('sendList', client_list);
-
-
-        // 현재 접속된 유저를 전달, JSON형식으로 보냄 -> userList를 갖고오기 위함
-        // socket.emit('userCnt', JSON.stringify(socket.id));
-        // socket.emit('userList', )
 
         // socket에 클라이언트 정보를 저장한다
         socket.name = data.name;
         socket.userid = data.userid;
-
+        
+        //socket.nickname = data.name;
 
         // socket.id = data.name;
         data.socketid = socket.id;
 
 
         // room 조인
-        var room = socket.room = data.name;
+        room = socket.room = data.channelName;
         console.log('('+socket.name+')'+ 'room : '+room);
         socket.join(room);
         console.log('socket.id: '+socket.id);
-        // 접속된 모든 클라이언트에게 메시지를 전송한다
-        // 'data.userid' has joined 가 index.html 에 출력. emit과 on방식 알기
-        io.emit('login', data);
+      
+        //socket.broadcast.emit('enter', data.name);
+        io.to(room).emit('enter', data.name);
+        
+        
+        //var clients = io.sockets.clients(room); -> 최신버전에서는 작동 x
+        var clientList = new Array();
+        io.of('/').in(room).clients(function(error,roster){
+          //console.log(io.sockets.sockets[roster[0]].name);
+          for(var i=0; i<roster.length; i++){
+            //console.log(io.sockets.sockets[roster[i]]);
+            clientList.push(io.sockets.sockets[roster[i]].name);
+          }
+        });
+        setTimeout(function() {
+          console.log(clientList);
+          io.to(room).emit('clientList', clientList); // 들어가는데에 시간이 조금 걸림.
+        }, 1000);
+        
     });
 
     // 클라이언트로부터의 메시지가 수신되면
@@ -100,7 +115,7 @@ io.on('connection', function(socket) {
                 name: '',
             },
             from: {
-                name: socket.name,
+                name: socket.name, // 내 소켓 네임
                 userid: socket.userid
             },
             msg: data.msg,
@@ -108,64 +123,49 @@ io.on('connection', function(socket) {
         };
 
         // 메시지를 전송한 클라이언트를 제외한 모든 클라이언트에게 메시지를 전송한다
-        // socket.broadcast.emit('chat', msg);
-
+        //socket.broadcast.emit('s2c chat', msg);
+        
         // 메시지를 전송한 클라이언트에게만 메시지를 전송한다
-        // socket.emit('s2c chat', msg);
-
+        //socket.emit('s2c chat me', msg);
+        
+        //socket.leave(this.room); --> 그냥 내 메시지 처리는 다른쪽에서 해줘야함. 딜레이가 심함
+        //console.log("나가기 전 room : "+room);
+        io.to(room).emit('s2c chat', msg);
+        console.log("상대한테 메시지 보내기 : "+data.msg);
+        
+        //socket.join(this.room);
+        //console.log("다시 들어갈 room : "+room);
+        socket.emit('s2c chat me', msg);
+        console.log("나한테 메시지 보내기 : "+data.msg);
+        
         // 접속된 모든 클라이언트에게 메시지를 전송한다
-        io.emit('s2c chat', msg);
+        // io.emit('s2c chat', msg);
 
         // 특정 클라이언트에게만 메시지를 전송한다
         // io.to(id).emit('s2c chat', data);
     });
 
 
-    // 클라이언트로부터의 메시지가 수신되면
-    socket.on('chatto', function(data) {
-        console.log('to %s from %s', data.id, socket.name);
-        // room 조인
-        socket.join(data.id);
 
-        console.log('(귓속말) 내용 : %s', data.msg);
-        console.log("socketid : "+socket.id);
-        console.log("dataid : "+data.id);
+    //     // 메시지를 전송한 클라이언트를 제외한 모든 클라이언트에게 메시지를 전송한다
+    //     // socket.broadcast.emit('chat', msg);
 
-        // socket.join(data.id);  // 상대 socket.id에 내 id를 조인시킴으로써 같은 room 입장. 이 경우 조인 경우가 꼬일 수 있음.
+    //     // 메시지를 전송한 클라이언트에게만 메시지를 전송한다
+    //     // socket.emit('s2c chat', msg);
 
-        var msg = {
-            to:{
-                name: data.id,
-            },
-            from: {
-                name: socket.name,
-                userid: socket.userid
-            },
-            msg: data.msg,
-            id: data.id,
-            myid: socket.id,
-            yourname: data.name
-        };
+    //     // 접속된 모든 클라이언트에게 메시지를 전송한다
+    //     // io.emit('s2c chat', msg);
 
-        // 메시지를 전송한 클라이언트를 제외한 모든 클라이언트에게 메시지를 전송한다
-        // socket.broadcast.emit('chat', msg);
+    //     // 특정 클라이언트에게만 메시지를 전송한다
+    //     //io.to(data.id).emit('s2c chat', msg);
 
-        // 메시지를 전송한 클라이언트에게만 메시지를 전송한다
-        // socket.emit('s2c chat', msg);
+    //     // room
+    //     var room = socket.room = data.id;
+    //     console.log('('+socket.name+') room : ' + room);
+    //     socket.join(room);
 
-        // 접속된 모든 클라이언트에게 메시지를 전송한다
-        // io.emit('s2c chat', msg);
-
-        // 특정 클라이언트에게만 메시지를 전송한다
-        //io.to(data.id).emit('s2c chat', msg);
-
-        // room
-        var room = socket.room = data.id;
-        console.log('('+socket.name+') room : ' + room);
-        socket.join(room);
-
-        io.to(room).emit('s2c chat', msg);
-    });
+    //     io.to(room).emit('s2c chat', msg);
+    // });
 
     // force client disconnect from server
     socket.on('forceDisconnect', function() {
@@ -176,6 +176,7 @@ io.on('connection', function(socket) {
 
     socket.on('disconnect', function(data) {
         console.log(socket.name + "님이 연결을 끓으셨습니다.");
+        
         var msg = {
             from: {
                 name: socket.name,
@@ -184,17 +185,24 @@ io.on('connection', function(socket) {
             msg: data.msg
         };
 
-        io.emit('out', msg);
+//        io.emit('out', msg);
+        io.to(room).emit('out', msg);
 
-        // 연결이 끊긴 client_list 삭제 후 다시 조회
-        for(var i in client_list){
-          if(client_list[i].sockect_id == socket.id){
-            io.emit('deleteUser', client_list[i].nickname);
-            console.log('client_list[i] : '+client_list[i].nickname);
+        // 소켓 room에서 빠져나온 뒤 clientList 다시 프론트로 전송
+        socket.leave(room);
+        var clientList = new Array();
+        io.of('/').in(room).clients(function(error,roster){
+          //console.log(io.sockets.sockets[roster[0]].name);
+          for(var i=0; i<roster.length; i++){
+            //console.log(io.sockets.sockets[roster[i]]);
+            clientList.push(io.sockets.sockets[roster[i]].name);
           }
-        }
-
-//        io.emit('sendList', client_list);
+        });
+        setTimeout(function() {
+          console.log(clientList);
+          io.to(room).emit('clientList', clientList); // 들어가는데에 시간이 조금 걸림.
+        }, 1000);
+       
     });
 
     /////////////////////////////// Cam
