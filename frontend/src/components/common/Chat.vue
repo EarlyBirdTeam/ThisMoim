@@ -96,7 +96,6 @@ export default {
     var chatheader = document.getElementById("chatHeader");
     var chatbox = document.getElementById("chatBox");
     var textbox = document.getElementById("textBox");
-    // var myname = this.makeRandomName();
     var $msgForm = $('#msgForm').val();
     this.naname = myname;
     this.Channel = localStorage.getItem("wsboard.channelName");
@@ -134,15 +133,12 @@ export default {
         if(data[i] === myname){
           continue;
         }
-        else exceptme.push(data[i]);
+        else exceptme.push(data[i]);  // 배열에 나의 정보는 빼고 넣어주었다
       }
       this.clientList = exceptme;
 
-
       console.log(this.clientList);
 
-      
-      //$('.chatbox').append('<div class="inout-bubble">'+data+'님이 입장하셨습니다.</div>');
     });
 
     // 내 메시지는 띄우지 말야아함.
