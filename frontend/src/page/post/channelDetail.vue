@@ -9,39 +9,53 @@
         :color="snackbar.color"
       >{{ snackbar.text }}</v-snackbar>
       <div>
-        <h4>
-          {{channelName}}
-          <span class="badge badge-info badge-pill">{{userCount}}</span>
-
-        <v-toolbar class="toolBox">
-      <v-btn icon color="orange" @click="pleaseDrag" draggable="true" @dragenter="dragging=true" @dragend="moduleDragEnd('postit', $event)">
-        <v-icon>mdi-message</v-icon>
-      </v-btn>
-      <v-btn icon color="orange" @click="pleaseDrag" draggable="true" @dragend="moduleDragEnd('kanban', $event)">
-        <v-icon>mdi-clipboard-list-outline</v-icon>
-      </v-btn>
-      <!-- <v-btn icon color="orange" @click="createMap">
-        <v-icon>mdi-map</v-icon>
-      </v-btn> -->
-      <v-btn icon color="orange" @click="pleaseDrag" draggable="true" @dragend="moduleDragEnd('scheduler', $event)">
-        <v-icon>mdi-calendar</v-icon>
-      </v-btn>
-      <v-btn icon color="orange" @click="pleaseDrag" draggable="true" @dragend="moduleDragEnd('poll', $event)">
-        <v-icon>mdi-vote</v-icon>
-      </v-btn>
-    	</v-toolbar>
-
-		</h4>
+        <div class="toolBox">
+          <v-btn
+            icon
+            color="orange"
+            @click="pleaseDrag"
+            draggable="true"
+            @dragenter="dragging=true"
+            @dragend="moduleDragEnd('postit', $event)"
+          >
+            <v-icon>mdi-message</v-icon>
+          </v-btn>
+          <v-btn
+            icon
+            color="orange"
+            @click="pleaseDrag"
+            draggable="true"
+            @dragend="moduleDragEnd('kanban', $event)"
+          >
+            <v-icon>mdi-clipboard-list-outline</v-icon>
+          </v-btn>
+          <!-- <v-btn icon color="orange" @click="createMap">
+          <v-icon>mdi-map</v-icon>
+          </v-btn>-->
+          <v-btn
+            icon
+            color="orange"
+            @click="pleaseDrag"
+            draggable="true"
+            @dragend="moduleDragEnd('scheduler', $event)"
+          >
+            <v-icon>mdi-calendar</v-icon>
+          </v-btn>
+          <v-btn
+            icon
+            color="orange"
+            @click="pleaseDrag"
+            draggable="true"
+            @dragend="moduleDragEnd('poll', $event)"
+          >
+            <v-icon>mdi-vote</v-icon>
+          </v-btn>
+        </div>
         <br />
-        
       </div>
     </div>
 
-    
-
-    <v-responsive class="vueBox text-center ma-3">
-      
-    </v-responsive>
+    <v-responsive class="vueBox text-center ma-3"></v-responsive>
 
     <v-responsive>
       <v-responsive
@@ -49,43 +63,19 @@
         @mouseover="testIn"
         @mouseout="testOut"
       >
-
-        <v-img src="@/assets/img/user.png">
-          {{userCount}}
-        </v-img>
-
-      
-        <!-- <v-hover v-slot:default="{ hover }">
-            <v-img src="@/assets/img/user.png">
-              {{userCount}}
-              <v-expand-transition>
-                <div
-                  v-if="hover"
-                  class="d-flex transition-fast-in-fast-out orange darken-2 v-card--reveal display-3 white--text"
-                  style="height: 100%;"
-                >
-                </div>
-              </v-expand-transition>
-              
-            </v-img>
-            
-        </v-hover> -->
-            
-          
-
-
+        <v-img src="@/assets/img/user.png">{{userCount}}</v-img>
       </v-responsive>
-      
+
       <transition name="slide-fade">
-        <v-responsive id="memberList" class="text-center ma-3 badge-info" 
-        v-if="memberView"
-        align="center"
-        justify="center">
-        김강현, 배민규, 정용우, 최문경, 김동률, 배재원
-        </v-responsive>
+        <v-responsive
+          id="memberList"
+          class="text-center ma-3 badge-info"
+          v-if="memberView"
+          align="center"
+          justify="center"
+        >김강현, 배민규, 정용우, 최문경, 김동률, 배재원</v-responsive>
       </transition>
     </v-responsive>
-    
 
     <Moveable
       ref="moveable"
@@ -100,77 +90,42 @@
       style="display: none;"
     ></Moveable>
 
-    <div class="bodyBox" ref="whiteBoard" 
-    @dblclick="focusAction" 
-    @click="changeTargetAction"
-    @wheel="wheelEvent"
-    style="height: 100%; width: 100%;">
-      
-      
-      <div class="MoveableBox realBoard" >
-
-            <div class="postit"
-      v-for="(pi, idx) in this.board.postitList"
-      :key="pi.frontPostitId"
-      @click.right="deleteTargetAction(idx, $event)">
-          <Postit
-          :id="pi.frontPostitId"
-          :postit="pi"
-          :style="{left: pi.left, top: pi.top}"
-          />
-
-      </div>
-
-      <div class="kanban" v-if="board.isKanban" @click.right="deleteKanban" >
-        <Kanban/>
-      
- 
-      </div>
-      <div class="map" @click.right="deleteAction">
-        <Map v-if="map.isPresent"/>
-      </div>
-
-      <div class="Scheduler" @click.right="deleteAction">
-        <Scheduler v-if="!!board.scheduler" 
-        :style="{left:board.scheduler.left, top:board.scheduler.top}"/>
-      </div>
-
-      <div class="Poll" @click.right="deleteAction">
-        <Poll v-if="isPoll" 
-        :style = "{left: board.poll.left, top: board.poll.top}"
-        />
-      </div>
-      <v-dialog width="600px">
-      <template v-slot:activator="{ on, attrs }">
-        <v-btn
-          color="rgb(255,157,91)"
-          style="right:10px; bottom:30px; position:fixed; display:flex"
-          dark
-          fab
-          large
-          v-bind="attrs"
-          v-on="on"
-
+    <div
+      class="bodyBox"
+      ref="whiteBoard"
+      @dblclick="focusAction"
+      @click="changeTargetAction"
+      @wheel="wheelEvent"
+      style="height: 100%; width: 100%;"
+    >
+      <div class="MoveableBox realBoard" @click.right="test3">
+        <div
+          class="postit"
+          v-for="(pi, idx) in this.board.postitList"
+          :key="pi.frontPostitId"
+          @click.right="deleteTargetAction(idx, $event)"
         >
-          <v-icon>mdi-message-bulleted</v-icon>
-        </v-btn>
-      </template>
-      <v-card>
-        <!-- <v-card-title>
-          <span class="headline">채팅</span>
-        </v-card-title>-->
-        <v-card-text style="padding:16px">
-          <Chat/>
-        </v-card-text>
-      </v-card>
-    </v-dialog>
-    
-     {{ board }}
-      
+          <Postit :id="pi.frontPostitId" :postit="pi" :style="{left: pi.left, top: pi.top}" />
+        </div>
 
-      </div>
+        <div class="kanban" v-if="board.isKanban" @click.right="deleteKanban">
+          <Kanban />
+        </div>
+        <div class="map" @click.right="deleteAction">
+          <Map v-if="map.isPresent" />
+        </div>
+
+        <div class="Scheduler" @click.right="deleteAction">
+          <Scheduler
+            v-if="!!board.scheduler"
+            :style="{left:board.scheduler.left, top:board.scheduler.top}"
+          />
+        </div>
+
+        <div class="Poll" @click.right="deleteAction">
+          <Poll v-if="isPoll" :style="{left: board.poll.left, top: board.poll.top}" />
+        </div>
         <v-dialog width="600px">
-
           <template v-slot:activator="{ on, attrs }">
             <v-btn
               color="rgb(255,157,91)"
@@ -184,21 +139,44 @@
               <v-icon>mdi-message-bulleted</v-icon>
             </v-btn>
           </template>
-
           <v-card>
             <!-- <v-card-title>
-              <span class="headline">채팅</span>
+          <span class="headline">채팅</span>
             </v-card-title>-->
             <v-card-text style="padding:16px">
+              <Chat />
             </v-card-text>
           </v-card>
-
         </v-dialog>
-    
- 
-      <!-- <Postit :id="pi.id" :postit="pi" style="position: relative; display: inline-block"/> -->
-     </div>
 
+        {{ board }}
+        <div class="testerDot"></div>
+      </div>
+      <v-dialog width="600px">
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn
+            color="rgb(255,157,91)"
+            style="right:10px; bottom:30px; position:fixed; display:flex"
+            dark
+            fab
+            large
+            v-bind="attrs"
+            v-on="on"
+          >
+            <v-icon>mdi-message-bulleted</v-icon>
+          </v-btn>
+        </template>
+
+        <v-card>
+          <!-- <v-card-title>
+              <span class="headline">채팅</span>
+          </v-card-title>-->
+          <v-card-text style="padding:16px"></v-card-text>
+        </v-card>
+      </v-dialog>
+
+      <!-- <Postit :id="pi.id" :postit="pi" style="position: relative; display: inline-block"/> -->
+    </div>
   </div>
 </template>
 
@@ -211,15 +189,11 @@ import Postit from "../../components/module/Postit";
 import Map from "../../components/module/Map";
 import Scheduler from "../../components/module/Scheduler";
 import Chat from "../../components/common/Chat";
-import Poll from "../../components/common/Poll"
+import Poll from "../../components/common/Poll";
 import Kanban from "../../components/module/Kanban";
 
-const boardLength = 10000;
 export default {
-  props:[
-
-  ]
-  ,
+  props: [],
   data() {
     return {
       ws: null,
@@ -229,8 +203,8 @@ export default {
         channelId: "",
         idCount: 1,
         crudModule: {
-          modulType: '',
-          crudType: '',
+          modulType: "",
+          crudType: "",
           moduleObject: Object,
         },
         postitList: [],
@@ -240,7 +214,7 @@ export default {
         poll: {},
         isDelete: false,
         delete: {
-          moduleName: '',
+          moduleName: "",
           id: -1,
         },
       },
@@ -259,7 +233,7 @@ export default {
         throttleRotate: 0,
         origin: false,
       },
-      
+
       map: {
         isPresent: false,
         left: "",
@@ -272,11 +246,16 @@ export default {
         text: "",
         timeout: 1000,
       },
+      boardLength: 10000,
       boardScale: 1,
-      boardX: boardLength/2,
-      boardY: boardLength/2,
+      boardX: this.boardLength / 2,
+      boardY: this.boardLength / 2,
+      lp: 0,
+      tp: 0,
+      lastBX: this.boardX,
+      lastBY: this.boardY,
 
-      memberView:false,
+      memberView: false,
       idc: 0,
       isPoll: false,
     };
@@ -287,18 +266,22 @@ export default {
       // 우클릭 default이벤트 차단
       return false;
     };
-    this.initRecv();
+    // this.initRecv();
   },
   mounted() {
-    document.querySelector('.realBoard').style.height = boardLength+"px";
-    document.querySelector('.realBoard').style.width = boardLength+"px";
+    document.querySelector(".realBoard").style.height = this.boardLength + "px";
+    document.querySelector(".realBoard").style.width = this.boardLength + "px";
 
-    console.log((boardLength/2) - (window.innerWidth * 0.4));
-    document.querySelector('.realBoard').style.left = 
-      -(boardLength/2) + (window.innerWidth * 0.4) + "px";
-      
-    document.querySelector('.realBoard').style.top = 
-      -(boardLength/2) + (window.innerHeight * 0.4) + "px";
+    // console.log((boardLength/2) - (window.innerWidth * 0.4));
+    document.querySelector(".realBoard").style.left =
+      -(this.boardLength / 2) + window.innerWidth * 0.5 + "px";
+
+    document.querySelector(".realBoard").style.top =
+      -(this.boardLength / 2) + window.innerHeight * 0.5 + "px";
+
+    document.querySelector(".realBoard").style.transformOrigin = `${
+      this.boardLength / 2
+    }px ${this.boardLength / 2}px`;
   },
   methods: {
     init() {
@@ -317,12 +300,13 @@ export default {
         ws.connect(
           { token: _this.token },
           function (frame) {
-            ws.subscribe("/sub/board/channel/" + _this.board.channelId, function (
-              message
-            ) {
-              var recv = JSON.parse(message.body);
-              _this.recvMessage(recv);
-            });
+            ws.subscribe(
+              "/sub/board/channel/" + _this.board.channelId,
+              function (message) {
+                var recv = JSON.parse(message.body);
+                _this.recvMessage(recv);
+              }
+            );
           },
           function (error) {
             alert("서버 연결에 실패 하였습니다. 다시 접속해 주십시요.");
@@ -336,14 +320,13 @@ export default {
       http
         .get(`/board/${this.board.channelId}`)
         .then((response) => {
-          console.log(response.data)
+          // console.log(response.data)
           // this.board.postitList = response.data.postitList;
           // this.board.idCount = response.data.idCount;
           this.board = response.data;
-          this.board.delete = { moduleName:'', id: -1}
+          this.board.delete = { moduleName: "", id: -1 };
         })
-        .catch((e) => {
-        });
+        .catch((e) => {});
       this.createSnackbar(
         `'${this.channelName}' 채널에 입장하였습니다!`,
         3000,
@@ -359,81 +342,78 @@ export default {
       this.createSnackbar("수정되었습니다", 1000, "warning");
     },
     recvMessage: function (recv) {
-      console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2")
-      console.log(recv.poll);
+      // console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2")
+      // console.log(recv.poll);
       this.userCount = recv.userCount;
       this.board.idCount = recv.idCount;
       this.board.postitList = recv.postitList;
       this.board.isDelete = false;
       if (!!recv.scheduler) this.board.scheduler = recv.scheduler;
       this.board.poll = recv.poll;
-      this.$store.state.scheduler.events = recv.scheduler.events;
+      // this.$store.state.scheduler.events = recv.scheduler.events;
       //crudModule 초기화
       this.board.crudModule = {
-        modulType: '',
-        crudType: '',
+        modulType: "",
+        crudType: "",
         moduleObject: Object,
       };
     },
-    createPostit(left='500px', top='170px') {
-      if(this.board.postitList.length > 20) {
-        this.createSnackbar("포스트잇이 너무 많습니다!", 3000, "error")
-        return
+    createPostit(left = "500px", top = "170px") {
+      if (this.board.postitList.length > 20) {
+        this.createSnackbar("포스트잇이 너무 많습니다!", 3000, "error");
+        return;
       }
       event.stopPropagation();
       const idc = this.board.idCount++;
       // postitList에 새로운 포스트잇 더하기
       var newPostit = {
         frontPostitId: idc,
-        left: (this.boardX - 120) + "px",
-        top: (this.boardY - 120) + "px",
+        left: this.boardX - 120 + "px",
+        top: this.boardY - 120 + "px",
         title: "",
         contents: "",
         channel: this.board.channelId,
-      }
+      };
       this.board.postitList.push(newPostit);
-      this.crudMethod('POSTIT', 'CREATE', newPostit);
+      this.crudMethod("POSTIT", "CREATE", newPostit);
       this.sendMessage();
-      this.crudMethod('', '', null);
+      this.crudMethod("", "", null);
       // snackbar
       this.createSnackbar("포스트잇이 생성되었습니다!", 1500, "success");
     },
 
     createKanban(event) {
-      if(this.board.isKanban==true){
-        this.createSnackbar("보드가 이미 생성되어 있습니다", 3000, "error")
-        return
+      if (this.board.isKanban == true) {
+        this.createSnackbar("보드가 이미 생성되어 있습니다", 3000, "error");
+        return;
       }
-  
-      this.createSnackbar("보드가 생성되었습니다", 1500, "success")
-      this.board.isKanban=true
-      this.board.kanban = this.$store.state.Kanban
+
+      this.createSnackbar("보드가 생성되었습니다", 1500, "success");
+      this.board.isKanban = true;
+      this.board.kanban = this.$store.state.Kanban;
     },
 
-    deleteKanban({target}) {
-      if(confirm("요소를 삭제하시겠습니까?") === true) {
+    deleteKanban({ target }) {
+      if (confirm("요소를 삭제하시겠습니까?") === true) {
         target.remove();
         this.cloakMoveable();
-        this.board.isKanban=false;
-        this.$store.state.Kanban.columns=[ {
-                  columnTitle: '할 일',
-                  tasks: [],
-                },
-                {
-                  columnTitle: "진행중",
-                  tasks: [],
-                },
-                {
-                  columnTitle: "완료",
-                  tasks: [],
-                },]
-        
+        this.board.isKanban = false;
+        this.$store.state.Kanban.columns = [
+          {
+            columnTitle: "할 일",
+            tasks: [],
+          },
+          {
+            columnTitle: "진행중",
+            tasks: [],
+          },
+          {
+            columnTitle: "완료",
+            tasks: [],
+          },
+        ];
       }
     },
-
-
-
-
 
     createMap(event) {
       if (this.map.isPresent) {
@@ -441,16 +421,16 @@ export default {
       } else {
         this.map.isPresent = true;
       }
-    },    
-    createScheduler(left='600px', top='270px') {
-      if (!!this.board.scheduler){
+    },
+    createScheduler(left = "600px", top = "270px") {
+      if (!!this.board.scheduler) {
         this.createSnackbar("이미 달력이 있습니다!", 3000, "error");
       } else {
         this.board.scheduler = {
           left: left,
           top: top,
           events: this.$store.state.scheduler.events,
-        }
+        };
         console.log("create Scheduler");
         console.log(this.board.scheduler);
         this.sendMessage();
@@ -458,9 +438,9 @@ export default {
         this.createSnackbar("달력이 생성되었습니다!", 1500, "success");
       }
     },
-    
-    createPoll(left='500px', top='170px') {
-      if (this.isPoll){
+
+    createPoll(left = "500px", top = "170px") {
+      if (this.isPoll) {
         this.createSnackbar("이미 투표가 있습니다!", 3000, "error");
       } else {
         this.isPoll = true;
@@ -468,7 +448,7 @@ export default {
         this.board.poll = this.$store.state.poll;
         this.board.poll.left = left;
         this.board.poll.top = top;
-        this.crudMethod('POLL', 'CREATE', this.board.poll);
+        this.crudMethod("POLL", "CREATE", this.board.poll);
         this.sendMessage();
         // snackbar
         this.createSnackbar("투표가 생성되었습니다!", 1500, "success");
@@ -488,7 +468,7 @@ export default {
         var clas = target.getAttribute("class").split(" ");
         for (var cla in clas) {
           if (clas[cla] == "paper") {
-              this.board.postitList.map((postit) => {
+            this.board.postitList.map((postit) => {
               if (postit.frontPostitId == target.id) {
                 (postit.left = `${left}px`), (postit.top = `${top}px`);
               }
@@ -496,68 +476,119 @@ export default {
                 ...postit,
               };
             });
-          } else if(clas[cla] == "scheduler") {
-            this.board.scheduler.left = `${left}px`
-            this.board.scheduler.top = `${top}px`
-          } else if(clas[cla] == "Pollx") {
+          } else if (clas[cla] == "scheduler") {
+            this.board.scheduler.left = `${left}px`;
+            this.board.scheduler.top = `${top}px`;
+          } else if (clas[cla] == "Pollx") {
             // this.board.poll.left = `${left}px`
             // this.board.poll.top = `${top}px`
+          } else if (clas[cla] == "realBoard") {
+            this.lp = target.style.left.replace("px", "");
+            this.tp = target.style.top.replace("px", "");
+            // console.log();
+
+            this.boardX = this.lp * -1 + window.innerWidth / 2;
+            this.boardY = this.tp * -1 + window.innerHeight / 2;
+
+            var limitUnit =
+              (this.boardScale / 0.05) * 250 - this.boardLength / 2;
+
+            // console.log("origin : ", document.querySelector('.realBoard').style.transformOrigin);
+            // if(this.lp > limitUnit) {
+            //   document.querySelector('.bodyBox').style.borderLeft = "red 3px solid";
+            //   target.style.left = limitUnit+'px'
+            // }
+            // else if((this.lp) < (-this.boardLength + (window.innerWidth)) - limitUnit) {
+            //   document.querySelector('.bodyBox').style.borderRight = "red 3px solid";
+            //   target.style.left = (-this.boardLength + (window.innerWidth) - limitUnit) +'px';
+            // }
+            // else {
+            //   document.querySelector('.bodyBox').style.borderRight = "1px pink solid";
+            //   document.querySelector('.bodyBox').style.borderLeft = "1px pink solid";
+            // }
+
+            // if(this.tp > limitUnit) {
+            //   target.style.top = limitUnit+'px'
+            //   document.querySelector('.bodyBox').style.borderTop = "red 3px solid";
+            // }
+            // else if (this.tp < (-this.boardLength + (window.innerHeight)) - limitUnit) {
+            //   target.style.top = (-this.boardLength + (window.innerHeight)) - limitUnit +'px';
+            //   document.querySelector('.bodyBox').style.borderBottom = "red 3px solid";
+            // }
+            // else {
+            //   document.querySelector('.bodyBox').style.borderTop = "1px pink solid";
+            //   document.querySelector('.bodyBox').style.borderBottom = "1px pink solid";
+            // }
+
+            return;
           }
-          else if(clas[cla] == 'realBoard'){
-            let lp = target.style.left.replace("px", "");
-            let tp = target.style.top.replace("px", "");
-            // console.log(lp, " , ", tp);
 
-            this.boardX = (lp*-1) + window.innerWidth * 0.4;
-            this.boardY = (tp*-1) + window.innerHeight * 0.365;
-
-            var limitUnit = (this.boardScale / 0.05) * 250 - (boardLength/2);   
-
-            console.log(lp - limitUnit);         
-            if(lp > limitUnit) {
-              document.querySelector('.bodyBox').style.borderLeft = "red 3px solid";
-              target.style.left = limitUnit+'px'
-            }
-            else if((lp) < (-boardLength + (window.innerWidth)) - limitUnit) {
-              document.querySelector('.bodyBox').style.borderRight = "red 3px solid";
-              target.style.left = (-boardLength + (window.innerWidth) - limitUnit) +'px';
-            } 
-            else {
-              document.querySelector('.bodyBox').style.borderRight = "1px pink solid";
-              document.querySelector('.bodyBox').style.borderLeft = "1px pink solid";
-            }
-
-            if(tp > limitUnit) {
-              target.style.top = limitUnit+'px'
-              document.querySelector('.bodyBox').style.borderTop = "red 3px solid";
-            }
-            else if (tp < (-boardLength + (window.innerHeight)) - limitUnit) {
-              target.style.top = (-boardLength + (window.innerHeight)) - limitUnit +'px';
-              document.querySelector('.bodyBox').style.borderBottom = "red 3px solid";
-            }
-            else {  
-              document.querySelector('.bodyBox').style.borderTop = "1px pink solid";
-              document.querySelector('.bodyBox').style.borderBottom = "1px pink solid";
-            }
-
-            return ;
-          }
+          // document.querySelector('.testerDot').style.top = this.boardY + 'px';
+          // document.querySelector('.testerDot').style.left = this.boardX  + 'px';
         }
       }
     },
-    handleDragEnd({target}) {
-      console.log(target);
+    handleDragEnd({ target }) {
       var moduleObj = null;
-      switch(target.nodeName) {
-        case 'POSTIT':
-          moduleObj = this.board.postitList.find(postit => postit.frontPostitId == target.id);
+      switch (target.nodeName) {
+        case "POSTIT":
+          moduleObj = this.board.postitList.find(
+            (postit) => postit.frontPostitId == target.id
+          );
           break;
-        case 'SCHEDULER':
+        case "SCHEDULER":
           break;
       }
-      this.crudMethod(target.nodeName, 'UPDATE', moduleObj);
-      this.sendMessage();
-      this.crudMethod('','',null);
+
+      if (target.getAttribute("class") != null) {
+        var clas = target.getAttribute("class").split(" ");
+        for (var cla in clas) {
+          if (clas[cla] == "realBoard") {
+            //  console.log("its realBoard!");
+
+            //  console.log("before : ", this.lastBX, ", ", this.lastBY);
+
+            //  let diffX = this.lastBX - this.boardX;
+            //  let diffY = this.lastBY - this.boardY;
+            //  console.log("diff : ", diffX, ", ", diffY);
+            //  console.log("after : ", this.boardX, ", ", this.boardY);
+
+            //  this.boardX = this.lastBX + (diffX / this.boardScale);
+            //  this.boardY = this.lastBY + (diffY / this.boardScale);
+
+            //  this.lastBX = this.boardX;
+            //  this.lastBY = this.boardY;
+
+            //  document.querySelector('.testerDot').style.top = this.boardY + 'px';
+            //  document.querySelector('.testerDot').style.left = this.boardX  + 'px';
+            document.querySelector(
+              ".realBoard"
+            ).style.transformOrigin = `${event.offsetX}px ${event.offsetY}px`;
+
+            document.querySelector(".testerDot").style.top =
+              event.offsetY + "px";
+            document.querySelector(".testerDot").style.left =
+              event.offsetX + "px";
+            //  target.style.transformOrigin = `${event.offsetX}px ${event.offsetY}px`
+            this.crudMethod(target.nodeName, "UPDATE", moduleObj);
+            this.sendMessage();
+            this.crudMethod("", "", null);
+            console.log("ltp : ", this.lp, ",", this.tp);
+            console.log(
+              "bodyBox wh : ",
+              window.innerWidth,
+              ", ",
+              window.innerHeight
+            );
+            console.log("boardXY  : ", this.boardX, ", ", this.boardY);
+            console.log(
+              "origin : ",
+              document.querySelector(".realBoard").style.transformOrigin
+            );
+            console.log("event : ", event);
+          }
+        }
+      }
     },
     handleResize({ target, width, height, delta }) {
       delta[0] && (target.style.width = `${width}px`);
@@ -576,24 +607,24 @@ export default {
       target.focus();
     },
     changeTargetAction({ target }) {
-       this.blockMoveable();
+      this.blockMoveable();
 
-      if(target.getAttribute('class') != null){
-        var clas = target.getAttribute('class').split(' ');
-      
-        for(var cla in clas){
+      if (target.getAttribute("class") != null) {
+        var clas = target.getAttribute("class").split(" ");
+
+        for (var cla in clas) {
           // console.log(clas[cla]);
-          if(clas[cla] == 'MoveableBox'){
+          if (clas[cla] == "MoveableBox") {
             event.stopPropagation();
             target.blur();
             this.$refs.moveable.moveable.target = target;
           }
 
-          if(clas[cla] == 'realBoard' || clas[cla] == 'bodyBox'){
+          if (clas[cla] == "realBoard" || clas[cla] == "bodyBox") {
             // event.stopPropagation();
             // target.blur();
             // this.$refs.moveable.moveable.target = target;
-            this.cloakMoveable(); 
+            this.cloakMoveable();
           }
         }
       }
@@ -602,46 +633,97 @@ export default {
       if (confirm("요소를 삭제하시겠습니까?") === true) {
         target.remove();
         this.board.isDelete = true;
-        this.board.delete.moduleName = 'postit';
+        this.board.delete.moduleName = "postit";
         this.board.delete.id = this.board.postitList[idx].frontPostitId;
-        this.crudMethod('POSTIT', 'CREATE', this.board.postitList[idx])
+        this.crudMethod("POSTIT", "CREATE", this.board.postitList[idx]);
         this.board.postitList.splice(idx, 1);
         this.sendMessage();
         this.cloakMoveable();
       }
     },
-    wheelEvent: function(event) {
-      if (event.deltaY < 0) { 
-        console.log("up!"); 
+    wheelEvent: function (event) {
+      if (event.deltaY < 0) {
+        console.log("up!");
         this.boardScale += 0.05;
 
-        if(this.boardScale > 1.3) this.boardScale = 1.3;
-
-        console.log(this.boardScale);
-      }
-      else if (event.deltaY > 0) {
+        if (this.boardScale > 1.3) {
+          this.boardScale = 1.3;
+          return;
+        }
+      } else if (event.deltaY > 0) {
         this.boardScale -= 0.05;
 
-        if(this.boardScale < 0.3) this.boardScale = 0.3;
-
-        console.log(this.boardScale);
-         console.log("down!"); 
+        if (this.boardScale < 0.6) {
+          this.boardScale = 0.6;
+          return 0;
+        }
       }
+      console.log(this.boardScale);
+      let lastOriginX = document
+        .querySelector(".realBoard")
+        .style.transformOrigin.split(" ")[0];
+      let lastOriginY = document
+        .querySelector(".realBoard")
+        .style.transformOrigin.split(" ")[1];
 
-      document.querySelector(".realBoard").style.transform = `scale(${this.boardScale})`;
-      
+      console.log("LastOrigin : ", lastOriginX, " ", lastOriginY);
+
+      let diffX = lastOriginX.replace("px", "") - event.offsetX;
+      let diffY = lastOriginY.replace("px", "") - event.offsetY;
+
+      console.log("Diff : ", diffX, ",", diffY);
+
+      document.querySelector(
+        ".realBoard"
+      ).style.transformOrigin = `${event.offsetX}px ${event.offsetY}px`;
+
+      document.querySelector(".testerDot").style.top = event.offsetY + "px";
+      document.querySelector(".testerDot").style.left = event.offsetX + "px";
+
+      let leftPoint =
+        document.querySelector(".realBoard").style.left.replace("px", "") * 1;
+      let topPoint =
+        document.querySelector(".realBoard").style.top.replace("px", "") * 1;
+
+      console.log("realBoard left and top : ", leftPoint, ", ", topPoint);
+      console.log("so its now  :  ", leftPoint + diffX, ", ", topPoint + diffY);
+
+      // if(this.boardScale != 1){
+      // document.querySelector('.realBoard').style.left = (leftPoint + diffX)+'px';
+      // document.querySelector('.realBoard').style.top =  (topPoint + diffY)+'px';
+      // }
+
+      console.log(
+        "origin : ",
+        document.querySelector(".realBoard").style.transformOrigin
+      );
+
+      document.querySelector(
+        ".realBoard"
+      ).style.transform = `scale(${this.boardScale})`;
     },
-    deleteAction({target}) {
-      if(confirm("요소를 삭제하시겠습니까?") === true) {
+    deleteAction({ target }) {
+      if (confirm("요소를 삭제하시겠습니까?") === true) {
         if (target.getAttribute("class") != null) {
           var clas = target.getAttribute("class").split(" ");
           console.log(clas);
           for (var cla in clas) {
             if (clas[cla] == "scheduler") {
-              this.board.scheduler = { "left": null, "top": null, "events": [{ "name": "오프라인", "content": "hello", "start": "2020-08-05T12:30:00", "end": "2020-08-05T18:00:00" }] }
+              this.board.scheduler = {
+                left: null,
+                top: null,
+                events: [
+                  {
+                    name: "오프라인",
+                    content: "hello",
+                    start: "2020-08-05T12:30:00",
+                    end: "2020-08-05T18:00:00",
+                  },
+                ],
+              };
               console.log(this.board.scheduler);
             } else if (clas == "Poll") {
-              this.board.poll = {}
+              this.board.poll = {};
               this.isPoll = false;
             }
           }
@@ -657,42 +739,64 @@ export default {
     cloakMoveable() {
       document.querySelector(".moveable-control-box").style.display = "none";
     },
-    moduleDragEnd(moduleName, {pageX, pageY}) {
-      switch(moduleName) {
-        case 'postit':
-          this.createPostit(`${pageX}px`, `${pageY}px`);
+    moduleDragEnd(moduleName, { offsetX, offsetY }) {
+      switch (moduleName) {
+        case "postit":
+          this.createPostit(`${offsetX}px`, `${offsetY}px`);
           break;
-        case 'scheduler':
-          this.createScheduler(`${pageX}px`, `${pageY}px`);
+        case "scheduler":
+          this.createScheduler(`${offsetX}px`, `${offsetY}px`);
           break;
-        case 'poll':
-          this.createPoll(`${pageX}px`, `${pageY}px`);
+        case "poll":
+          this.createPoll(`${offsetX}px`, `${offsetY}px`);
           break;
       }
     },
     pleaseDrag() {
-      this.createSnackbar('생성하고자 하는 위치로 드래그 해주세요!', 3000, 'default')
+      this.createSnackbar(
+        "생성하고자 하는 위치로 드래그 해주세요!",
+        3000,
+        "default"
+      );
     },
     crudMethod(moduleType, crudType, moduleObject) {
-      this.board.crudModule =  {
+      this.board.crudModule = {
         modulType: moduleType,
         crudType: crudType,
         moduleObject: moduleObject,
-      }
+      };
     },
 
-    testIn(){
-      if(!this.memberView){
+    testIn() {
+      if (!this.memberView) {
         this.memberView = true;
-        console.log("hover!");
       }
     },
-    testOut(){
-      if(this.memberView){
+    testOut() {
+      if (this.memberView) {
         this.memberView = false;
-        console.log("out!");
       }
-    }
+    },
+    test3(event) {
+      // let lastOriginX = document.querySelector('.realBoard').style.transformOrigin.split(" ")[0];
+      // let lastOriginY = document.querySelector('.realBoard').style.transformOrigin.split(" ")[1];
+      // console.log("LastOrigin : ", lastOriginX, " ", lastOriginY);
+      // let diffX = lastOriginX.replace("px", "") - event.offsetX;
+      // let diffY = lastOriginY.replace("px", "") - event.offsetY;
+      // console.log("Diff : ", diffX, "," , diffY);
+      // document.querySelector('.realBoard').style.transformOrigin = `${event.offsetX}px ${event.offsetY}px`;
+      // document.querySelector('.testerDot').style.top = event.offsetY + 'px';
+      // document.querySelector('.testerDot').style.left = event.offsetX + 'px';
+      // let leftPoint = document.querySelector('.realBoard').style.left.replace("px", "") * 1;
+      // let topPoint = document.querySelector('.realBoard').style.top.replace("px", "") * 1;
+      // console.log("realBoard left and top : ", leftPoint, ", ", topPoint);
+      // console.log("so its now  :  ", (leftPoint + diffX),", ", (topPoint + diffY));
+      // // if(this.boardScale != 1){
+      // document.querySelector('.realBoard').style.left = (leftPoint + diffX)+'px';
+      // document.querySelector('.realBoard').style.top =  (topPoint + diffY)+'px';
+      // // }
+      // console.log("origin : ", document.querySelector('.realBoard').style.transformOrigin);
+    },
   },
   components: {
     Moveable,
@@ -740,53 +844,91 @@ export default {
   border: 1px solid pink;
   background: rgb(247, 236, 236);
 
-  background-image:     
-     linear-gradient(
-        0deg, transparent 0%, 
-        transparent 0px, rgba(104, 104, 104, 0.1) 0px,rgba(104, 104, 104, 0.1) 1px, transparent 1px,
-        transparent 49px, rgba(104, 104, 104, 0.1) 49px,rgba(104, 104, 104, 0.1) 50px, transparent 1px, 
-        transparent 99px, rgba(104, 104, 104, 0.1) 99px,rgba(104, 104, 104, 0.1) 100px, transparent 1px, 
-        transparent 149px, rgba(104, 104, 104, 0.1) 149px,rgba(104, 104, 104, 0.1) 150px, transparent 1px, 
-        transparent 199px, rgba(104, 104, 104, 0.1) 199px,rgba(104, 104, 104, 0.1) 200px, transparent 1px, 
-        transparent 249px, rgba(104, 104, 104, 0.3) 249px,rgba(104, 104, 104, 0.3) 250px, transparent 1px),
-
+  background-image: linear-gradient(
+      0deg,
+      transparent 0%,
+      transparent 0px,
+      rgba(104, 104, 104, 0.1) 0px,
+      rgba(104, 104, 104, 0.1) 1px,
+      transparent 1px,
+      transparent 49px,
+      rgba(104, 104, 104, 0.1) 49px,
+      rgba(104, 104, 104, 0.1) 50px,
+      transparent 1px,
+      transparent 99px,
+      rgba(104, 104, 104, 0.1) 99px,
+      rgba(104, 104, 104, 0.1) 100px,
+      transparent 1px,
+      transparent 149px,
+      rgba(104, 104, 104, 0.1) 149px,
+      rgba(104, 104, 104, 0.1) 150px,
+      transparent 1px,
+      transparent 199px,
+      rgba(104, 104, 104, 0.1) 199px,
+      rgba(104, 104, 104, 0.1) 200px,
+      transparent 1px,
+      transparent 249px,
+      rgba(104, 104, 104, 0.3) 249px,
+      rgba(104, 104, 104, 0.3) 250px,
+      transparent 1px
+    ),
     linear-gradient(
-        -90deg, transparent 0%, 
-        transparent 0px, rgba(104, 104, 104, 0.1) 0px, rgba(104, 104, 104, 0.1) 1px, transparent 1px,
-        transparent 49px, rgba(104, 104, 104, 0.1) 49px,rgba(104, 104, 104, 0.1) 50px, transparent 1px,
-        transparent 99px, rgba(104, 104, 104, 0.1) 99px,rgba(104, 104, 104, 0.1) 100px, transparent 1px,
-        transparent 149px, rgba(104, 104, 104, 0.1) 149px,rgba(104, 104, 104, 0.1) 150px, transparent 1px, 
-        transparent 199px, rgba(104, 104, 104, 0.1) 199px,rgba(104, 104, 104, 0.1) 200px, transparent 1px, 
-        transparent 249px, rgba(104, 104, 104, 0.3) 249px,rgba(104, 104, 104, 0.3) 250px, transparent 1px);
-               
-    background-size: 250px 250px;
-  }
+      -90deg,
+      transparent 0%,
+      transparent 0px,
+      rgba(104, 104, 104, 0.1) 0px,
+      rgba(104, 104, 104, 0.1) 1px,
+      transparent 1px,
+      transparent 49px,
+      rgba(104, 104, 104, 0.1) 49px,
+      rgba(104, 104, 104, 0.1) 50px,
+      transparent 1px,
+      transparent 99px,
+      rgba(104, 104, 104, 0.1) 99px,
+      rgba(104, 104, 104, 0.1) 100px,
+      transparent 1px,
+      transparent 149px,
+      rgba(104, 104, 104, 0.1) 149px,
+      rgba(104, 104, 104, 0.1) 150px,
+      transparent 1px,
+      transparent 199px,
+      rgba(104, 104, 104, 0.1) 199px,
+      rgba(104, 104, 104, 0.1) 200px,
+      transparent 1px,
+      transparent 249px,
+      rgba(104, 104, 104, 0.3) 249px,
+      rgba(104, 104, 104, 0.3) 250px,
+      transparent 1px
+    );
 
+  background-size: 250px 250px;
+}
 
-.moveable-control-box{
-    display:none;
-  }
+.moveable-control-box {
+  display: none;
+}
 
-
-.toolBox{
+.toolBox {
   font-family: "Roboto", sans-serif;
   /* position: relative; */
   position: fixed;
   z-index: 3;
   width: 64px;
-  /* height: 1%; */
-  /* transform: rotate(90deg); */
   bottom: 50%;
   left: 2%;
-  /* left: -50px;; */
+  padding: 10px;
+  display: inline;
+  background-color: white;
+  text-align: center;
+  vertical-align: middle;
 }
 
-.toolbar{
+.toolbar {
   position: fixed;
   z-index: 3;
 }
 
-.userListBadge{
+.userListBadge {
   position: fixed;
   z-index: 3;
   bottom: 1%;
@@ -798,8 +940,9 @@ export default {
   height: 64px;
 }
 
-.vueBox{
+.vueBox {
   background-color: white;
+  border: 1px solid black;
   position: fixed;
   z-index: 3;
   right: 10%;
@@ -808,29 +951,39 @@ export default {
   height: 200px;
 }
 
-#memberList{
+#memberList {
   width: auto;
   height: 40px;
   position: fixed;
-  z-index: 3;
+  z-index: 2;
   bottom: 1%;
-  left: 120px;
-  /* padding: 5%; */
-  /* vertical-align: middle; */
-  /* background-color: olive; */
+  left: 50px;
+  text-align: right;
+  padding-right: 1%;
+  padding-left: 5%;
 }
-
-
 
 .slide-fade-enter-active {
-  transition: all .4s ease;
+  transition: all 0.4s ease;
 }
 .slide-fade-leave-active {
-  transition: all .4s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+  transition: all 0.4s cubic-bezier(1, 0.5, 0.8, 1);
 }
 .slide-fade-enter, .slide-fade-leave-to
 /* .slide-fade-leave-active below version 2.1.8 */ {
   transform: translateX(-10px);
   opacity: 0;
+}
+
+.testerDot {
+  height: 4px;
+  width: 4px;
+  background-color: black;
+  position: fixed;
+  z-index: 4;
+  display: none;
+}
+.testBox {
+  display: inline;
 }
 </style>
