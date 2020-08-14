@@ -68,31 +68,33 @@ export const store = new Vuex.Store({
             status:"",
         },
         Kanban:{
+            left: '200px',
+            top: '200px',
             task: {
                 taskTitle:'',
                 taskContents:'',
                 taskAssigner:'',
               },
-              columns: [
-                {
-                  columnTitle: '할 일',
-                  tasks: [],
-                },
-                {
-                  columnTitle: "진행중",
-                  tasks: [],
-                },
-                {
-                  columnTitle: "완료",
-                  tasks: [],
-                },
-              ],
+            states: [
+              {
+                columnTitle: 'TO DO',
+                tasks: [],
+              },
+              {
+                columnTitle: "IN PROGRESS",
+                tasks: [],
+              },
+              {
+                columnTitle: "DONE",
+                tasks: [],
+              },
+            ],
         },
-        kanban: {
-            frontKanbanId:'', 
-            kanban: {}, 
-            channel:""
-        },
+        // kanban: {
+        //     frontKanbanId:'', 
+        //     kanban: {}, 
+        //     channel:"",
+        // },
         poll: {
           left: "500px",
           top: "170px",

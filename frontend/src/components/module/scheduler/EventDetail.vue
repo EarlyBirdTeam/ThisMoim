@@ -37,7 +37,7 @@
                 return this.event.endDate + getTime(this.event.endTime);
             },
             close(){
-                return this.$store.commit('CLOSE_CALENDAR_EVENT');
+                return this.$store.commit('CLOSE_SCHEDULER_EVENT');
             }
         }
     }
