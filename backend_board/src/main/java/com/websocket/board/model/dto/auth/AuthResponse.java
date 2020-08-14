@@ -1,4 +1,4 @@
-package com.websocket.board.model.auth;
+package com.websocket.board.model.dto.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -66,6 +66,7 @@ export default {
       } else {
         var params = new URLSearchParams();
         params.append("channelName", this.channel_name);
+        params.append("token", this.$store.getters.accessToken)
         http
           .post("/board/channel", params)
           .then((response) => {

@@ -1,7 +1,6 @@
 package com.websocket.board.repo;
 
 import com.websocket.board.model.SocketBoardMessage;
-import com.websocket.board.model.member.Member;
 import lombok.RequiredArgsConstructor;
 import com.websocket.board.model.Channel;
 import org.springframework.data.redis.core.HashOperations;
@@ -31,8 +30,8 @@ public class ChannelRedisRepository {
     private ValueOperations<String, String> valueOps;
     @Resource(name = "redisTemplate")
     private HashOperations<String, String, SocketBoardMessage> hashOpsBoard;
-    @Resource(name = "redisTemplate")
-    private HashOperations<String, String, Member> hashOpsMember;
+//    @Resource(name = "redisTemplate")
+//    private HashOperations<String, String, Member> hashOpsMember;
 
     // 모든 채널 조회
     public List<Channel> findAllChannel() {

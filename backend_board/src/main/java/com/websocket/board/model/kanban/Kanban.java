@@ -26,6 +26,7 @@ public class Kanban implements Serializable {
 
     @OneToMany(mappedBy = "kanban")
     @JsonManagedReference
+    @Builder.Default
     private List<State> states = new ArrayList<>();
 
     @OneToOne

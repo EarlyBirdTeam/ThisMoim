@@ -1,4 +1,4 @@
-package com.websocket.board.model.client;
+package com.websocket.board.model.dto.client;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,10 +11,6 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserRole implements Serializable {
-
-    private String id;
-    private String role;
-    private Boolean adminRole;
-
+public class UserInfoRequest implements Serializable {
+    private String email;
 }
