@@ -16,7 +16,7 @@ public interface DBSyncService {
     boolean crudModuleSync(CRUDModule crudModule);
     boolean postitSync(CRUDType crudType, Postit postit);
     boolean schedulerSync(CRUDType crudType, Scheduler scheduler);
-    boolean pollSync(CRUDType crudType, Poll poll);
+    //boolean pollSync(CRUDType crudType, Poll poll);
     boolean kanbanSync(CRUDType crudType, Kanban kanban);
 
     void channelDBIdCountSync(String channelId, Long idCount);

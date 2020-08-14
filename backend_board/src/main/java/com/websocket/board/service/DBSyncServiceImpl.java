@@ -24,7 +24,7 @@ public class DBSyncServiceImpl implements DBSyncService {
     private final PostitRepository postitRepository;
     private final SchedulerRepository schedulerRepository;
     private final EventRepository eventRepository;
-    private final PollRepository pollRepository;
+    //private final PollRepository pollRepository;
     private final KanbanRepository kanbanRepository;
     private final TaskRepository taskRepository;
 
@@ -68,9 +68,9 @@ public class DBSyncServiceImpl implements DBSyncService {
             case CALENDAR:
                 ok = schedulerSync(crudType, (Scheduler)crudModule.getModuleObject());
                 break;
-            case POLL:
-                ok = pollSync(crudType, (Poll)crudModule.getModuleObject());
-                break;
+//            case POLL:
+//                ok = pollSync(crudType, (Poll)crudModule.getModuleObject());
+//                break;
             case KANBAN:
                 ok = kanbanSync(crudType, (Kanban)crudModule.getModuleObject());
                 break;
@@ -116,23 +116,23 @@ public class DBSyncServiceImpl implements DBSyncService {
         return ok;
     }
 
-    @Override
-    public boolean pollSync(CRUDType crudType, Poll poll) {
-        boolean ok = false;
-        switch (crudType) {
-            case CREATE:
-                ok = pollRepository.save(poll) != null ? true : false;
-                break;
-            case UPDATE:
-                // 해당 포스트잇 아이디 찾아오는 코드 있어야
-                ok = pollRepository.save(poll) != null ? true : false;
-                break;
-            case DELETE:
-                pollRepository.delete(poll);
-                break;
-        }
-        return ok;
-    }
+//    @Override
+//    public boolean pollSync(CRUDType crudType, Poll poll) {
+//        boolean ok = false;
+//        switch (crudType) {
+//            case CREATE:
+//                ok = pollRepository.save(poll) != null ? true : false;
+//                break;
+//            case UPDATE:
+//                // 해당 포스트잇 아이디 찾아오는 코드 있어야
+//                ok = pollRepository.save(poll) != null ? true : false;
+//                break;
+//            case DELETE:
+//                pollRepository.delete(poll);
+//                break;
+//        }
+//        return ok;
+//    }
 
     @Override
     public boolean kanbanSync(CRUDType crudType, Kanban kanban) {
