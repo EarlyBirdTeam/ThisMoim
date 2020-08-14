@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
-@Repository
-public interface PollRepository extends JpaRepository<Poll, Long> {
-}
+//@Repository
+//public interface PollRepository extends JpaRepository<Poll, Long> {
+//}
