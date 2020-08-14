@@ -23,6 +23,9 @@ public class Kanban implements Serializable {
     @Id
     private String id;
     private String kanbanName;
+    @Column(name = "\"left\"")
+    private String left;
+    private String top;
 
     @OneToMany(mappedBy = "kanban")
     @JsonManagedReference
