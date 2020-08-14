@@ -1,6 +1,7 @@
 package com.accolite.pru.health.AuthApp.controller;
 
 import com.accolite.pru.health.AuthApp.model.User;
+import com.accolite.pru.health.AuthApp.model.member.Member;
 import com.accolite.pru.health.AuthApp.service.MemberService;
 import com.accolite.pru.health.AuthApp.service.UserService;
 import io.swagger.annotations.Api;
@@ -37,7 +38,6 @@ public class MemberController {
     @ApiOperation(value = "Registers the member")
     public ResponseEntity registerUser(@RequestParam String channelId, @RequestParam Long userId) {
         User user = userService.findById(userId).orElseThrow(() -> new NoSuchElementException());
-        System.out.println(user);
         return new ResponseEntity<>(memberService.createMember(user,channelId),HttpStatus.ACCEPTED);
     }
 }

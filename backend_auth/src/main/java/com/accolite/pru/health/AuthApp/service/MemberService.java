@@ -16,14 +16,15 @@ public class MemberService {
     MemberRepository memberRepository;
 
     public List<Member> findByChannelId(String channelId) {
-        return memberRepository.findAllByChannel(channelId).orElseThrow(() -> new NoSuchElementException());
+        return memberRepository.findAllByChannelId(channelId).orElseThrow(() -> new NoSuchElementException());
     }
 
     public Member createMember(User user, String channelId) {
         Member newMember = new Member();
-        newMember.setChannel(channelId);
+        newMember.setChannelId(channelId);
         newMember.setUser(user);
         newMember.setAttendance(0);
+        newMember.setMemberRoleName("MEMBER_NORMAL");
         return memberRepository.save(newMember);
     }
 }

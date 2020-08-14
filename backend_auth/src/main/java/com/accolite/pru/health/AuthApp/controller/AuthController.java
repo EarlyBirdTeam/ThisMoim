@@ -130,30 +130,26 @@ public class AuthController {
 
     @PostMapping("/invite")
     @ApiOperation(value = "invite member to channel")
-    public ResponseEntity inviteUser(@ApiParam(value = "The RegistrationRequest payload") @Valid @RequestBody MailSendRequest mailSendRequest) {
+    public ResponseEntity inviteUser(@ApiParam(value = "invitation payload") @Valid @RequestBody MailSendRequest mailSendRequest) {
 
         return authService.inviteUser(mailSendRequest)
                 .map(member -> {
                     UriComponentsBuilder urlBuilder = ServletUriComponentsBuilder.newInstance().scheme("http").host("localhost").port(9004).path("/api/auth/inviteConfirmation");
 //                    UriComponentsBuilder urlBuilder = ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/auth/registrationConfirmation");
-                    OnInvitationCompleteEvent onInvitationCompleteEvent = new OnInvitationCompleteEvent(member, urlBuilder);
-                    applicationEventPublisher.publishEvent(onInvitationCompleteEvent);
-                    logger.info("invited member returned [API[: " + member);
-                    return ResponseEntity.ok(new ApiResponse(true, "User invited successfully. Check your email for verification"));
+                    OnInvitationCompleteEvent onUserRegistrationCompleteEvent = new OnInvitationCompleteEvent(member, urlBuilder);
+                    applicationEventPublisher.publishEvent(onUserRegistrationCompleteEvent);
+                    logger.info("Registered User returned [API[: " + member);
+                    return ResponseEntity.ok(new ApiResponse(true, "User registered successfully. Check your email for verification"));
                 })
                 .orElseThrow(() -> new UserRegistrationException(mailSendRequest.getEmail(), "Missing user object in database"));
     }
 
     @GetMapping("/inviteConfirmation")
-    public String confirmInvitation(@RequestParam("token") String token) {
-        if(authService.confirmEmailRegistration(token)!=null){
-//            return "redirect:http://i3a510.p.ssafy.io:3000/#/api/auth/registrationConfirmation";
-            return "redirect:http://localhost:3000/api/auth/registrationConfirmation";
-        }else{
-            return "redirect:http://localhost:3000/error";
-        }
-    }
+    @ApiOperation(value = "Confirms the email verification token that has been generated for the user during registration")
+    public String confirmInvitation() {
+            return "redirect:http://localhost:3000";
 
+    }
 
     @PostMapping("/password/resetlink")
     @ApiOperation(value = "Receive the reset link request and publish event to send mail containing the password " +
@@ -198,7 +194,6 @@ public class AuthController {
             return "redirect:http://localhost:3000/error";
         }
     }
-
 
 
     @GetMapping("/resendRegistrationToken")

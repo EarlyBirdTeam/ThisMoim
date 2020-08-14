@@ -14,7 +14,7 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @Getter
 @Setter
-@ApiModel(value = "Registration Request", description = "The registration request payload")
+@ApiModel(value = "invitation Request", description = "invitation request payload")
 public class MailSendRequest {
 
     @NullOrNotBlank(message = "Registration channelId can be null but not blank")

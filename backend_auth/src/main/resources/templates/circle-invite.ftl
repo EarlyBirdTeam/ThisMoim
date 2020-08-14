@@ -46,7 +46,7 @@
                                             style="padding: 20px 35px; text-align: left; color: #6f6f6f; font-family: sans-serif; border-top: 0;">
                                             <p class=""
                                                style="margin: 20px 0; font-size: 16px; mso-line-height-rule: exactly; line-height: 24px;">
-                                            <span style="font-weight: 400;">confirm 버튼을 눌러 초대를 수락하세요</span>
+                                            <span style="font-weight: 400;">버튼을 눌러 초대를 수락하세요</span>
                                             <table style="border: 0; width: 100%;" cellspacing="0" cellpadding="0">
                                                 <tbody>
                                                 <tr>
@@ -65,8 +65,7 @@
                                                                             style="border-radius: 4px; color: #ffffff; display: block; font-family: sans-serif; font-size: 18px; font-weight: bold; mso-height-rule: exactly; line-height: 1.1; padding: 14px 18px; text-decoration: none; text-transform: none; border: 0;"
                                                                             href="${invitationLink}"
                                                                             target="_blank"
-                                                                            rel="noopener">Confirm
-                                                                        email</a> <!--![endif]--></td>
+                                                                            rel="noopener">수락</a> <!--![endif]--></td>
                                                             </tr>
                                                             </tbody>
                                                         </table>

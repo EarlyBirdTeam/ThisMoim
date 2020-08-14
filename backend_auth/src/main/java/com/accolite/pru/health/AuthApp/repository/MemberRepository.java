@@ -10,6 +10,6 @@ import java.util.Optional;
 @Repository
 public interface MemberRepository extends JpaRepository<Member,String> {
 
-    Optional<List<Member>> findAllByChannel(String channelId);
+    Optional<List<Member>> findAllByChannelId(String channelId);
 }
 

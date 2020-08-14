@@ -16,11 +16,7 @@ package com.accolite.pru.health.AuthApp.event.listener;
 
 
 import com.accolite.pru.health.AuthApp.event.OnInvitationEvent;
-import com.accolite.pru.health.AuthApp.event.OnRegenerateEmailVerificationEvent;
-import com.accolite.pru.health.AuthApp.event.OnUserRegistrationCompleteEvent;
 import com.accolite.pru.health.AuthApp.exception.MailSendException;
-import com.accolite.pru.health.AuthApp.model.User;
-import com.accolite.pru.health.AuthApp.model.member.Member;
 import com.accolite.pru.health.AuthApp.service.MailService;
 import freemarker.template.TemplateException;
 import org.apache.log4j.Logger;
@@ -47,7 +43,7 @@ public class OnInvitationListener implements ApplicationListener<OnInvitationEve
     @Override
     @Async
     public void onApplicationEvent( OnInvitationEvent onInvitationEvent) {
-        sendEmailVerification(onInvitationEvent);
+        resendEmailVerification(onInvitationEvent);
     }
 
 
@@ -60,19 +56,8 @@ public class OnInvitationListener implements ApplicationListener<OnInvitationEve
             mailService.sendInviteEmail(inviteConfirmUrl, recipientAddress);
         } catch (IOException | TemplateException | MessagingException e) {
             logger.error(e);
-            throw new MailSendException(recipientAddress, "Email Verification");
+            throw new MailSendException(recipientAddress, "invite circle");
         }
     }
-    private void sendEmailVerification(OnInvitationEvent event) {
-        String recipientAddress = event.getMailSendRequest().getEmail();
-        String emailConfirmationUrl =
-                event.getRedirectUrl().toUriString();
 
-        try {
-            mailService.sendEmailVerification(emailConfirmationUrl, recipientAddress);
-        } catch (IOException | TemplateException | MessagingException e) {
-            logger.error(e);
-            throw new MailSendException(recipientAddress, "Email Verification");
-        }
-    }
 }

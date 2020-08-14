@@ -3,10 +3,7 @@ package com.accolite.pru.health.AuthApp.model.member;
 
 import com.accolite.pru.health.AuthApp.model.User;
 import com.accolite.pru.health.AuthApp.model.audit.DateAudit;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -16,6 +13,7 @@ import java.util.Set;
 @Entity(name = "MEMBER")
 @Getter
 @Setter
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 public class Member extends DateAudit {
@@ -25,21 +23,14 @@ public class Member extends DateAudit {
     @Column(name = "MEMBER_ID")
     private String memberId;
 
-    @Enumerated(value = EnumType.STRING)
     @Column(length = 36, name = "MEMBER_ROLE")
-    private MemberRoleName memberRoleName;
+    private String memberRoleName;
 
     @Column(length = 36, name = "ATTENDANCE")
     private int attendance;
 
-//    @ManyToMany(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-//    @JoinTable(name = "MemberRoleMapping", joinColumns = {
-//            @JoinColumn(name = "MEMBER_ID", referencedColumnName = "MEMBER_ID")}, inverseJoinColumns = {
-//            @JoinColumn(name = "MEMBERROLE_ID", referencedColumnName = "MEMBERROLE_ID")})
-//    private Set<MemberRole> memberRoles = new HashSet<>();
-
     @Column
-    private String channel;
+    private String channelId;
 
     @ManyToOne
     @JoinColumn(name = "USER_ID")
