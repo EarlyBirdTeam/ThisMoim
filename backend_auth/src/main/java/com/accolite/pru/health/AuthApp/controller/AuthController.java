@@ -13,10 +13,7 @@
  */
 package com.accolite.pru.health.AuthApp.controller;
 
-import com.accolite.pru.health.AuthApp.event.OnGenerateResetLinkEvent;
-import com.accolite.pru.health.AuthApp.event.OnRegenerateEmailVerificationEvent;
-import com.accolite.pru.health.AuthApp.event.OnUserAccountChangeEvent;
-import com.accolite.pru.health.AuthApp.event.OnUserRegistrationCompleteEvent;
+import com.accolite.pru.health.AuthApp.event.*;
 import com.accolite.pru.health.AuthApp.exception.InvalidTokenRequestException;
 import com.accolite.pru.health.AuthApp.exception.PasswordResetException;
 import com.accolite.pru.health.AuthApp.exception.PasswordResetLinkException;
@@ -25,13 +22,7 @@ import com.accolite.pru.health.AuthApp.exception.UserLoginException;
 import com.accolite.pru.health.AuthApp.exception.UserRegistrationException;
 import com.accolite.pru.health.AuthApp.model.CustomUserDetails;
 import com.accolite.pru.health.AuthApp.model.User;
-import com.accolite.pru.health.AuthApp.model.payload.ApiResponse;
-import com.accolite.pru.health.AuthApp.model.payload.JwtAuthenticationResponse;
-import com.accolite.pru.health.AuthApp.model.payload.LoginRequest;
-import com.accolite.pru.health.AuthApp.model.payload.PasswordResetLinkRequest;
-import com.accolite.pru.health.AuthApp.model.payload.PasswordResetRequest;
-import com.accolite.pru.health.AuthApp.model.payload.RegistrationRequest;
-import com.accolite.pru.health.AuthApp.model.payload.TokenRefreshRequest;
+import com.accolite.pru.health.AuthApp.model.payload.*;
 import com.accolite.pru.health.AuthApp.model.token.EmailVerificationToken;
 import com.accolite.pru.health.AuthApp.model.token.RefreshToken;
 import com.accolite.pru.health.AuthApp.security.JwtTokenProvider;
@@ -65,7 +56,6 @@ import static org.springframework.web.util.UriComponentsBuilder.newInstance;
 @Controller
 @RequestMapping("/api/auth")
 @Api(value = "Authorization Rest API", description = "Defines endpoints that can be hit only when the user is not logged in. It's not secured by default.")
-// @CrossOrigin(origins = "http://localhost:3001")
 @CrossOrigin(origins = "http://localhost:3000")
 public class AuthController {
 
@@ -138,6 +128,32 @@ public class AuthController {
                 .orElseThrow(() -> new UserRegistrationException(registrationRequest.getEmail(), "Missing user object in database"));
     }
 
+    @PostMapping("/invite")
+    @ApiOperation(value = "invite member to channel")
+    public ResponseEntity inviteUser(@ApiParam(value = "The RegistrationRequest payload") @Valid @RequestBody MailSendRequest mailSendRequest) {
+
+        return authService.inviteUser(mailSendRequest)
+                .map(member -> {
+                    UriComponentsBuilder urlBuilder = ServletUriComponentsBuilder.newInstance().scheme("http").host("localhost").port(9004).path("/api/auth/inviteConfirmation");
+//                    UriComponentsBuilder urlBuilder = ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/auth/registrationConfirmation");
+                    OnInvitationCompleteEvent onInvitationCompleteEvent = new OnInvitationCompleteEvent(member, urlBuilder);
+                    applicationEventPublisher.publishEvent(onInvitationCompleteEvent);
+                    logger.info("invited member returned [API[: " + member);
+                    return ResponseEntity.ok(new ApiResponse(true, "User invited successfully. Check your email for verification"));
+                })
+                .orElseThrow(() -> new UserRegistrationException(mailSendRequest.getEmail(), "Missing user object in database"));
+    }
+
+    @GetMapping("/inviteConfirmation")
+    public String confirmInvitation(@RequestParam("token") String token) {
+        if(authService.confirmEmailRegistration(token)!=null){
+//            return "redirect:http://i3a510.p.ssafy.io:3000/#/api/auth/registrationConfirmation";
+            return "redirect:http://localhost:3000/api/auth/registrationConfirmation";
+        }else{
+            return "redirect:http://localhost:3000/error";
+        }
+    }
+
 
     @PostMapping("/password/resetlink")
     @ApiOperation(value = "Receive the reset link request and publish event to send mail containing the password " +
@@ -182,6 +198,7 @@ public class AuthController {
             return "redirect:http://localhost:3000/error";
         }
     }
+
 
 
     @GetMapping("/resendRegistrationToken")

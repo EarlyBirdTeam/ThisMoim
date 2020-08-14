@@ -11,25 +11,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.websocket.board.event;
+package com.accolite.pru.health.AuthApp.event;
 
-import com.websocket.board.model.Channel;
-import com.websocket.board.model.MailSendRequest;
-import lombok.AllArgsConstructor;
+
+import com.accolite.pru.health.AuthApp.model.payload.MailSendRequest;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @Getter
 @Setter
-public class OnRegenerateEmailVerificationEvent extends ApplicationEvent {
+public class OnInvitationEvent extends ApplicationEvent {
 
     private transient UriComponentsBuilder redirectUrl;
     private MailSendRequest mailSendRequest;
 
-    public OnRegenerateEmailVerificationEvent(MailSendRequest mailSendRequest, UriComponentsBuilder redirectUrl) {
+    public OnInvitationEvent(MailSendRequest mailSendRequest, UriComponentsBuilder redirectUrl) {
         super(mailSendRequest);
         this.mailSendRequest = mailSendRequest;
         this.redirectUrl = redirectUrl;

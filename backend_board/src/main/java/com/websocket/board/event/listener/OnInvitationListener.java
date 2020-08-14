@@ -29,13 +29,13 @@ import javax.mail.MessagingException;
 import java.io.IOException;
 
 @Component
-public class OnRegenerateEmailVerificationListener implements ApplicationListener<OnRegenerateEmailVerificationEvent> {
+public class OnInvitationListener implements ApplicationListener<OnRegenerateEmailVerificationEvent> {
 
-    private static final Logger logger = Logger.getLogger(OnRegenerateEmailVerificationListener.class);
+    private static final Logger logger = Logger.getLogger(OnInvitationListener.class);
     private final MailService mailService;
 
     @Autowired
-    public OnRegenerateEmailVerificationListener(MailService mailService) {
+    public OnInvitationListener(MailService mailService) {
         this.mailService = mailService;
     }
 
