@@ -1,5 +1,5 @@
 <template>
-  <kanban class="kanban">
+  <kanban class="kanban MoveableBox">
     <div class="flex justify-center">
       <div class="d-flex">
 
