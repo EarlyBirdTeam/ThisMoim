@@ -65,7 +65,7 @@
               v-model="newTask.taskContents"
             ></v-textarea>
             <div class="text-center">
-              <v-btn text class="primary white--text mx-2 mt-3" @click="submit">추가</v-btn>
+              <v-btn text class="primary white--text mx-2 mt-3" @click="submit" v-if="isAdd">추가</v-btn>
               <v-btn text class="primary white--text mx-2 mt-3" @click="close">닫기</v-btn>
             </div>
           </v-form>
@@ -107,6 +107,7 @@ export default {
         },
       ],
       dialog: false,
+      isAdd: false,
       newTask: {
         taskTitle : "",
         taskContents : "",
@@ -117,6 +118,7 @@ export default {
   },
   methods: {
     addTask(columnTitle) {
+      this.isAdd = true
       this.dialog = true
       this.newColumnTitle = columnTitle;
     },
@@ -140,6 +142,7 @@ export default {
         .tasks.indexOf(task);
         this.newColumnTitle = columnTitle
         this.newTask = task;
+        this.isAdd = false; 
         this.dialog = true;
     },
     submit() {
