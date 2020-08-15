@@ -34,22 +34,23 @@ public class ChannelController {
 
     @GetMapping("/channels")
     @ResponseBody
-    public List<Channel> myChannel(@Header("token") String token) {
+    public List<Channel> myChannel(@RequestHeader(name = "Authorization") String Authorization) {
         // 각 사용자가 가진 채널 리스트 전달하기 <- 디비에서 가져오기
-        List<Channel> channels = channelRedisRepository.findAllChannel();
+        List<Channel> channels = channelService.getMyChannels(Authorization);
+        //List<Channel> channels = channelRedisRepository.findAllChannel();
         // 현재 채널에 접속해 있는 인원을 가져오는 부분
-        channels.stream().forEach(channel -> channel.setUserCount(channelRedisRepository.getUserCount(channel.getChannelId())));
+        //channels.stream().forEach(channel -> channel.setUserCount(channelRedisRepository.getUserCount(channel.getChannelId())));
         return channels;
     }
 
     @PostMapping("/channel")
     @ResponseBody
-    public Channel createChannel(@Header("token") String token, @RequestParam("channelName") String channelName) {
+    public Channel createChannel(@RequestHeader(name = "Authorization") String Authorization, @RequestParam("channelName") String channelName) {
         String channelId = UUID.randomUUID().toString();
         // save channel in redis
         Channel channel = channelRedisRepository.createChannel(channelName, channelId);
         // save channel in mariadb
-        channelService.saveChannel(token, channelName, channelId);
+        channelService.saveChannel(Authorization, channelName, channelId);
         return channel;
     }
 

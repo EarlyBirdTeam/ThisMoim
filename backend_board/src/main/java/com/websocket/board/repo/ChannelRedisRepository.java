@@ -17,10 +17,10 @@ import java.util.Optional;
 public class ChannelRedisRepository {
     // Redis CacheKeys
     private static final String CHANNEL = "CHANNEL"; // 채널 저장
-    public static final String USER_COUNT = "USER_COUNT"; // 채널에 입장한 클라이언트 수 저장
-    public static final String ENTER_INFO = "ENTER_INFO"; // 채널에 입장한 클라이언트의 sessionId와 채널 id를 맵핑한 정보 저장
-    public static final String USER_INFO = "USER_INFO"; // 채널에 입장한 멤버들의 정보를 채널 id와 매핑하여 저장
-    public static final String BOARD = "BOARD"; // 채널이 가지고 있는 보드의 상태 저장
+    private static final String USER_COUNT = "USER_COUNT"; // 채널에 입장한 클라이언트 수 저장
+    private static final String ENTER_INFO = "ENTER_INFO"; // 채널에 입장한 클라이언트의 sessionId와 채널 id를 맵핑한 정보 저장
+    private static final String USER_INFO = "USER_INFO"; // 채널에 입장한 멤버들의 정보를 채널 id와 매핑하여 저장
+    private static final String BOARD = "BOARD"; // 채널이 가지고 있는 보드의 상태 저장
 
     @Resource(name = "redisTemplate")
     private HashOperations<String, String, Channel> hashOpsChannel;

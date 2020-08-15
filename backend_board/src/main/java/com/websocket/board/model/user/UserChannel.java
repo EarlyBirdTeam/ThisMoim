@@ -1,5 +1,6 @@
 package com.websocket.board.model.user;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.websocket.board.model.Channel;
 import lombok.*;
 
@@ -21,10 +22,12 @@ public class UserChannel implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @JsonBackReference
     private User user;
 
     @ManyToOne
     @JoinColumn(name = "channel_id")
+    @JsonBackReference
     private Channel channel;
 
 }
