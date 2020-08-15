@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.net.Socket;
+
 @RequiredArgsConstructor
 @RestController
 public class BoardInitController {
@@ -23,7 +25,11 @@ public class BoardInitController {
             throws JsonProcessingException {
         //return initService.getBoard(channelId);
         // 이 부분 레디스에 정보가 없다면 디비에서 가져오도록 수정할 예정
-        return channelRedisRepository.findBoardByChannelId(channelId);
+        SocketBoardMessage socketBoardMessage = channelRedisRepository.findBoardByChannelId(channelId);
+//        if(socketBoardMessage == null) {
+//            initService.getBoard(channelId);
+//        }
+        return socketBoardMessage;
     }
 
 }

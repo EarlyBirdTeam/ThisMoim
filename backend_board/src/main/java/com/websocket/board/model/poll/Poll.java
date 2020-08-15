@@ -1,5 +1,6 @@
 package com.websocket.board.model.poll;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.websocket.board.model.postit.Postit;
 import lombok.*;
@@ -18,6 +19,7 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
+@JsonIgnoreProperties("answers")
 public class Poll implements Serializable {
 
     @Id
@@ -28,10 +30,10 @@ public class Poll implements Serializable {
     private String top;
     private String question;
 
-//    @OneToMany(mappedBy = "poll")
-//    @JsonManagedReference
-//    @Builder.Default
-//    private List<Answer> answers = new ArrayList<>();
+    @OneToMany(mappedBy = "poll")
+    @JsonManagedReference
+    //@Builder.Default
+    private List<Answer> answers = new ArrayList<>();
 
     private boolean multipleVotes;
     private int totalVotes;
