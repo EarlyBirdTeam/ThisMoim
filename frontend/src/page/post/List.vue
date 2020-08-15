@@ -4,7 +4,7 @@
       <div class="d-flex justify-content-between">
         <h2>나의 모임목록</h2>
         <div class="d-flex">
-          <v-text-field placeholder="채널 제목" v-model="channel_name"></v-text-field>
+          <v-text-field @keyup.enter="createChannel" placeholder="채널 제목" v-model="channel_name"></v-text-field>
           <button @click="createChannel" class="circleScaleBtn"><span>채널 생성</span></button>
         </div>
       </div>
@@ -52,8 +52,12 @@ export default {
     getRandomImage(idString) {
       return `https://picsum.photos/seed/${idString}/200/300`;
     },
-    findAllChannel: function () {
-      http.get("/board/channels").then((response) => {
+   findAllChannel: function () {
+      http.get("/board/channels", {
+        headers: {
+            "Authorization" : "Bearer " + this.$store.getters.accessToken
+          }
+      }).then((response) => {
         // prevent html, allow json array
         if (Object.prototype.toString.call(response.data) === "[object Array]")
           this.channels = response.data;
@@ -66,9 +70,14 @@ export default {
       } else {
         var params = new URLSearchParams();
         params.append("channelName", this.channel_name);
-        params.append("token", this.$store.getters.accessToken)
+        // params.append("token", this.$store.getters.accessToken)
+        const config = {
+          headers: {
+            "Authorization" : "Bearer " + this.$store.getters.accessToken
+          }
+        }
         http
-          .post("/board/channel", params)
+          .post("/board/channel", params, config)
           .then((response) => {
             alert(response.data.channelName + "채널 개설에 성공하였습니다.");
             this.channel_name = "";
