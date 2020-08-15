@@ -10,7 +10,7 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoginResponse extends Response implements Serializable {
+public class LoginResponse implements Serializable {
 
     private String accessToken;
     private String refreshToken;
