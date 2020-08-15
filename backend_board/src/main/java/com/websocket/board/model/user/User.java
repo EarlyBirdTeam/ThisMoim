@@ -8,11 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
 public class User {
 
     @Id

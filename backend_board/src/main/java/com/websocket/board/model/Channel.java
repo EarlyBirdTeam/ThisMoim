@@ -13,10 +13,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Data
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@Builder
 public class Channel implements Serializable {
 
     //private static final long serialVersionUID = 6494678977089006639L;

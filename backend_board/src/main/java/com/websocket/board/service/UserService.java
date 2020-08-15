@@ -36,7 +36,7 @@ public class UserService {
 
     public void saveUserTest(LoginResponse loginResponse, UserInfoResponse userResponse) {
 
-        UserInfoResponse userInfoResponse = loginResponse.getUserInfoResponse();
+        // UserInfoResponse userInfoResponse = loginResponse.getUserInfoResponse();
         Optional<User> user = userRepository.findByUserId(userResponse.getId());
 
         if(!user.isPresent()) {

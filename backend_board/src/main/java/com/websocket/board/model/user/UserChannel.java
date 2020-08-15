@@ -6,11 +6,12 @@ import lombok.*;
 import javax.persistence.*;
 import java.io.Serializable;
 
-@Data
 @Entity
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@Builder
 public class UserChannel implements Serializable {
 
     @Id
