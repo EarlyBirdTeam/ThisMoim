@@ -34,7 +34,7 @@ public class EmailVerificationTokenService {
 
     private static final Logger logger = Logger.getLogger(EmailVerificationTokenService.class);
     private final EmailVerificationTokenRepository emailVerificationTokenRepository;
-    @Value("${app.token.email.verification.duration}")
+    @Value("${app.token.email.verification.duration}00")
     private Long emailVerificationTokenExpiryDuration;
 
     @Autowired
