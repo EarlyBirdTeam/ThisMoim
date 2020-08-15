@@ -10,53 +10,85 @@
       >{{ snackbar.text }}</v-snackbar>
       <div>
         <div class="toolBox">
-          <v-btn
-            icon
-            color="orange"
-            @click="pleaseDrag"
-            draggable="true"
-            @dragenter="dragging=true"
-            @dragend="moduleDragEnd('postit', $event)"
-          >
-            <v-icon>mdi-message</v-icon>
-          </v-btn>
-          <v-btn
-            icon
-            color="orange"
-            @click="pleaseDrag"
-            draggable="true"
-            @dragend="moduleDragEnd('kanban', $event)"
-          >
-            <v-icon>mdi-clipboard-list-outline</v-icon>
-          </v-btn>
+          <v-tooltip v-model="show" right>
+            <template v-slot:activator="{ on }">
+              <div v-on="on">
+                <v-btn
+                  icon
+                  color="orange"
+                  @click="pleaseDrag"
+                  draggable="true"
+                  @dragenter="dragging=true"
+                  @dragend="moduleDragEnd('postit', $event)"
+                >
+                  <v-icon>mdi-message</v-icon>
+                </v-btn>
+              </div>
+            </template>
+            <span>Post-it</span>
+          </v-tooltip>
+
+          <v-tooltip v-model="show" right>
+            <template v-slot:activator="{ on }">
+              <div v-on="on">
+                <v-btn
+                  icon
+                  color="orange"
+                  @click="pleaseDrag"
+                  draggable="true"
+                  @dragend="moduleDragEnd('kanban', $event)"
+                >
+                  <v-icon>mdi-clipboard-list-outline</v-icon>
+                </v-btn>
+              </div>
+            </template>
+            <span>Kanban-Board</span>
+          </v-tooltip>
+          
           <!-- <v-btn icon color="orange" @click="createMap">
           <v-icon>mdi-map</v-icon>
           </v-btn>-->
-          <v-btn
-            icon
-            color="orange"
-            @click="pleaseDrag"
-            draggable="true"
-            @dragend="moduleDragEnd('scheduler', $event)"
-          >
-            <v-icon>mdi-calendar</v-icon>
-          </v-btn>
-          <v-btn
-            icon
-            color="orange"
-            @click="pleaseDrag"
-            draggable="true"
-            @dragend="moduleDragEnd('poll', $event)"
-          >
-            <v-icon>mdi-vote</v-icon>
-          </v-btn>
+          <v-tooltip v-model="show" right>
+            <template v-slot:activator="{ on }">
+              <div v-on="on">
+                <v-btn
+                  icon
+                  color="orange"
+                  @click="pleaseDrag"
+                  draggable="true"
+                  @dragend="moduleDragEnd('scheduler', $event)"
+                >
+                  <v-icon>mdi-calendar</v-icon>
+                </v-btn>
+              </div>
+            </template>
+            <span>Scheduler</span>
+          </v-tooltip>
+          
+          <v-tooltip v-model="show" right>
+            <template v-slot:activator="{ on }">
+              <div v-on="on">
+                <v-btn
+                  icon
+                  color="orange"
+                  @click="pleaseDrag"
+                  draggable="true"
+                  @dragend="moduleDragEnd('poll', $event)"
+                >
+                  <v-icon>mdi-vote</v-icon>
+                </v-btn>
+              </div>
+            </template>
+            <span>Poll</span>
+          </v-tooltip>
+          
         </div>
         <br />
       </div>
     </div>
 
     <v-responsive class="vueBox text-center ma-3"></v-responsive>
-
+    <div class="testerDot"></div>
     <v-responsive>
       <v-responsive
         class="userListBadge badge-info text-center lighten-2 rounded-circle d-inline-flex align-center justify-center ma-3"
@@ -108,33 +140,33 @@
           <Postit :id="pi.frontPostitId" :postit="pi" :style="{left: pi.left, top: pi.top}" />
         </div>
 
-        <div class="kanban" @click.right="deleteKanban">
+        <div class="kanban" @click.right="deleteAction('kanban', $event)">
           <Kanban v-if="board.isKanban" :style="{left:board.kanban.left, top:board.kanban.top}"/>
         </div>
         <div class="map" @click.right="deleteAction">
           <Map v-if="map.isPresent" />
         </div>
 
-        <div class="Scheduler" @click.right="deleteAction">
+        <div class="Scheduler" @click.right="deleteAction('scheduler', $event)">
           <Scheduler
             v-if="!!board.scheduler"
             :style="{left:board.scheduler.left, top:board.scheduler.top}"
           />
         </div>
 
-        <div class="Poll" @click.right="deleteAction">
+        <div class="Poll" @click.right="deleteAction('poll', $event)">
           <Poll
             v-if="!!board.poll"
             :style="{left: $store.state.poll.left, top: $store.state.poll.top}"
           />
         </div>
-        {{ board.isKanban}}<br>
-        board : {{ board.kanban }} 
+        {{ board }}<br><br>
+        board : {{ board.poll }} 
         <br />
         <br />
         <br />
 
-        store : {{ $store.state.Kanban }}
+        store : {{ $store.state.poll }}
       </div>
 
       <!-- <Postit :id="pi.id" :postit="pi" style="position: relative; display: inline-block"/> -->
@@ -232,7 +264,7 @@ export default {
       // 우클릭 default이벤트 차단
       return false;
     };
-    // this.initRecv();
+    this.initRecv();
   },
   mounted() {
     document.querySelector(".realBoard").style.height = this.boardLength + "px";
@@ -356,21 +388,23 @@ export default {
       this.createSnackbar("포스트잇이 생성되었습니다!", 1500, "success");
     },
 
-    createKanban(event) {
+    createKanban(left = "500px", top = "170px") {
       if (this.board.isKanban == true) {
         this.createSnackbar("보드가 이미 생성되어 있습니다", 3000, "error");
         return;
       }
-
-      this.createSnackbar("보드가 생성되었습니다", 1500, "success");
       this.board.isKanban = true;
       this.board.kanban = this.$store.state.Kanban;
+      this.board.kanban.left = left;
+      this.board.kanban.top = top;
       this.crudMethod("KANBAN", "CREATE", this.board.kanban);
       this.sendMessage();
+      this.createSnackbar("보드가 생성되었습니다", 1500, "success");
     },
 
-    deleteKanban({ target }) {
+    deleteKanban({ target }) { console.log(target);
       if (confirm("요소를 삭제하시겠습니까?") === true) {
+       
         target.remove();
         this.cloakMoveable();
         this.board.isKanban = false;
@@ -683,36 +717,36 @@ export default {
         ".realBoard"
       ).style.transform = `scale(${this.boardScale})`;
     },
-    deleteAction({ target }) {
+    deleteAction(moduleName, { target }) {
       if (confirm("요소를 삭제하시겠습니까?") === true) {
-        if (target.getAttribute("class") != null) {
-          var clas = target.getAttribute("class").split(" ");
-          console.log(clas);
-          for (var cla in clas) {
-            if (clas[cla] == "scheduler") {
-              this.crudMethod("SCHEDULER", "DELETE", this.board.scheduler);
-              this.board.scheduler = {
-                left: null,
-                top: null,
-                events: [
-                  {
-                    name: "오프라인 미팅",
-                    content: "예시 일정입니다.",
-                    start: "2020-08-05T08:30:00",
-                    end: "2020-08-05T18:00:00",
-                  },
-                ],
-              };
-            
-            } else if (clas == "poll") {
-              this.board.poll = null;
-            }
-          }
+        if (moduleName == "scheduler") {
+          this.crudMethod("SCHEDULER", "DELETE", this.board.scheduler);
+          this.board.scheduler = null;
+        } else if (moduleName == "poll") {
+          console.log('delete POLLLLLLLLLL')
+          this.crudMethod("POLL", "DELETE", this.board.poll);
+          this.board.poll = null;
+        } else if (moduleName == "kanban"){
+          this.crudMethod("KANBAN", "DELETE", this.board.kanban);
+          this.board.isKanban = false;
+          this.$store.state.Kanban.states = [
+            {
+              columnTitle: "TO DO",
+              tasks: [],
+            },
+            {
+              columnTitle: "IN PROGRESS",
+              tasks: [],
+            },
+            {
+              columnTitle: "DONE",
+              tasks: [],
+            },
+          ];
         }
-        target.remove();
-        this.sendMessage();
-        this.cloakMoveable();
       }
+      this.sendMessage();
+      this.cloakMoveable();
     },
     blockMoveable() {
       document.querySelector(".moveable-control-box").style.display = "block";
@@ -730,6 +764,9 @@ export default {
           break;
         case "poll":
           this.createPoll(`${offsetX}px`, `${offsetY}px`);
+          break;
+        case "kanban":
+          this.createKanban(`${offsetX}px`, `${offsetY}px`);
           break;
       }
     },
@@ -897,11 +934,13 @@ export default {
   width: 64px;
   bottom: 50%;
   left: 2%;
-  padding: 10px;
+  padding: 10px 0px;
   display: inline;
   background-color: white;
   text-align: center;
   vertical-align: middle;
+  border-radius: 20px;
+  border: 2px solid rgba(104, 104, 104, 0.5) ;
 }
 
 .toolbar {
@@ -922,8 +961,9 @@ export default {
 }
 
 .vueBox {
-  background-color: white;
-  border: 1px solid black;
+  background-color: rgba(0,0,0,0);
+  /* background-color: white; */
+  /* border: 1px solid black; */
   position: fixed;
   z-index: 3;
   right: 10%;
