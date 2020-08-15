@@ -30,9 +30,6 @@ import java.util.Properties;
 @EnableAsync
 public class MailConfig {
 
-//    @Value("${spring.mail.default-encoding}")
-//    private String mailDefaultEncoding;
-
     @Value("${spring.mail.host}")
     private String mailHost;
 
@@ -44,12 +41,6 @@ public class MailConfig {
 
     @Value("${spring.mail.port}")
     private Integer mailPort;
-
-//    @Value("${spring.mail.protocol}")
-//    private String mailProtocol;
-
-//    @Value("${spring.mail.debug}")
-//    private String mailDebug;
 
     @Value("${spring.mail.properties.mail.smtp.auth}")
     private String mailSmtpAuth;
