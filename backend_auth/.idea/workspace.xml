@@ -38,12 +38,7 @@
   <component name="ChangeListManager">
     <list default="true" id="be227e13-619a-489d-8166-3b9497ebcabf" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/accolite/pru/health/AuthApp/config/MailConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/accolite/pru/health/AuthApp/config/MailConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/accolite/pru/health/AuthApp/service/EmailVerificationTokenService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/accolite/pru/health/AuthApp/service/EmailVerificationTokenService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/accolite/pru/health/AuthApp/service/RefreshTokenService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/accolite/pru/health/AuthApp/service/RefreshTokenService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend_board/src/main/java/com/websocket/board/controller/ChannelController.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend_board/src/main/java/com/websocket/board/controller/ChannelController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend_board/src/main/java/com/websocket/board/event/listener/OnInvitationListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/../backend_board/src/main/java/com/websocket/board/event/listener/OnInvitationListener.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -86,7 +81,7 @@
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/main/java/com/accolite/pru/health/AuthApp/event" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="settings.editor.selected.configurable" value="configurable.group.appearance" />
     <property name="show.unlinked.gradle.project.popup" value="true" />
@@ -148,6 +143,7 @@
       <workItem from="1597340477113" duration="5574000" />
       <workItem from="1597365920215" duration="10878000" />
       <workItem from="1597379606330" duration="3881000" />
+      <workItem from="1597487611635" duration="282000" />
     </task>
     <servers />
   </component>
@@ -183,10 +179,10 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="499" y="159" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.1536.824@0.0.1536.824" timestamp="1597378244632" />
-    <state x="549" y="167" key="FileChooserDialogImpl" timestamp="1597366448535">
+    <state x="549" y="167" key="FileChooserDialogImpl" timestamp="1597487873938">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="549" y="167" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1597366448535" />
+    <state x="549" y="167" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1597487873938" />
     <state width="1493" height="369" key="GridCell.Tab.0.bottom" timestamp="1597487272559">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
