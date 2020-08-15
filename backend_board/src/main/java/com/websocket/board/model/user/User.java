@@ -28,5 +28,4 @@ public class User {
     @JsonManagedReference
     @Builder.Default
     private List<UserChannel> userChannels = new ArrayList<>();
-
 }
