@@ -13,10 +13,7 @@
  */
 package com.accolite.pru.health.AuthApp.controller;
 
-import com.accolite.pru.health.AuthApp.event.OnGenerateResetLinkEvent;
-import com.accolite.pru.health.AuthApp.event.OnRegenerateEmailVerificationEvent;
-import com.accolite.pru.health.AuthApp.event.OnUserAccountChangeEvent;
-import com.accolite.pru.health.AuthApp.event.OnUserRegistrationCompleteEvent;
+import com.accolite.pru.health.AuthApp.event.*;
 import com.accolite.pru.health.AuthApp.exception.InvalidTokenRequestException;
 import com.accolite.pru.health.AuthApp.exception.PasswordResetException;
 import com.accolite.pru.health.AuthApp.exception.PasswordResetLinkException;
@@ -24,22 +21,20 @@ import com.accolite.pru.health.AuthApp.exception.TokenRefreshException;
 import com.accolite.pru.health.AuthApp.exception.UserLoginException;
 import com.accolite.pru.health.AuthApp.exception.UserRegistrationException;
 import com.accolite.pru.health.AuthApp.model.CustomUserDetails;
-import com.accolite.pru.health.AuthApp.model.payload.ApiResponse;
-import com.accolite.pru.health.AuthApp.model.payload.JwtAuthenticationResponse;
-import com.accolite.pru.health.AuthApp.model.payload.LoginRequest;
-import com.accolite.pru.health.AuthApp.model.payload.PasswordResetLinkRequest;
-import com.accolite.pru.health.AuthApp.model.payload.PasswordResetRequest;
-import com.accolite.pru.health.AuthApp.model.payload.RegistrationRequest;
-import com.accolite.pru.health.AuthApp.model.payload.TokenRefreshRequest;
+import com.accolite.pru.health.AuthApp.model.User;
+import com.accolite.pru.health.AuthApp.model.payload.*;
 import com.accolite.pru.health.AuthApp.model.token.EmailVerificationToken;
 import com.accolite.pru.health.AuthApp.model.token.RefreshToken;
 import com.accolite.pru.health.AuthApp.security.JwtTokenProvider;
 import com.accolite.pru.health.AuthApp.service.AuthService;
+import com.accolite.pru.health.AuthApp.service.UserService;
 import com.sun.jndi.toolkit.url.Uri;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import javassist.NotFoundException;
 import org.apache.log4j.Logger;
+import org.omg.CORBA.UserException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
@@ -52,6 +47,7 @@ import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static org.springframework.web.util.UriComponentsBuilder.newInstance;
@@ -60,7 +56,6 @@ import static org.springframework.web.util.UriComponentsBuilder.newInstance;
 @Controller
 @RequestMapping("/api/auth")
 @Api(value = "Authorization Rest API", description = "Defines endpoints that can be hit only when the user is not logged in. It's not secured by default.")
-// @CrossOrigin(origins = "http://localhost:3001")
 @CrossOrigin(origins = "http://localhost:3000")
 public class AuthController {
 
@@ -68,9 +63,11 @@ public class AuthController {
     private final AuthService authService;
     private final JwtTokenProvider tokenProvider;
     private final ApplicationEventPublisher applicationEventPublisher;
+    private final UserService userService;
 
     @Autowired
-    public AuthController(AuthService authService, JwtTokenProvider tokenProvider, ApplicationEventPublisher applicationEventPublisher) {
+    public AuthController(UserService userService,AuthService authService, JwtTokenProvider tokenProvider, ApplicationEventPublisher applicationEventPublisher) {
+        this.userService = userService;
         this.authService = authService;
         this.tokenProvider = tokenProvider;
         this.applicationEventPublisher = applicationEventPublisher;
@@ -108,7 +105,8 @@ public class AuthController {
                 .map(RefreshToken::getToken)
                 .map(refreshToken -> {
                     String jwtToken = authService.generateToken(customUserDetails);
-                    return ResponseEntity.ok(new JwtAuthenticationResponse(jwtToken, refreshToken, tokenProvider.getExpiryDuration()));
+                    User user = userService.findByEmail(loginRequest.getEmail()).orElseThrow(() -> new NoSuchElementException());
+                    return ResponseEntity.ok(new JwtAuthenticationResponse(jwtToken, refreshToken, tokenProvider.getExpiryDuration(),user));
                 })
                 .orElseThrow(() -> new UserLoginException("Couldn't create refresh token for: [" + loginRequest + "]"));
     }
@@ -130,6 +128,28 @@ public class AuthController {
                 .orElseThrow(() -> new UserRegistrationException(registrationRequest.getEmail(), "Missing user object in database"));
     }
 
+    @PostMapping("/invite")
+    @ApiOperation(value = "invite member to channel")
+    public ResponseEntity inviteUser(@ApiParam(value = "invitation payload") @Valid @RequestBody MailSendRequest mailSendRequest) {
+
+        return authService.inviteUser(mailSendRequest)
+                .map(member -> {
+                    UriComponentsBuilder urlBuilder = ServletUriComponentsBuilder.newInstance().scheme("http").host("localhost").port(9004).path("/api/auth/inviteConfirmation");
+//                    UriComponentsBuilder urlBuilder = ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/auth/registrationConfirmation");
+                    OnInvitationCompleteEvent onUserRegistrationCompleteEvent = new OnInvitationCompleteEvent(member, urlBuilder);
+                    applicationEventPublisher.publishEvent(onUserRegistrationCompleteEvent);
+                    logger.info("Registered User returned [API[: " + member);
+                    return ResponseEntity.ok(new ApiResponse(true, "User registered successfully. Check your email for verification"));
+                })
+                .orElseThrow(() -> new UserRegistrationException(mailSendRequest.getEmail(), "Missing user object in database"));
+    }
+
+    @GetMapping("/inviteConfirmation")
+    @ApiOperation(value = "Confirms the email verification token that has been generated for the user during registration")
+    public String confirmInvitation() {
+            return "redirect:http://localhost:3000";
+
+    }
 
     @PostMapping("/password/resetlink")
     @ApiOperation(value = "Receive the reset link request and publish event to send mail containing the password " +

@@ -62,7 +62,7 @@ public class OnUserRegistrationCompleteListener implements ApplicationListener<O
         String recipientAddress = user.getEmail();
         String emailConfirmationUrl =
                 event.getRedirectUrl().queryParam("token", token).toUriString();
-
+        System.out.println("send email verification called");
         try {
             mailService.sendEmailVerification(emailConfirmationUrl, recipientAddress);
         } catch (IOException | TemplateException | MessagingException e) {
