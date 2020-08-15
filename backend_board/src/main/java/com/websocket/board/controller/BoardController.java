@@ -27,7 +27,7 @@ public class BoardController {
      * 클라이언트로 부터 받은 보드 상태 전달
      */
     @MessageMapping("/board/message")
-    public void message(SocketBoardMessage message, @Header("token") String token) {
+    public void message(SocketBoardMessage message) {
         //String nickname = jwtTokenProvider.getUserNameFromJwt(token);
         // 로그인 회원 정보로 대화명 설정
         //message.setSender(nickname);

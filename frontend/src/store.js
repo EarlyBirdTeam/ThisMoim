@@ -240,27 +240,27 @@ export const store = new Vuex.Store({
     /**
      * 유저 정보 가져오기
      */
-    [constants.METHODS.GET_USER] : (store, payload) =>{
-        // console.log("data : " + payload);
+    // [constants.METHODS.GET_USER] : (store, payload) =>{
+    //     // console.log("data : " + payload);
 
-        const data = payload;
-        const url = `/api/user/userInfo?email=${data}`;
-        authConnect.get(url, {
-            headers: {
-                Authorization: 'Bearer ' + store.getters.accessToken
-            }
-        })
-            .then(res => {
-                const dataWhatINeed = res.data  ;
-                console.log("In store, dataWhatINeed is : ", dataWhatINeed);
-                store.commit(constants.METHODS.GET_USER, {
-                    dataWhatINeed
-                });
-            })
-            .catch(exp => {
-                store.dispatch("throwError", exp);
-            });
-    },
+    //     const data = payload;
+    //     const url = `/api/user/userInfo?email=${data}`;
+    //     authConnect.get(url, {
+    //         headers: {
+    //             Authorization: 'Bearer ' + store.getters.accessToken
+    //         }
+    //     })
+    //         .then(res => {
+    //             const dataWhatINeed = res.data  ;
+    //             console.log("In store, dataWhatINeed is : ", dataWhatINeed);
+    //             store.commit(constants.METHODS.GET_USER, {
+    //                 dataWhatINeed
+    //             });
+    //         })
+    //         .catch(exp => {
+    //             store.dispatch("throwError", exp);
+    //         });
+    // },
 
     /**
      * 이메일 중복 체크 메소드
