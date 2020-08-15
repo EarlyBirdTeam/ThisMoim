@@ -13,6 +13,12 @@
  */
 package com.accolite.pru.health.AuthApp.model.payload;
 
+import com.accolite.pru.health.AuthApp.model.User;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class JwtAuthenticationResponse {
 
     private String accessToken;
@@ -23,6 +29,8 @@ public class JwtAuthenticationResponse {
 
     private Long expiryDuration;
 
+    private User user;
+
     public JwtAuthenticationResponse(String accessToken, String refreshToken, Long expiryDuration) {
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
@@ -30,35 +38,12 @@ public class JwtAuthenticationResponse {
         tokenType = "Bearer ";
     }
 
-    public String getAccessToken() {
-        return accessToken;
-    }
-
-    public void setAccessToken(String accessToken) {
+    public JwtAuthenticationResponse(String accessToken, String refreshToken, Long expiryDuration,User user) {
         this.accessToken = accessToken;
-    }
-
-    public String getTokenType() {
-        return tokenType;
-    }
-
-    public void setTokenType(String tokenType) {
-        this.tokenType = tokenType;
-    }
-
-    public String getRefreshToken() {
-        return refreshToken;
-    }
-
-    public void setRefreshToken(String refreshToken) {
         this.refreshToken = refreshToken;
-    }
-
-    public Long getExpiryDuration() {
-        return expiryDuration;
-    }
-
-    public void setExpiryDuration(Long expiryDuration) {
         this.expiryDuration = expiryDuration;
+        tokenType = "Bearer ";
+        this.user = user;
     }
+
 }

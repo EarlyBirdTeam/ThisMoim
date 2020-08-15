@@ -22,15 +22,12 @@ import com.accolite.pru.health.AuthApp.model.CustomUserDetails;
 import com.accolite.pru.health.AuthApp.model.PasswordResetToken;
 import com.accolite.pru.health.AuthApp.model.User;
 import com.accolite.pru.health.AuthApp.model.UserDevice;
-import com.accolite.pru.health.AuthApp.model.payload.LoginRequest;
-import com.accolite.pru.health.AuthApp.model.payload.PasswordResetLinkRequest;
-import com.accolite.pru.health.AuthApp.model.payload.PasswordResetRequest;
-import com.accolite.pru.health.AuthApp.model.payload.RegistrationRequest;
-import com.accolite.pru.health.AuthApp.model.payload.TokenRefreshRequest;
-import com.accolite.pru.health.AuthApp.model.payload.UpdatePasswordRequest;
+import com.accolite.pru.health.AuthApp.model.member.Member;
+import com.accolite.pru.health.AuthApp.model.payload.*;
 import com.accolite.pru.health.AuthApp.model.token.EmailVerificationToken;
 import com.accolite.pru.health.AuthApp.model.token.RefreshToken;
 import com.accolite.pru.health.AuthApp.security.JwtTokenProvider;
+import javassist.NotFoundException;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -39,6 +36,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -53,9 +51,10 @@ public class AuthService {
     private final EmailVerificationTokenService emailVerificationTokenService;
     private final UserDeviceService userDeviceService;
     private final PasswordResetTokenService passwordResetTokenService;
+    private final MemberService memberService;
 
     @Autowired
-    public AuthService(UserService userService, JwtTokenProvider tokenProvider, RefreshTokenService refreshTokenService, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, EmailVerificationTokenService emailVerificationTokenService, UserDeviceService userDeviceService, PasswordResetTokenService passwordResetTokenService) {
+    public AuthService(UserService userService, JwtTokenProvider tokenProvider, RefreshTokenService refreshTokenService, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager, EmailVerificationTokenService emailVerificationTokenService, UserDeviceService userDeviceService, PasswordResetTokenService passwordResetTokenService, MemberService memberService) {
         this.userService = userService;
         this.tokenProvider = tokenProvider;
         this.refreshTokenService = refreshTokenService;
@@ -64,6 +63,7 @@ public class AuthService {
         this.emailVerificationTokenService = emailVerificationTokenService;
         this.userDeviceService = userDeviceService;
         this.passwordResetTokenService = passwordResetTokenService;
+        this.memberService = memberService;
     }
 
     /**
@@ -83,6 +83,13 @@ public class AuthService {
         return Optional.ofNullable(registeredNewUser);
     }
 
+    public Optional<Member> inviteUser(MailSendRequest mailSendRequest) {
+        Member newMember = memberService.createMember(
+                userService.findByEmail(mailSendRequest.getEmail())
+                        .orElseThrow(() -> new ResourceNotFoundException("Email", "Address", mailSendRequest.getEmail()))
+                ,mailSendRequest.getChannelId());
+        return Optional.ofNullable(newMember);
+    }
     /**
      * Checks if the given email already exists in the database repository or not
      *

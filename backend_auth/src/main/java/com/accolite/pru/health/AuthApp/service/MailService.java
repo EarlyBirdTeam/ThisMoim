@@ -126,4 +126,18 @@ public class MailService {
         mailSender.send(message);
     }
 
+    public void sendInviteEmail(String inviteUrl, String to)
+            throws IOException, TemplateException, MessagingException {
+        Mail mail = new Mail();
+        mail.setSubject("Circle invitation [Team EarlyBird]");
+        mail.setTo(to);
+        mail.setFrom(mailFrom);
+        mail.getModel().put("userName", to);
+        mail.getModel().put("invitationLink", inviteUrl);
+        templateConfiguration.setClassForTemplateLoading(getClass(), basePackagePath);
+        Template template = templateConfiguration.getTemplate("circle-invite.ftl");
+        String mailContent = FreeMarkerTemplateUtils.processTemplateIntoString(template, mail.getModel());
+        mail.setContent(mailContent);
+        send(mail);
+    }
 }
