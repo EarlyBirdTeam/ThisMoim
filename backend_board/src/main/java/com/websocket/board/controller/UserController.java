@@ -25,6 +25,8 @@ public class UserController {
                 loginResponse.getAccessToken(),
                 request.getEmail());
 
+        loginResponse.setUserInfoResponse(userInfoResponse);
+
         // 보드 서버에 로그인한 사용자 정보 저장
         // userService.saveUser(loginResponse);
         userService.saveUserTest(loginResponse, userInfoResponse);

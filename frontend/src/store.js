@@ -173,28 +173,33 @@ export const store = new Vuex.Store({
             회원 로그인 메소드
         */
        [constants.METHODS.LOGIN_USER] : (_store, payload) =>{
-        const url = "api/auth/login";
+        const url = "/api/auth/login";
         const data = {
             "email": payload.email,
             "password": payload.password
         }   
-            authConnect
+            http
             .post(url, data)
             .then(res => {
                 console.log("In store, res is : ", res);
                 if (res.status == 200) {
                     cookies.set('AccessToken', res.data.accessToken);
                     store.commit(constants.METHODS.LOGIN_USER, [data, res.data.accessToken]);
-                    store.dispatch(constants.METHODS.GET_USER, data.email);
+                    // store.commit(constants.METHODS.GET_USER, res.data.userInfoResponse);
+                    const dataWhatINeed = res.data.userInfoResponse  ;
+                    console.log("In store, dataWhatINeed is : ", dataWhatINeed);
+                    store.commit(constants.METHODS.GET_USER, {
+                        dataWhatINeed
+                    });
+                    //store.dispatch(constants.METHODS.GET_USER, data.email);
                     console.log("In store, state is : ", store.state);
-                    
                     cookies.set('AccessData', _store.getters.userData.email);
                     return true;
                 }
             })
             .catch(err => {
                 console.log(err.message);
-                 alert("로그인 정보가 잘못되었습니다.");
+                alert("로그인 정보가 잘못되었습니다.");
                 return false;
             });
             
