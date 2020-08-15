@@ -8,11 +8,10 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
+@NoArgsConstructor
 @Getter
 @Setter
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
 public class Postit implements Serializable {
 
     @Id

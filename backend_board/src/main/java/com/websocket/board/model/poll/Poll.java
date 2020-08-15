@@ -2,10 +2,7 @@ package com.websocket.board.model.poll;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.websocket.board.model.postit.Postit;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,9 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 @Builder
 public class Poll implements Serializable {
 
