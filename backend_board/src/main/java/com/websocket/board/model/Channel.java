@@ -1,5 +1,6 @@
 package com.websocket.board.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.websocket.board.model.calendar.Scheduler;
 import com.websocket.board.model.kanban.Kanban;
@@ -18,6 +19,7 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
+@JsonIgnoreProperties({"postitList", "scheduler", "kanban", "userList"})
 public class Channel implements Serializable {
 
     //private static final long serialVersionUID = 6494678977089006639L;
@@ -33,7 +35,7 @@ public class Channel implements Serializable {
 
     @OneToMany(mappedBy = "channel")
     @JsonManagedReference
-    @Builder.Default
+    //@Builder.Default
     private List<Postit> postitList = new ArrayList<>();
 
     @OneToOne(mappedBy = "channel")
@@ -44,19 +46,9 @@ public class Channel implements Serializable {
     @JsonManagedReference
     private Kanban kanban;
 
-//    @OneToMany(mappedBy = "channel")
-//    @JsonManagedReference
-//    @Builder.Default
-//    private List<Member> memberList = new ArrayList<>();
-
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "board_user_id")
-//    @JsonBackReference
-//    private BoardUser boardUser;
-
     @OneToMany(mappedBy = "channel")
     @JsonManagedReference
-    @Builder.Default
+    //@Builder.Default
     private List<UserChannel> userList = new ArrayList<>();
 
     public Channel(String channelName) {

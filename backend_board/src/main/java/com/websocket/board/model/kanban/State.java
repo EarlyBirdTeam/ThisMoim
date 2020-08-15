@@ -1,6 +1,7 @@
 package com.websocket.board.model.kanban;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
@@ -15,6 +16,7 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
+@JsonIgnoreProperties("tasks")
 public class State implements Serializable {
 
     @Id
@@ -24,7 +26,7 @@ public class State implements Serializable {
 
     @OneToMany(mappedBy = "state")
     @JsonManagedReference
-    @Builder.Default
+    //@Builder.Default
     private List<Task> tasks = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
