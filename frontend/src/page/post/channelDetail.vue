@@ -338,7 +338,9 @@ export default {
           console.log(response.data);
           // this.board.postitList = response.data.postitList;
           // this.board.idCount = response.data.idCount;
-          this.board = response.data;
+          if(!!response.data) {
+            this.board = response.data;
+          }
           this.board.delete = { moduleName: "", id: -1 };
           if(response.data.kanban !== null) {
             this.$store.state.Kanban.states = response.data.kanban.states;

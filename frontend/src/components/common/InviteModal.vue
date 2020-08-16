@@ -47,9 +47,6 @@
 
 <script>
 export default {
-  created() {
-    this.$store.state.inviteModal = true;
-  },
   data() {
     return {
       memberList: [],
