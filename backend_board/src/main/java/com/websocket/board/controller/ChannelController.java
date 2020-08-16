@@ -4,6 +4,7 @@ import com.websocket.board.config.JwtTokenProvider;
 import com.websocket.board.model.Channel;
 import com.websocket.board.model.LoginInfo;
 import com.websocket.board.payload.CreateChannelRequest;
+import com.websocket.board.payload.UserInfoRequest;
 import com.websocket.board.payload.ValidTokenRequest;
 import com.websocket.board.repo.ChannelRedisRepository;
 import com.websocket.board.service.BoardClientService;
@@ -35,14 +36,13 @@ public class ChannelController {
 //        channels.stream().forEach(channel -> channel.setUserCount(channelRedisRepository.getUserCount(channel.getChannelId())));
 //        return channels;
 //    }
-
-    @GetMapping("/channels")
+    @PostMapping("/channels")
     @ResponseBody
     public List<Channel> myChannel(
             @RequestHeader(name = "Authorization") String Authorization,
-            @RequestParam(name = "email") String email) {
+            @RequestBody UserInfoRequest userInfoRequest) {
         // 각 사용자가 가진 채널 리스트 전달하기 <- 디비에서 가져오기
-        List<Channel> channels = channelService.getMyChannels(email);
+        List<Channel> channels = channelService.getMyChannels(userInfoRequest.getEmail());
         //List<Channel> channels = channelRedisRepository.findAllChannel();
         // 현재 채널에 접속해 있는 인원을 가져오는 부분
         //channels.stream().forEach(channel -> channel.setUserCount(channelRedisRepository.getUserCount(channel.getChannelId())));
