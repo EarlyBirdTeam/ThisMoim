@@ -3,60 +3,104 @@
     <div class="toolbar">
       <v-snackbar
         app
-        top
+        bottom
         v-model="snackbar.isPresent"
         :timeout="snackbar.timeout"
         :color="snackbar.color"
       >{{ snackbar.text }}</v-snackbar>
       <div>
         <div class="toolBox">
-          <v-btn
-            icon
-            color="orange"
-            @click="pleaseDrag"
-            draggable="true"
-            @dragenter="dragging=true"
-            @dragend="moduleDragEnd('postit', $event)"
-          >
-            <v-icon>mdi-message</v-icon>
-          </v-btn>
-          <v-btn
-            icon
-            color="orange"
-            @click="pleaseDrag"
-            draggable="true"
-            @dragend="moduleDragEnd('kanban', $event)"
-          >
-            <v-icon>mdi-clipboard-list-outline</v-icon>
-          </v-btn>
-          <!-- <v-btn icon color="orange" @click="createMap">
-          <v-icon>mdi-map</v-icon>
-          </v-btn>-->
-          <v-btn
-            icon
-            color="orange"
-            @click="pleaseDrag"
-            draggable="true"
-            @dragend="moduleDragEnd('scheduler', $event)"
-          >
-            <v-icon>mdi-calendar</v-icon>
-          </v-btn>
-          <v-btn
-            icon
-            color="orange"
-            @click="pleaseDrag"
-            draggable="true"
-            @dragend="moduleDragEnd('poll', $event)"
-          >
-            <v-icon>mdi-vote</v-icon>
-          </v-btn>
+          <v-tooltip right>
+            <template v-slot:activator="{ on }">
+              <div v-on="on">
+                <v-btn
+                  icon
+                  color="orange"
+                  @click="pleaseDrag"
+                  draggable="true"
+                  @dragend="moduleDragEnd('postit', $event)"
+                >
+                  <v-icon>mdi-message</v-icon>
+                </v-btn>
+              </div>
+            </template>
+            <span>Post-it</span>
+          </v-tooltip>
+
+          <v-tooltip right>
+            <template v-slot:activator="{ on }">
+              <div v-on="on">
+                <v-btn
+                  icon
+                  color="orange"
+                  @click="pleaseDrag"
+                  draggable="true"
+                  @dragend="moduleDragEnd('kanban', $event)"
+                >
+                  <v-icon>mdi-clipboard-list-outline</v-icon>
+                </v-btn>
+              </div>
+            </template>
+            <span>Kanban-Board</span>
+          </v-tooltip>
+          
+          <v-tooltip right>
+            <template v-slot:activator="{ on }">
+              <div v-on="on">
+                <v-btn
+                  icon
+                  color="orange"
+                  @click="pleaseDrag"
+                  draggable="true"
+                  @dragend="moduleDragEnd('scheduler', $event)"
+                >
+                  <v-icon>mdi-calendar</v-icon>
+                </v-btn>
+              </div>
+            </template>
+            <span>Scheduler</span>
+          </v-tooltip>
+          
+          <v-tooltip right>
+            <template v-slot:activator="{ on }">
+              <div v-on="on">
+                <v-btn
+                  icon
+                  color="orange"
+                  @click="pleaseDrag"
+                  draggable="true"
+                  @dragend="moduleDragEnd('poll', $event)"
+                >
+                  <v-icon>mdi-vote</v-icon>
+                </v-btn>
+              </div>
+            </template>
+            <span>Poll</span>
+          </v-tooltip>
+
+          <!-- <v-tooltip right>
+            <template v-slot:activator="{ on }">
+              <div v-on="on">
+                <v-btn
+                  icon
+                  color="#FF5722"
+                  @click="$store.state.inviteModal = !$store.state.inviteModal"
+                  draggable="true"
+                  class="invite-mem"
+                >
+                  <v-icon>mdi-plus-circle-outline</v-icon>
+                </v-btn>
+              </div>
+            </template>
+            <span>멤버 초대하기</span>
+          </v-tooltip> -->
         </div>
         <br />
       </div>
     </div>
 
-    <v-responsive class="vueBox text-center ma-3"></v-responsive>
-
+    <!-- <v-responsive class="vueBox text-center ma-3"></v-responsive> -->
+    <div class="testerDot"></div>
     <v-responsive>
       <v-responsive
         class="userListBadge badge-info text-center lighten-2 rounded-circle d-inline-flex align-center justify-center ma-3"
@@ -98,7 +142,9 @@
       @wheel="wheelEvent"
       style="height: 100%; width: 100%;"
     >
-      <div class="MoveableBox realBoard" @click.right="test3">
+      
+      <div class="MoveableBox realBoard" @click.right="test3" @dragenter="test4"
+      @dragover="test5">
         <div
           class="postit"
           v-for="(pi, idx) in this.board.postitList"
@@ -108,75 +154,40 @@
           <Postit :id="pi.frontPostitId" :postit="pi" :style="{left: pi.left, top: pi.top}" />
         </div>
 
-        <div class="kanban" v-if="board.isKanban" @click.right="deleteKanban">
-          <Kanban />
+        <div class="kanban" @click.right="deleteAction('kanban', $event)">
+          <Kanban v-if="board.isKanban" :style="{left:board.kanban.left, top:board.kanban.top}"/>
         </div>
         <div class="map" @click.right="deleteAction">
           <Map v-if="map.isPresent" />
         </div>
 
-        <div class="Scheduler" @click.right="deleteAction">
+        <div class="Scheduler" @click.right="deleteAction('scheduler', $event)">
           <Scheduler
             v-if="!!board.scheduler"
             :style="{left:board.scheduler.left, top:board.scheduler.top}"
           />
         </div>
 
-        <div class="Poll" @click.right="deleteAction">
-          <Poll v-if="isPoll" :style="{left: board.poll.left, top: board.poll.top}" />
+        <div class="Poll" @click.right="deleteAction('poll', $event)">
+          <Poll
+            v-if="!!board.poll"
+            :style="{left: $store.state.poll.left, top: $store.state.poll.top}"
+          />
         </div>
-        <v-dialog width="600px">
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn
-              color="rgb(255,157,91)"
-              style="right:10px; bottom:30px; position:fixed; display:flex"
-              dark
-              fab
-              large
-              v-bind="attrs"
-              v-on="on"
-            >
-              <v-icon>mdi-message-bulleted</v-icon>
-            </v-btn>
-          </template>
-          <v-card>
-            <!-- <v-card-title>
-          <span class="headline">채팅</span>
-            </v-card-title>-->
-            <v-card-text style="padding:16px">
-              <Chat />
-            </v-card-text>
-          </v-card>
-        </v-dialog>
+        {{ board }}<br><br>
+        board : {{ board.poll }} 
+        <br />
+        <br />
+        <br />
 
-        {{ board }}
-        <div class="testerDot"></div>
+        <!-- store : {{ $store.state.poll }}<br><br>
+        {{$store.state.userData }}
+        <InviteModal v-model="$store.state.inviteModal"/> -->
       </div>
-      <v-dialog width="600px">
-        <template v-slot:activator="{ on, attrs }">
-          <v-btn
-            color="rgb(255,157,91)"
-            style="right:10px; bottom:30px; position:fixed; display:flex"
-            dark
-            fab
-            large
-            v-bind="attrs"
-            v-on="on"
-          >
-            <v-icon>mdi-message-bulleted</v-icon>
-          </v-btn>
-        </template>
-
-        <v-card>
-          <!-- <v-card-title>
-              <span class="headline">채팅</span>
-          </v-card-title>-->
-          <v-card-text style="padding:16px"></v-card-text>
-        </v-card>
-      </v-dialog>
 
       <!-- <Postit :id="pi.id" :postit="pi" style="position: relative; display: inline-block"/> -->
     </div>
+    <Chat />
   </div>
 </template>
 
@@ -191,9 +202,14 @@ import Scheduler from "../../components/module/Scheduler";
 import Chat from "../../components/common/Chat";
 import Poll from "../../components/common/Poll";
 import Kanban from "../../components/module/Kanban";
+// import InviteModal from "../../components/common/InviteModal"
 
 export default {
-  props: [],
+  computed: {
+    poll() {
+      return this.$store.state.poll;
+    },
+  },
   data() {
     return {
       ws: null,
@@ -211,7 +227,7 @@ export default {
         isKanban: false,
         kanban: this.$store.state.Kanban,
         scheduler: {},
-        poll: {},
+        // poll: {},
         isDelete: false,
         delete: {
           moduleName: "",
@@ -254,10 +270,11 @@ export default {
       tp: 0,
       lastBX: this.boardX,
       lastBY: this.boardY,
+      moduleXP : this.boardLength / 2,
+      moduleYP : this.boardLength / 2,
 
       memberView: false,
       idc: 0,
-      isPoll: false,
     };
   },
   created() {
@@ -266,7 +283,7 @@ export default {
       // 우클릭 default이벤트 차단
       return false;
     };
-    // this.initRecv();
+    this.initRecv();
   },
   mounted() {
     document.querySelector(".realBoard").style.height = this.boardLength + "px";
@@ -320,18 +337,24 @@ export default {
       http
         .get(`/board/${this.board.channelId}`)
         .then((response) => {
-          // console.log(response.data)
+          console.log('initRecv@@@@');
+          console.log(response.data);
           // this.board.postitList = response.data.postitList;
           // this.board.idCount = response.data.idCount;
-          this.board = response.data;
+          if(!!response.data) {
+            this.board = response.data;
+          }
           this.board.delete = { moduleName: "", id: -1 };
+          if(response.data.kanban !== null) {
+            this.$store.state.Kanban.states = response.data.kanban.states;
+          }
+          // this.board.Kanban.columns = response.data.kanban.columns;
         })
-        .catch((e) => {});
-      this.createSnackbar(
-        `'${this.channelName}' 채널에 입장하였습니다!`,
-        3000,
-        "info"
-      );
+        .catch((e) => {
+          console.log('initRecv 실패')
+          console.log(e);
+        });
+        this.createSnackbar(`'${this.channelName}' 채널에 입장하였습니다!`, 3000, "info");
     },
     sendMessage: function (type) {
       this.ws.send(
@@ -342,23 +365,26 @@ export default {
       this.createSnackbar("수정되었습니다", 1000, "warning");
     },
     recvMessage: function (recv) {
-      // console.log("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@2")
-      // console.log(recv.poll);
       this.userCount = recv.userCount;
       this.board.idCount = recv.idCount;
       this.board.postitList = recv.postitList;
       this.board.isDelete = false;
-      if (!!recv.scheduler) this.board.scheduler = recv.scheduler;
+      if (!!recv.scheduler) {
+        this.board.scheduler = recv.scheduler;
+        this.$store.state.scheduler.events = recv.scheduler.events;
+      }
       this.board.poll = recv.poll;
-      // this.$store.state.scheduler.events = recv.scheduler.events;
+      this.$store.state.poll = recv.poll;
+      this.board.kanban = recv.kanban;
+      this.$store.state.Kanban = recv.kanban;
       //crudModule 초기화
       this.board.crudModule = {
         modulType: "",
         crudType: "",
-        moduleObject: Object,
+        moduleObject: null,
       };
     },
-    createPostit(left = "500px", top = "170px") {
+    createPostit(lp, tp) {
       if (this.board.postitList.length > 20) {
         this.createSnackbar("포스트잇이 너무 많습니다!", 3000, "error");
         return;
@@ -368,8 +394,8 @@ export default {
       // postitList에 새로운 포스트잇 더하기
       var newPostit = {
         frontPostitId: idc,
-        left: this.boardX - 120 + "px",
-        top: this.boardY - 120 + "px",
+        left: this.moduleXP - 120 + "px",
+        top: this.moduleYP - 120 + "px",
         title: "",
         contents: "",
         channel: this.board.channelId,
@@ -377,62 +403,67 @@ export default {
       this.board.postitList.push(newPostit);
       this.crudMethod("POSTIT", "CREATE", newPostit);
       this.sendMessage();
-      this.crudMethod("", "", null);
       // snackbar
       this.createSnackbar("포스트잇이 생성되었습니다!", 1500, "success");
     },
 
-    createKanban(event) {
+    createKanban(left = "500px", top = "170px") {
       if (this.board.isKanban == true) {
         this.createSnackbar("보드가 이미 생성되어 있습니다", 3000, "error");
         return;
       }
-
-      this.createSnackbar("보드가 생성되었습니다", 1500, "success");
       this.board.isKanban = true;
       this.board.kanban = this.$store.state.Kanban;
+      this.board.kanban.left = this.moduleXP + "px";
+      this.board.kanban.top = this.moduleYP + "px";
+      this.crudMethod("KANBAN", "CREATE", this.board.kanban);
+      this.sendMessage();
+      this.createSnackbar("보드가 생성되었습니다", 1500, "success");
     },
 
-    deleteKanban({ target }) {
+    deleteKanban({ target }) { console.log(target);
       if (confirm("요소를 삭제하시겠습니까?") === true) {
+       
         target.remove();
         this.cloakMoveable();
         this.board.isKanban = false;
-        this.$store.state.Kanban.columns = [
+        this.crudMethod("KANBAN", "DELETE", this.board.kanban);
+        this.$store.state.Kanban.states = [
           {
-            columnTitle: "할 일",
+            columnTitle: "TO DO",
             tasks: [],
           },
           {
-            columnTitle: "진행중",
+            columnTitle: "IN PROGRESS",
             tasks: [],
           },
           {
-            columnTitle: "완료",
+            columnTitle: "DONE",
             tasks: [],
           },
         ];
+        this.sendMessage();
       }
     },
 
-    createMap(event) {
-      if (this.map.isPresent) {
-        this.createSnackbar("이미 카카오맵이 있습니다!", 3000, "error");
-      } else {
-        this.map.isPresent = true;
-      }
-    },
+    // createMap(event) {
+    //   if (this.map.isPresent) {
+    //     this.createSnackbar("이미 카카오맵이 있습니다!", 3000, "error");
+    //   } else {
+    //     this.map.isPresent = true;
+    //   }
+    // },
     createScheduler(left = "600px", top = "270px") {
       if (!!this.board.scheduler) {
         this.createSnackbar("이미 달력이 있습니다!", 3000, "error");
       } else {
         this.board.scheduler = {
-          left: left,
-          top: top,
+          left: this.moduleXP + "px",
+          top: this.moduleYP + "px",
           events: this.$store.state.scheduler.events,
         };
         console.log("create Scheduler");
-        console.log(this.board.scheduler);
+        this.crudMethod("SCHEDULER", "CREATE", this.board.scheduler);
         this.sendMessage();
         // snackbar
         this.createSnackbar("달력이 생성되었습니다!", 1500, "success");
@@ -440,14 +471,13 @@ export default {
     },
 
     createPoll(left = "500px", top = "170px") {
-      if (this.isPoll) {
+      if (!!this.board.poll) {
         this.createSnackbar("이미 투표가 있습니다!", 3000, "error");
       } else {
-        this.isPoll = true;
         const idc = this.board.idCount++;
         this.board.poll = this.$store.state.poll;
-        this.board.poll.left = left;
-        this.board.poll.top = top;
+        this.board.poll.left = this.moduleXP + "px";
+        this.board.poll.top = this.moduleYP + "px";
         this.crudMethod("POLL", "CREATE", this.board.poll);
         this.sendMessage();
         // snackbar
@@ -538,7 +568,11 @@ export default {
           break;
         case "SCHEDULER":
           break;
+        case "DIV":
+          return;
       }
+      this.crudMethod(target.nodeName, "UPDATE", moduleObj);
+      this.sendMessage();
 
       if (target.getAttribute("class") != null) {
         var clas = target.getAttribute("class").split(" ");
@@ -635,7 +669,7 @@ export default {
         this.board.isDelete = true;
         this.board.delete.moduleName = "postit";
         this.board.delete.id = this.board.postitList[idx].frontPostitId;
-        this.crudMethod("POSTIT", "CREATE", this.board.postitList[idx]);
+        this.crudMethod("POSTIT", "DELETE", this.board.postitList[idx]);
         this.board.postitList.splice(idx, 1);
         this.sendMessage();
         this.cloakMoveable();
@@ -702,36 +736,36 @@ export default {
         ".realBoard"
       ).style.transform = `scale(${this.boardScale})`;
     },
-    deleteAction({ target }) {
+    deleteAction(moduleName, { target }) {
       if (confirm("요소를 삭제하시겠습니까?") === true) {
-        if (target.getAttribute("class") != null) {
-          var clas = target.getAttribute("class").split(" ");
-          console.log(clas);
-          for (var cla in clas) {
-            if (clas[cla] == "scheduler") {
-              this.board.scheduler = {
-                left: null,
-                top: null,
-                events: [
-                  {
-                    name: "오프라인",
-                    content: "hello",
-                    start: "2020-08-05T12:30:00",
-                    end: "2020-08-05T18:00:00",
-                  },
-                ],
-              };
-              console.log(this.board.scheduler);
-            } else if (clas == "Poll") {
-              this.board.poll = {};
-              this.isPoll = false;
-            }
-          }
+        if (moduleName == "scheduler") {
+          this.crudMethod("SCHEDULER", "DELETE", this.board.scheduler);
+          this.board.scheduler = null;
+        } else if (moduleName == "poll") {
+          console.log('delete POLLLLLLLLLL')
+          this.crudMethod("POLL", "DELETE", this.board.poll);
+          this.board.poll = null;
+        } else if (moduleName == "kanban"){
+          this.crudMethod("KANBAN", "DELETE", this.board.kanban);
+          this.board.isKanban = false;
+          this.$store.state.Kanban.states = [
+            {
+              columnTitle: "TO DO",
+              tasks: [],
+            },
+            {
+              columnTitle: "IN PROGRESS",
+              tasks: [],
+            },
+            {
+              columnTitle: "DONE",
+              tasks: [],
+            },
+          ];
         }
-        target.remove();
-        this.sendMessage();
-        this.cloakMoveable();
       }
+      this.sendMessage();
+      this.cloakMoveable();
     },
     blockMoveable() {
       document.querySelector(".moveable-control-box").style.display = "block";
@@ -739,18 +773,23 @@ export default {
     cloakMoveable() {
       document.querySelector(".moveable-control-box").style.display = "none";
     },
-    moduleDragEnd(moduleName, { offsetX, offsetY }) {
+    // moduleDragEnd(moduleName, { offsetX, offsetY }) {
+    moduleDragEnd(moduleName, event) {
       switch (moduleName) {
         case "postit":
-          this.createPostit(`${offsetX}px`, `${offsetY}px`);
+          this.createPostit(`${event.offsetX}`, `${event.offsetY}`);
           break;
         case "scheduler":
-          this.createScheduler(`${offsetX}px`, `${offsetY}px`);
+          this.createScheduler(`${event.offsetX}px`, `${event.offsetY}px`);
           break;
         case "poll":
-          this.createPoll(`${offsetX}px`, `${offsetY}px`);
+          this.createPoll(`${event.offsetX}px`, `${event.offsetY}px`);
+          break;
+        case "kanban":
+          this.createKanban(`${event.offsetX}px`, `${event.offsetY}px`);
           break;
       }
+      console.log("drag end at : ", event);
     },
     pleaseDrag() {
       this.createSnackbar(
@@ -761,7 +800,7 @@ export default {
     },
     crudMethod(moduleType, crudType, moduleObject) {
       this.board.crudModule = {
-        modulType: moduleType,
+        moduleType: moduleType,
         crudType: crudType,
         moduleObject: moduleObject,
       };
@@ -778,6 +817,7 @@ export default {
       }
     },
     test3(event) {
+      console.log(event);
       // let lastOriginX = document.querySelector('.realBoard').style.transformOrigin.split(" ")[0];
       // let lastOriginY = document.querySelector('.realBoard').style.transformOrigin.split(" ")[1];
       // console.log("LastOrigin : ", lastOriginX, " ", lastOriginY);
@@ -797,6 +837,18 @@ export default {
       // // }
       // console.log("origin : ", document.querySelector('.realBoard').style.transformOrigin);
     },
+    test4(event){
+      console.log(event.target);
+      
+    },
+    test5(event){
+      // console.log(event.offsetX, event.offsetY);
+      this.moduleXP = event.offsetX;
+      this.moduleYP = event.offsetY;
+    },
+    inviteMember(){
+      alert('hi');
+    },
   },
   components: {
     Moveable,
@@ -806,8 +858,18 @@ export default {
     Chat,
     Kanban,
     Poll,
+    // InviteModal,
   },
 };
+
+
+// document.addEventListener("dragenter", function( event ) {
+//       // highlight potential drop target when the draggable element enters it
+//       if ( event.target.className == "realBoard" ) {
+//           event.target.style.background = "purple";
+//       }
+
+//   }, false);
 </script>
 
 <style scoped>
@@ -916,11 +978,13 @@ export default {
   width: 64px;
   bottom: 50%;
   left: 2%;
-  padding: 10px;
+  padding: 10px 0px;
   display: inline;
   background-color: white;
   text-align: center;
   vertical-align: middle;
+  border-radius: 20px;
+  border: 2px solid rgba(104, 104, 104, 0.5) ;
 }
 
 .toolbar {
@@ -941,8 +1005,9 @@ export default {
 }
 
 .vueBox {
-  background-color: white;
-  border: 1px solid black;
+  background-color: rgba(0,0,0,0);
+  /* background-color: white; */
+  /* border: 1px solid black; */
   position: fixed;
   z-index: 3;
   right: 10%;
@@ -985,5 +1050,8 @@ export default {
 }
 .testBox {
   display: inline;
+}
+.invite-mem{
+  margin-top: 20px;
 }
 </style>
