@@ -3,6 +3,7 @@
     <v-container fluid>
       <div class="d-flex justify-content-between">
         <h2>나의 모임목록</h2>
+        {{ this.$store.state.userData }}
         <div class="d-flex">
           <v-text-field @keyup.enter="createChannel" placeholder="채널 제목" v-model="channel_name"></v-text-field>
           <button @click="createChannel" class="circleScaleBtn"><span>채널 생성</span></button>
