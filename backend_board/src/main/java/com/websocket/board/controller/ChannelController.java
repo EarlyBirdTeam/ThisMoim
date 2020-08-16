@@ -3,9 +3,7 @@ package com.websocket.board.controller;
 import com.websocket.board.config.JwtTokenProvider;
 import com.websocket.board.model.Channel;
 import com.websocket.board.model.LoginInfo;
-import com.websocket.board.payload.CreateChannelRequest;
-import com.websocket.board.payload.UserInfoRequest;
-import com.websocket.board.payload.ValidTokenRequest;
+import com.websocket.board.payload.*;
 import com.websocket.board.repo.ChannelRedisRepository;
 import com.websocket.board.service.BoardClientService;
 import com.websocket.board.service.ChannelService;
@@ -70,6 +68,26 @@ public class ChannelController {
         // 인증 서버에서 토큰 검증 api 완성되기 전 테스트
         channelService.saveChannel(createChannelRequest, channelId);
         return channel;
+    }
+
+    @PostMapping("/channel/invitation")
+    @ResponseBody
+    public InviteChannelResponse enterInvitedChannel(@RequestBody InviteChannelRequest inviteChannelRequest) {
+        String channelId = inviteChannelRequest.getChannelId();
+        // save channel in mariadb
+        // check token validation before creating channel
+
+        // 인증 서버에서 토큰 검증 api 완성되면 사용할 것
+//        ValidTokenRequest validTokenRequest = new ValidTokenRequest()
+//                .builder()
+//                .token(Authorization)
+//                .build();
+//        if(boardClientService.checkToken(validTokenRequest).getIsValid()) {
+//            channelService.saveChannel(createChannelRequest, channelId);
+//        }
+        // 인증 서버에서 토큰 검증 api 완성되기 전 테스트
+        channelService.saveInvitedChannel(inviteChannelRequest, channelId);
+        return new InviteChannelResponse().builder().message("Success Invitation").success(true).build();C
     }
 
     @GetMapping("/channel/{channelId}")
