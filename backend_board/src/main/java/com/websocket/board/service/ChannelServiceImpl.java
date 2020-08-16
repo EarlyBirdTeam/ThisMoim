@@ -4,6 +4,7 @@ import com.websocket.board.model.Channel;
 import com.websocket.board.model.user.User;
 import com.websocket.board.model.user.UserChannel;
 import com.websocket.board.payload.CreateChannelRequest;
+import com.websocket.board.payload.InviteChannelRequest;
 import com.websocket.board.repo.ChannelRepository;
 import com.websocket.board.repo.UserChannelRepository;
 import com.websocket.board.repo.UserRepository;
@@ -44,6 +45,25 @@ public class ChannelServiceImpl implements ChannelService {
         }
 
         return channelResponse;
+    }
+
+    @Override
+    public Channel saveInvitedChannel(InviteChannelRequest inviteChannelRequest, String channelId) {
+
+        Channel channelResponse = channelRepository.findByChannelId(channelId);
+
+        Optional<User> user = userRepository.findByEmail(inviteChannelRequest.getUser().getEmail());
+
+        if(user.isPresent()) {
+            UserChannel userChannel = new UserChannel().builder()
+                    .user(user.get())
+                    .channel(channelResponse)
+                    .build();
+
+            userChannelRepository.save(userChannel);
+        }
+
+        return null;
     }
 
     @Override
