@@ -3,7 +3,7 @@
     <v-container fluid>
       <div class="d-flex justify-content-between">
         <h2>나의 모임목록</h2>
-        {{ this.$store.state.userData }}
+        <button @click="alertStore($store.state.userData)">store</button>{{ this.$store.state.userData }}
         <div class="d-flex">
           <v-text-field @keyup.enter="createChannel" placeholder="채널 제목" v-model="channel_name"></v-text-field>
           <button @click="createChannel" class="circleScaleBtn"><span>채널 생성</span></button>
@@ -54,11 +54,14 @@ export default {
       return `https://picsum.photos/seed/${idString}/200/300`;
     },
    findAllChannel: function () {
-      http.get("/board/channels", {
-        headers: {
+     console.log(this.$store.state.userData.email)
+      http.post("/board/channels", {email: this.$store.state.userData.email}, {
+          headers: {
             "Authorization" : "Bearer " + this.$store.getters.accessToken
           }
-      }).then((response) => {
+      }
+      ).then((response) => {
+        console.log(response);
         // prevent html, allow json array
         if (Object.prototype.toString.call(response.data) === "[object Array]")
           this.channels = response.data;
@@ -69,8 +72,13 @@ export default {
         alert("채널 이름을 입력해 주십시오.");
         return;
       } else {
-        var params = new URLSearchParams();
-        params.append("channelName", this.channel_name);
+        // var params = new URLSearchParams();
+        // params.append("channelName", this.channel_name);
+        const params = {
+          channelName: this.channel_name,
+          email: this.$store.state.userData.email,
+        }
+        console.log(params);
         // params.append("token", this.$store.getters.accessToken)
         const config = {
           headers: {
@@ -94,6 +102,9 @@ export default {
       localStorage.setItem("wsboard.channelName", channelName);
       location.href = "/channel/" + channelId;
     },
+    alertStore() {
+      console.log(this.$store.state.userData);
+    }
   },
 };
 </script>
