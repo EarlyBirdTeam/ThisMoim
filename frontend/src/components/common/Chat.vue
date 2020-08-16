@@ -92,7 +92,12 @@ export default {
   name: "Chat",
   created() {
     //console.log("chanelName : "+ localStorage.getItem("wsboard.channelName")); 채널 이름 가져오는 부분
-    var myname = this.makeRandomName();
+    // var myname = this.makeRandomName();
+    var myname = this.$store.getters.userData.nickname;
+    if(this.$store.getters.userData.nickname == ""){
+      myname = "Unknown_"+this.makeRandomName();
+    }
+    // console.log("my nickname is : ", myname);
     var chatcontainer = document.getElementById("chatContainer");
     var chatheader = document.getElementById("chatHeader");
     var chatbox = document.getElementById("chatBox");
