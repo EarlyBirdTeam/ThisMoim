@@ -6,7 +6,10 @@ import {store} from './store'
 import cookies from 'vue-cookie';
 import constant from './lib/constants'
 import vuetify from './plugins/vuetify';
-import io from 'socket.io-client'; 
+import io from 'socket.io-client';
+import BootstrapVue from 'bootstrap-vue'
+import 'bootstrap/dist/css/bootstrap.min.css'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 const socket = io('http://localhost:3030');
 
