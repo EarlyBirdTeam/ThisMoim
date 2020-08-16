@@ -381,7 +381,7 @@ export default {
         moduleObject: null,
       };
     },
-    createPostit(left = "500px", top = "170px") {
+    createPostit(left = this.boardX - 120 + "px", top = this.boardY - 120 + "px") {
       if (this.board.postitList.length > 20) {
         this.createSnackbar("포스트잇이 너무 많습니다!", 3000, "error");
         return;
@@ -391,8 +391,8 @@ export default {
       // postitList에 새로운 포스트잇 더하기
       var newPostit = {
         frontPostitId: idc,
-        left: this.boardX - 120 + "px",
-        top: this.boardY - 120 + "px",
+        left: left,
+        top: top,
         title: "",
         contents: "",
         channel: this.board.channelId,
@@ -770,19 +770,25 @@ export default {
     cloakMoveable() {
       document.querySelector(".moveable-control-box").style.display = "none";
     },
-    moduleDragEnd(moduleName, { offsetX, offsetY }) {
+    moduleDragEnd(moduleName, { clientX, clientY }) {
+      console.log(event);
+      console.log(this.lp, this.tp);
+      console.log(clientX, clientY);
+      console.log(-this.lp + clientX, -this.tp + clientY)
+      // console.log(screen);
+      // console.log()
       switch (moduleName) {
         case "postit":
-          this.createPostit(`${offsetX}px`, `${offsetY}px`);
+          this.createPostit(`${-this.lp + clientX}px`, `${-this.tp + clientY - 60}px`);
           break;
         case "scheduler":
-          this.createScheduler(`${offsetX}px`, `${offsetY}px`);
+          this.createScheduler(`${clientX}px`, `${clientY}px`);
           break;
         case "poll":
-          this.createPoll(`${offsetX}px`, `${offsetY}px`);
+          this.createPoll(`${clientX}px`, `${clientY}px`);
           break;
         case "kanban":
-          this.createKanban(`${offsetX}px`, `${offsetY}px`);
+          this.createKanban(`${clientX}px`, `${clientY}px`);
           break;
       }
     },
@@ -940,6 +946,7 @@ export default {
     );
 
   background-size: 250px 250px;
+  /* transition: all 0.05s; */
 }
 
 .moveable-control-box {
@@ -952,7 +959,7 @@ export default {
   position: fixed;
   z-index: 3;
   width: 64px;
-  bottom: 50%;
+  top: 30%;
   left: 2%;
   padding: 10px 0px;
   display: inline;
