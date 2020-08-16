@@ -100,7 +100,7 @@
       </div>
     </div>
 
-    <v-responsive class="vueBox text-center ma-3"></v-responsive>
+    <!-- <v-responsive class="vueBox text-center ma-3"></v-responsive> -->
     <div class="testerDot"></div>
     <v-responsive>
       <v-responsive
@@ -261,7 +261,7 @@ export default {
         text: "",
         timeout: 1000,
       },
-      boardLength: 2000,
+      boardLength: 10000,
       boardScale: 1,
       boardX: this.boardLength / 2,
       boardY: this.boardLength / 2,
@@ -381,7 +381,7 @@ export default {
         moduleObject: null,
       };
     },
-    createPostit(left = "500px", top = "170px") {
+    createPostit(lp, tp) {
       if (this.board.postitList.length > 20) {
         this.createSnackbar("포스트잇이 너무 많습니다!", 3000, "error");
         return;
@@ -391,8 +391,8 @@ export default {
       // postitList에 새로운 포스트잇 더하기
       var newPostit = {
         frontPostitId: idc,
-        left: this.boardX - 120 + "px",
-        top: this.boardY - 120 + "px",
+        left: lp - 120 + "px",
+        top: tp - 120 + "px",
         title: "",
         contents: "",
         channel: this.board.channelId,
@@ -770,21 +770,23 @@ export default {
     cloakMoveable() {
       document.querySelector(".moveable-control-box").style.display = "none";
     },
-    moduleDragEnd(moduleName, { offsetX, offsetY }) {
+    // moduleDragEnd(moduleName, { offsetX, offsetY }) {
+    moduleDragEnd(moduleName, event) {
       switch (moduleName) {
         case "postit":
-          this.createPostit(`${offsetX}px`, `${offsetY}px`);
+          this.createPostit(`${event.offsetX}`, `${event.offsetY}`);
           break;
         case "scheduler":
-          this.createScheduler(`${offsetX}px`, `${offsetY}px`);
+          this.createScheduler(`${event.offsetX}px`, `${event.offsetY}px`);
           break;
         case "poll":
-          this.createPoll(`${offsetX}px`, `${offsetY}px`);
+          this.createPoll(`${event.offsetX}px`, `${event.offsetY}px`);
           break;
         case "kanban":
-          this.createKanban(`${offsetX}px`, `${offsetY}px`);
+          this.createKanban(`${event.offsetX}px`, `${event.offsetY}px`);
           break;
       }
+      console.log("drag end at : ", event);
     },
     pleaseDrag() {
       this.createSnackbar(
@@ -812,6 +814,7 @@ export default {
       }
     },
     test3(event) {
+      console.log(event);
       // let lastOriginX = document.querySelector('.realBoard').style.transformOrigin.split(" ")[0];
       // let lastOriginY = document.querySelector('.realBoard').style.transformOrigin.split(" ")[1];
       // console.log("LastOrigin : ", lastOriginX, " ", lastOriginY);
