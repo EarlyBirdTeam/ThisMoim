@@ -2,7 +2,7 @@ package com.websocket.board.repo;
 
 import com.websocket.board.model.Channel;
 import com.websocket.board.model.SocketBoardMessage;
-import com.websocket.board.model.calendar.Scheduler;
+import com.websocket.board.model.scheduler.Scheduler;
 import com.websocket.board.model.kanban.Kanban;
 import com.websocket.board.model.poll.Poll;
 import com.websocket.board.model.postit.Postit;

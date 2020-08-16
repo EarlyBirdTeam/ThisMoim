@@ -1,4 +1,4 @@
-package com.websocket.board.model.calendar;
+package com.websocket.board.model.scheduler;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -31,7 +31,7 @@ public class Scheduler implements Serializable {
 
     @OneToMany(mappedBy = "scheduler")
     @JsonManagedReference
-    //@Builder.Default
+    @Builder.Default
     private List<Event> events = new ArrayList<>();
 
     @OneToOne

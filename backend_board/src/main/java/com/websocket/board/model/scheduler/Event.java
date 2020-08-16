@@ -1,4 +1,4 @@
-package com.websocket.board.model.calendar;
+package com.websocket.board.model.scheduler;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.AllArgsConstructor;

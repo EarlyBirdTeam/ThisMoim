@@ -26,7 +26,7 @@ public class State implements Serializable {
 
     @OneToMany(mappedBy = "state")
     @JsonManagedReference
-    //@Builder.Default
+    @Builder.Default
     private List<Task> tasks = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)

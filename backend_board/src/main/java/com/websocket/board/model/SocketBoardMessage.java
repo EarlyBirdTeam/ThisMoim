@@ -1,6 +1,6 @@
 package com.websocket.board.model;
 
-import com.websocket.board.model.calendar.Scheduler;
+import com.websocket.board.model.scheduler.Scheduler;
 import com.websocket.board.model.crud.CRUDModule;
 import com.websocket.board.model.kanban.Kanban;
 import com.websocket.board.model.poll.Poll;

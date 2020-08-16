@@ -55,23 +55,23 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .logout().disable();
     }
 
-    /**
-     * 테스트를 위해 In-Memory에 계정을 임의로 생성한다.
-     * 서비스에 사용시에는 DB데이터를 이용하도록 수정이 필요하다.
-     */
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication()
-                .withUser("happydaddy")
-                .password("{noop}1234")
-                .roles("USER")
-                .and()
-                .withUser("angrydaddy")
-                .password("{noop}1234")
-                .roles("USER")
-                .and()
-                .withUser("guest")
-                .password("{noop}1234")
-                .roles("GUEST");
-    }
+//    /**
+//     * 테스트를 위해 In-Memory에 계정을 임의로 생성한다.
+//     * 서비스에 사용시에는 DB데이터를 이용하도록 수정이 필요하다.
+//     */
+//    @Override
+//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+//        auth.inMemoryAuthentication()
+//                .withUser("happydaddy")
+//                .password("{noop}1234")
+//                .roles("USER")
+//                .and()
+//                .withUser("angrydaddy")
+//                .password("{noop}1234")
+//                .roles("USER")
+//                .and()
+//                .withUser("guest")
+//                .password("{noop}1234")
+//                .roles("GUEST");
+//    }
 }

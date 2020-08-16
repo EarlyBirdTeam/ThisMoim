@@ -32,7 +32,7 @@ public class Poll implements Serializable {
 
     @OneToMany(mappedBy = "poll")
     @JsonManagedReference
-    //@Builder.Default
+    @Builder.Default
     private List<Answer> answers = new ArrayList<>();
 
     private boolean multipleVotes;

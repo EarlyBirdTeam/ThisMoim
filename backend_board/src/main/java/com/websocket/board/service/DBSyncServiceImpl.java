@@ -2,7 +2,7 @@ package com.websocket.board.service;
 
 import com.websocket.board.model.Channel;
 import com.websocket.board.model.SocketBoardMessage;
-import com.websocket.board.model.calendar.Scheduler;
+import com.websocket.board.model.scheduler.Scheduler;
 import com.websocket.board.model.crud.CRUDModule;
 import com.websocket.board.model.crud.CRUDType;
 import com.websocket.board.model.crud.ModuleType;
@@ -64,7 +64,7 @@ public class DBSyncServiceImpl implements DBSyncService {
             case POSTIT:
                 ok = postitSync(crudType, (Postit) crudModule.getModuleObject());
                 break;
-            case CALENDAR:
+            case SCHEDULER:
                 ok = schedulerSync(crudType, (Scheduler)crudModule.getModuleObject());
                 break;
 //            case POLL:
