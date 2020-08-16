@@ -2,7 +2,7 @@ package com.websocket.board.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.websocket.board.model.calendar.Scheduler;
+import com.websocket.board.model.scheduler.Scheduler;
 import com.websocket.board.model.kanban.Kanban;
 import com.websocket.board.model.postit.Postit;
 import com.websocket.board.model.user.UserChannel;
@@ -35,7 +35,7 @@ public class Channel implements Serializable {
 
     @OneToMany(mappedBy = "channel")
     @JsonManagedReference
-    //@Builder.Default
+    @Builder.Default
     private List<Postit> postitList = new ArrayList<>();
 
     @OneToOne(mappedBy = "channel")
@@ -48,7 +48,7 @@ public class Channel implements Serializable {
 
     @OneToMany(mappedBy = "channel")
     @JsonManagedReference
-    //@Builder.Default
+    @Builder.Default
     private List<UserChannel> userList = new ArrayList<>();
 
     public Channel(String channelName) {

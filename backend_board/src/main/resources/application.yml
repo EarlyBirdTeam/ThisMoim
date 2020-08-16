@@ -1,14 +1,23 @@
 spring:
+  redis:
+    host: localhost
+    port: 6378
+    database: 0
+    #password: redis
+
   profiles:
     active: local
+
   devtools:
     livereload:
       enabled: true
     restart:
       enabled: false
     add-properties: false
+
   freemarker:
     cache: false
+
   jwt:
     secret: govlepel@$&
 
@@ -19,6 +28,7 @@ spring:
       use-new-id-generator-mappings: false
     generate-ddl: true
     show-sql: true
+
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
     url: jdbc:mariadb://localhost:3306/board?autoReconnect=true&useUnicode=true&characterEncoding=utf8&serverTimezone=UTC
