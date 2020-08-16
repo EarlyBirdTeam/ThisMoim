@@ -2,7 +2,6 @@ package com.websocket.board.controller;
 
 import com.websocket.board.config.JwtTokenProvider;
 import com.websocket.board.event.OnMemberInvitatinCompleteEvent;
-import com.websocket.board.event.OnRegenerateEmailVerificationEvent;
 import com.websocket.board.model.Channel;
 import com.websocket.board.model.LoginInfo;
 import com.websocket.board.model.MailSendRequest;
@@ -20,7 +19,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @RequiredArgsConstructor

@@ -14,7 +14,7 @@
 package com.websocket.board.event.listener;
 
 
-import com.websocket.board.event.OnRegenerateEmailVerificationEvent;
+import com.websocket.board.event.OnInvitationEvent;
 import com.websocket.board.exception.MailSendException;
 import com.websocket.board.model.Channel;
 import com.websocket.board.service.MailService;
@@ -29,7 +29,7 @@ import javax.mail.MessagingException;
 import java.io.IOException;
 
 @Component
-public class OnInvitationListener implements ApplicationListener<OnRegenerateEmailVerificationEvent> {
+public class OnInvitationListener implements ApplicationListener<OnInvitationEvent> {
 
     private static final Logger logger = Logger.getLogger(OnInvitationListener.class);
     private final MailService mailService;
@@ -42,12 +42,12 @@ public class OnInvitationListener implements ApplicationListener<OnRegenerateEma
 
     @Override
     @Async
-    public void onApplicationEvent(OnRegenerateEmailVerificationEvent onRegenerateEmailVerificationEvent) {
+    public void onApplicationEvent(OnInvitationEvent onRegenerateEmailVerificationEvent) {
         resendEmailVerification(onRegenerateEmailVerificationEvent);
     }
 
 
-    private void resendEmailVerification(OnRegenerateEmailVerificationEvent event) {
+    private void resendEmailVerification(OnInvitationEvent event) {
         Channel channel = event.getMailSendRequest().getChannel();
         String recipientAddress = channel.getChannelId();
 
