@@ -87,7 +87,7 @@ public class ChannelController {
 //        }
         // 인증 서버에서 토큰 검증 api 완성되기 전 테스트
         channelService.saveInvitedChannel(inviteChannelRequest, channelId);
-        return new InviteChannelResponse().builder().message("Success Invitation").success(true).build();C
+        return new InviteChannelResponse().builder().message("Success Invitation").success(true).build();
     }
 
     @GetMapping("/channel/{channelId}")
