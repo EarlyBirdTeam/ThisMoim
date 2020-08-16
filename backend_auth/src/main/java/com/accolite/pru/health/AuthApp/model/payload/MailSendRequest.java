@@ -8,7 +8,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -21,8 +23,7 @@ public class MailSendRequest {
     @ApiModelProperty(value = "A valid channel", allowableValues = "NonEmpty String")
     private String channelId;
 
-    @NullOrNotBlank(message = "Registration email can be null but not blank")
     @ApiModelProperty(value = "A valid email", required = true, allowableValues = "NonEmpty String")
-    private String email;
+    private List<String> email;
 
 }

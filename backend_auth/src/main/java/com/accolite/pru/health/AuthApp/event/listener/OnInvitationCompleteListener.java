@@ -13,6 +13,9 @@ import org.springframework.stereotype.Component;
 
 import javax.mail.MessagingException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 @Component
 public class OnInvitationCompleteListener implements ApplicationListener<OnInvitationCompleteEvent> {
 
@@ -32,17 +35,34 @@ public class OnInvitationCompleteListener implements ApplicationListener<OnInvit
     }
 
     private void sendEmailVerification(OnInvitationCompleteEvent event) {
-        User user = event.getMember().getUser();
+        List<User> user = new ArrayList<>();
+        for (int i=0;i<event.getMember().size();i++){
+            user.add(event.getMember().get(i).getUser());
+        }
 
-        String recipientAddress = user.getEmail();
+
+        List<String> recipientAddress = new ArrayList<>();
+        for (User u:user) {
+            System.out.println(u.getEmail());
+            recipientAddress.add(u.getEmail());
+        }
+
         String emailConfirmationUrl =
                 event.getRedirectUrl().toUriString();
-        System.out.println("--------------------");
-        try {
-            mailService.sendInviteEmail(emailConfirmationUrl, recipientAddress);
-        } catch (IOException | TemplateException | MessagingException e) {
-            logger.error(e);
-            throw new MailSendException(recipientAddress, "Email Verification");
+        System.out.println("--------EVENTLISTNER CALLED------------");
+
+
+
+        for (int i=0;i<recipientAddress.size();i++) {
+            try {
+
+                mailService.sendInviteEmail(emailConfirmationUrl, recipientAddress.get(i));
+
+            } catch (IOException | TemplateException | MessagingException e) {
+                logger.error(e);
+                throw new MailSendException(recipientAddress.get(i), "Email Verification");
+            }
         }
+
     }
 }

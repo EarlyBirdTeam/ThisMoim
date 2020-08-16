@@ -36,6 +36,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -83,11 +85,20 @@ public class AuthService {
         return Optional.ofNullable(registeredNewUser);
     }
 
-    public Optional<Member> inviteUser(MailSendRequest mailSendRequest) {
-        Member newMember = memberService.createMember(
-                userService.findByEmail(mailSendRequest.getEmail())
-                        .orElseThrow(() -> new ResourceNotFoundException("Email", "Address", mailSendRequest.getEmail()))
-                ,mailSendRequest.getChannelId());
+    public Optional<List<Member>> inviteUser(MailSendRequest mailSendRequest) {
+        List<Member> newMember = new ArrayList<>();
+        for (int i=0;i<mailSendRequest.getEmail().size();i++){
+            System.out.println("ADDED EMAIL "+mailSendRequest.getEmail().get(i));
+        }
+
+        for (int i=0;i<mailSendRequest.getEmail().size();i++){
+            Member m = memberService.createMember(
+                    userService.findByEmail(mailSendRequest.getEmail().get(i))
+                            .orElseThrow(() -> new ResourceNotFoundException("Email", "Address", mailSendRequest.getEmail()))
+                    ,mailSendRequest.getChannelId());
+            newMember.add(m);
+        }
+
         return Optional.ofNullable(newMember);
     }
     /**
