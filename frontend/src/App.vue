@@ -42,8 +42,14 @@ export default {
               logInfo.AccessToken = element.split('=')[1];
           }
           if(element.split('=')[0].trim() == 'AccessData'){
-              
-              logInfo.AccessData = unescape(element.split('=')[1]);
+            console.log("AccessData@")
+            const a = element.split('=')[1].split('%2C')
+            logInfo.AccessData = {
+              email: unescape(a[0].split('%3A')[1]),
+              name: decodeURI(a[1].split('%3A')[1]),
+              nickname: unescape(a[2].split('%3A')[1]),
+            }
+              // logInfo.AccessData = unescape(element.split('=')[1]);
           }
       });
 
