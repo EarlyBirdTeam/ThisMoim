@@ -106,7 +106,7 @@ export const store = new Vuex.Store({
           isSetAll: false,
           isEnd: false,
         },
-        
+        inviteModal: false,
     },
     actions: {
         async REQUEST_ADD_EVENT(context, event) {

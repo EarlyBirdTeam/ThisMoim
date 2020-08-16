@@ -10,7 +10,7 @@
       >{{ snackbar.text }}</v-snackbar>
       <div>
         <div class="toolBox">
-          <v-tooltip v-model="show" right>
+          <v-tooltip right>
             <template v-slot:activator="{ on }">
               <div v-on="on">
                 <v-btn
@@ -28,7 +28,7 @@
             <span>Post-it</span>
           </v-tooltip>
 
-          <v-tooltip v-model="show" right>
+          <v-tooltip right>
             <template v-slot:activator="{ on }">
               <div v-on="on">
                 <v-btn
@@ -45,10 +45,7 @@
             <span>Kanban-Board</span>
           </v-tooltip>
           
-          <!-- <v-btn icon color="orange" @click="createMap">
-          <v-icon>mdi-map</v-icon>
-          </v-btn>-->
-          <v-tooltip v-model="show" right>
+          <v-tooltip right>
             <template v-slot:activator="{ on }">
               <div v-on="on">
                 <v-btn
@@ -65,7 +62,7 @@
             <span>Scheduler</span>
           </v-tooltip>
           
-          <v-tooltip v-model="show" right>
+          <v-tooltip right>
             <template v-slot:activator="{ on }">
               <div v-on="on">
                 <v-btn
@@ -81,7 +78,23 @@
             </template>
             <span>Poll</span>
           </v-tooltip>
-          
+
+          <v-tooltip right>
+            <template v-slot:activator="{ on }">
+              <div v-on="on">
+                <v-btn
+                  icon
+                  color="#FF5722"
+                  @click="$store.state.inviteModal = !$store.state.inviteModal"
+                  draggable="true"
+                  class="invite-mem"
+                >
+                  <v-icon>mdi-plus-circle-outline</v-icon>
+                </v-btn>
+              </div>
+            </template>
+            <span>멤버 초대하기</span>
+          </v-tooltip>
         </div>
         <br />
       </div>
@@ -166,7 +179,9 @@
         <br />
         <br />
 
-        store : {{ $store.state.poll }}
+        store : {{ $store.state.poll }}<br><br>
+        {{$store.state.userData }}
+        <InviteModal v-model="$store.state.inviteModal"/>
       </div>
 
       <!-- <Postit :id="pi.id" :postit="pi" style="position: relative; display: inline-block"/> -->
@@ -186,6 +201,7 @@ import Scheduler from "../../components/module/Scheduler";
 import Chat from "../../components/common/Chat";
 import Poll from "../../components/common/Poll";
 import Kanban from "../../components/module/Kanban";
+import InviteModal from "../../components/common/InviteModal"
 
 export default {
   computed: {
@@ -245,7 +261,7 @@ export default {
         text: "",
         timeout: 1000,
       },
-      boardLength: 10000,
+      boardLength: 2000,
       boardScale: 1,
       boardX: this.boardLength / 2,
       boardY: this.boardLength / 2,
@@ -324,18 +340,16 @@ export default {
           // this.board.idCount = response.data.idCount;
           this.board = response.data;
           this.board.delete = { moduleName: "", id: -1 };
-          this.$store.state.Kanban.states = response.data.kanban.states;
+          if(response.data.kanban !== null) {
+            this.$store.state.Kanban.states = response.data.kanban.states;
+          }
           // this.board.Kanban.columns = response.data.kanban.columns;
         })
         .catch((e) => {
           console.log('initRecv 실패')
           console.log(e);
         });
-        this.createSnackbar(
-        `'${this.channelName}' 채널에 입장하였습니다!`,
-        3000,
-        "info"
-      );
+        this.createSnackbar(`'${this.channelName}' 채널에 입장하였습니다!`, 3000, "info");
     },
     sendMessage: function (type) {
       this.ws.send(
@@ -815,6 +829,9 @@ export default {
       // // }
       // console.log("origin : ", document.querySelector('.realBoard').style.transformOrigin);
     },
+    inviteMember(){
+      alert('hi');
+    },
   },
   components: {
     Moveable,
@@ -824,6 +841,7 @@ export default {
     Chat,
     Kanban,
     Poll,
+    InviteModal,
   },
 };
 </script>
@@ -1006,5 +1024,8 @@ export default {
 }
 .testBox {
   display: inline;
+}
+.invite-mem{
+  margin-top: 20px;
 }
 </style>

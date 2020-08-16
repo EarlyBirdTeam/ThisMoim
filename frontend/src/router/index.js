@@ -26,6 +26,7 @@ import Board from '../page/post/Test_Board.vue'
 import Poll from '../components/common/Poll.vue'
 import Map from '../components/module/Map.vue'
 import Scheduler from '../components/module/Scheduler.vue'
+import InviteModal from '../components/common/InviteModal.vue'
 
 Vue.use(Router) 
 Vue.use(Vuex)
@@ -130,6 +131,11 @@ export default new Router({
       path: '/scheduler',
       name: 'Scheduler',
       component: Scheduler,
+    },    
+    { 
+      path: '/invite',
+      name: 'InviteModal',
+      component: InviteModal,
     },
   ]
 })

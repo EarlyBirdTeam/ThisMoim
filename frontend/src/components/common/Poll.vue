@@ -84,6 +84,7 @@
         <div class="poll-title">
           <strong>Q.{{ poll.question }}</strong><hr />
         </div>
+        
         <div class="poll-contents">
           <div
             v-for="(answer, index) in poll.answers"
@@ -93,7 +94,14 @@
             style="margin-bottom: 10px;"
           >
             <div class="d-flex justify-content-between">
-              <div>{{ answer.answer }}</div>
+              <div>{{ answer.answer }}
+                <v-progress-linear
+                  v-model="knowledge"
+                  height="25"
+                >
+                  <strong>{{ Math.ceil(knowledge) }}%</strong>
+                </v-progress-linear>
+              </div>
               <div>
                 <v-icon>mdi-account</v-icon>
                 {{ answer.voted }}
