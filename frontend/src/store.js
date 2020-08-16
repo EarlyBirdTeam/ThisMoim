@@ -186,7 +186,7 @@ export const store = new Vuex.Store({
                     cookies.set('AccessToken', res.data.accessToken);
                     store.commit(constants.METHODS.LOGIN_USER, [data, res.data.accessToken]);
                     // store.commit(constants.METHODS.GET_USER, res.data.userInfoResponse);
-                    const dataWhatINeed = res.data.userInfoResponse  ;
+                    const dataWhatINeed = res.data.user  ;
                     console.log("In store, dataWhatINeed is : ", dataWhatINeed);
                     store.commit(constants.METHODS.GET_USER, {
                         dataWhatINeed

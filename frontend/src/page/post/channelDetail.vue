@@ -245,7 +245,7 @@ export default {
         text: "",
         timeout: 1000,
       },
-      boardLength: 10000,
+      boardLength: 1000,
       boardScale: 1,
       boardX: this.boardLength / 2,
       boardY: this.boardLength / 2,
