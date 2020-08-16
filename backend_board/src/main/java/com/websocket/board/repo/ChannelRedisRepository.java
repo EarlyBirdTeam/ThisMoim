@@ -1,19 +1,18 @@
 package com.websocket.board.repo;
 
+import com.websocket.board.model.Channel;
 import com.websocket.board.model.SocketBoardMessage;
 import com.websocket.board.model.calendar.Scheduler;
 import com.websocket.board.model.kanban.Kanban;
 import com.websocket.board.model.poll.Poll;
 import com.websocket.board.model.postit.Postit;
 import lombok.RequiredArgsConstructor;
-import com.websocket.board.model.Channel;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 

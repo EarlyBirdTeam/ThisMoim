@@ -1,6 +1,5 @@
 package com.websocket.board.pubsub;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.websocket.board.model.SocketBoardMessage;
 import lombok.RequiredArgsConstructor;

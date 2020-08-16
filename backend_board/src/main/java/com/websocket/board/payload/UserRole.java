@@ -1,4 +1,4 @@
-package com.websocket.board.model.dto.client;
+package com.websocket.board.payload;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,14 +1,13 @@
 package com.websocket.board.service;
 
 import com.websocket.board.model.Channel;
+import com.websocket.board.model.SocketBoardMessage;
 import com.websocket.board.model.calendar.Scheduler;
 import com.websocket.board.model.crud.CRUDModule;
 import com.websocket.board.model.crud.CRUDType;
 import com.websocket.board.model.crud.ModuleType;
 import com.websocket.board.model.kanban.Kanban;
-import com.websocket.board.model.poll.Poll;
 import com.websocket.board.model.postit.Postit;
-import com.websocket.board.model.SocketBoardMessage;
 import com.websocket.board.repo.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
