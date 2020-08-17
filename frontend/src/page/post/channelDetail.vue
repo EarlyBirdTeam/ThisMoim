@@ -217,6 +217,7 @@ export default {
       board: {
         channelId: "",
         idCount: 1,
+        memberList: [],
         crudModule: {
           modulType: "",
           crudType: "",
@@ -272,6 +273,7 @@ export default {
 
       memberView: false,
       idc: 0,
+      isPoll: false,
     };
   },
   created() {
@@ -380,6 +382,7 @@ export default {
         crudType: "",
         moduleObject: null,
       };
+      this.board.memberList = recv.memberList;
     },
     createPostit(left = this.boardX - 120 + "px", top = this.boardY - 120 + "px") {
       if (this.board.postitList.length > 20) {
