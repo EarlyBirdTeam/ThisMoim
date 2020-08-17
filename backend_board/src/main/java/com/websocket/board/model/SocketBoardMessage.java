@@ -37,6 +37,7 @@ public class SocketBoardMessage implements Serializable {
 
     private CRUDModule crudModule;
     private Boolean isDelete;
+    private List<String> memberList;
 
     // List<Attendance> attendenceList; // 출석부 리스트
     // List<Attendance> voteList; // 출석부 리스트

@@ -25,7 +25,7 @@ public class InitServiceImpl implements InitService {
 //            Channel channel = channelRepository.findByChannelId(channelId);
 //            vop.set(channelId, board);
 //        }
-        Channel channel = channelRepository.findByChannelId(channelId);
+        Channel channel = channelRepository.findByChannelId(channelId).get();
         //List<Postit> list = channelRepository.findByChannelId(channelId).getPostitList();
         Board board = new Board()
                 .builder()

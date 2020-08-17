@@ -10,4 +10,5 @@ public interface ChannelService {
     Channel saveChannel(CreateChannelRequest createChannelRequest, String channelId);
     Boolean saveInvitedChannel(InviteChannelRequest inviteChannelRequest, String channelId);
     List<Channel> getMyChannels(String token);
+    List<String> getChannelMember(String channelId);
 }
