@@ -41,4 +41,23 @@ public class BoardInitController {
         return socketBoardMessage;
     }
 
+    @CrossOrigin("*")
+    @GetMapping("/board/{channelId}")
+    public SocketBoardMessage getTutorialChannelInit(@PathVariable("channelId") String tutorialChannelId)
+            throws JsonProcessingException {
+        //String tutorialChannelId = "earlyBird10TeamTestChannel1";
+        List<String> tutorialMockMember = new ArrayList<>();
+        tutorialMockMember.add("배민규");
+        tutorialMockMember.add("정용우");
+        tutorialMockMember.add("김강현");
+        tutorialMockMember.add("김동률");
+        tutorialMockMember.add("배재원");
+        tutorialMockMember.add("최문경");
+
+        SocketBoardMessage socketBoardMessage = channelRedisRepository.findBoardByChannelId(tutorialChannelId);
+        socketBoardMessage.setMemberList(tutorialMockMember);
+
+        return socketBoardMessage;
+    }
+
 }
