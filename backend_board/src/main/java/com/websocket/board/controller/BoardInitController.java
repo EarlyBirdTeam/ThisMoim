@@ -34,29 +34,23 @@ public class BoardInitController {
         //return initService.getBoard(channelId);
         // 이 부분 레디스에 정보가 없다면 디비에서 가져오도록 수정할 예정
         SocketBoardMessage socketBoardMessage = channelRedisRepository.findBoardByChannelId(channelId);
+        if (channelId.equals("earlyBird10TeamTestChannel1")) {
+            List<String> tutorialMockMember = new ArrayList<>();
+            tutorialMockMember.add("배민규");
+            tutorialMockMember.add("정용우");
+            tutorialMockMember.add("김강현");
+            tutorialMockMember.add("김동률");
+            tutorialMockMember.add("배재원");
+            tutorialMockMember.add("최문경");
+
+            socketBoardMessage.setMemberList(tutorialMockMember);
+            return socketBoardMessage;
+        }
+
         socketBoardMessage.setMemberList(channelService.getChannelMember(channelId));
 //        if(socketBoardMessage == null) {
 //            initService.getBoard(channelId);
 //        }
-        return socketBoardMessage;
-    }
-
-    @CrossOrigin("*")
-    @GetMapping("/board/{channelId}")
-    public SocketBoardMessage getTutorialChannelInit(@PathVariable("channelId") String tutorialChannelId)
-            throws JsonProcessingException {
-        //String tutorialChannelId = "earlyBird10TeamTestChannel1";
-        List<String> tutorialMockMember = new ArrayList<>();
-        tutorialMockMember.add("배민규");
-        tutorialMockMember.add("정용우");
-        tutorialMockMember.add("김강현");
-        tutorialMockMember.add("김동률");
-        tutorialMockMember.add("배재원");
-        tutorialMockMember.add("최문경");
-
-        SocketBoardMessage socketBoardMessage = channelRedisRepository.findBoardByChannelId(tutorialChannelId);
-        socketBoardMessage.setMemberList(tutorialMockMember);
-
         return socketBoardMessage;
     }
 
