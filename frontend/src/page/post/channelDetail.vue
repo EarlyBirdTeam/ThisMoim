@@ -18,7 +18,6 @@
                   color="orange"
                   @click="pleaseDrag"
                   draggable="true"
-                  @dragenter="dragging=true"
                   @dragend="moduleDragEnd('postit', $event)"
                 >
                   <v-icon>mdi-message</v-icon>
@@ -100,7 +99,7 @@
       </div>
     </div>
 
-    <v-responsive class="vueBox text-center ma-3"></v-responsive>
+    <!-- <v-responsive class="vueBox text-center ma-3"></v-responsive> -->
     <div class="testerDot"></div>
     <v-responsive>
       <v-responsive
@@ -143,7 +142,9 @@
       @wheel="wheelEvent"
       style="height: 100%; width: 100%;"
     >
-      <div class="MoveableBox realBoard" @click.right="test3">
+      
+      <div class="MoveableBox realBoard" @click.right="test3" @dragenter="test4"
+      @dragover="test5">
         <div
           class="postit"
           v-for="(pi, idx) in this.board.postitList"
@@ -269,6 +270,8 @@ export default {
       tp: 0,
       lastBX: this.boardX,
       lastBY: this.boardY,
+      moduleXP : this.boardLength / 2,
+      moduleYP : this.boardLength / 2,
 
       memberView: false,
       idc: 0,
@@ -391,8 +394,8 @@ export default {
       // postitList에 새로운 포스트잇 더하기
       var newPostit = {
         frontPostitId: idc,
-        left: left,
-        top: top,
+        left: this.moduleXP - 120 + "px",
+        top: this.moduleYP - 120 + "px",
         title: "",
         contents: "",
         channel: this.board.channelId,
@@ -411,8 +414,8 @@ export default {
       }
       this.board.isKanban = true;
       this.board.kanban = this.$store.state.Kanban;
-      this.board.kanban.left = left;
-      this.board.kanban.top = top;
+      this.board.kanban.left = this.moduleXP + "px";
+      this.board.kanban.top = this.moduleYP + "px";
       this.crudMethod("KANBAN", "CREATE", this.board.kanban);
       this.sendMessage();
       this.createSnackbar("보드가 생성되었습니다", 1500, "success");
@@ -455,8 +458,8 @@ export default {
         this.createSnackbar("이미 달력이 있습니다!", 3000, "error");
       } else {
         this.board.scheduler = {
-          left: left,
-          top: top,
+          left: this.moduleXP + "px",
+          top: this.moduleYP + "px",
           events: this.$store.state.scheduler.events,
         };
         console.log("create Scheduler");
@@ -473,8 +476,8 @@ export default {
       } else {
         const idc = this.board.idCount++;
         this.board.poll = this.$store.state.poll;
-        this.board.poll.left = left;
-        this.board.poll.top = top;
+        this.board.poll.left = this.moduleXP + "px";
+        this.board.poll.top = this.moduleYP + "px";
         this.crudMethod("POLL", "CREATE", this.board.poll);
         this.sendMessage();
         // snackbar
@@ -770,27 +773,23 @@ export default {
     cloakMoveable() {
       document.querySelector(".moveable-control-box").style.display = "none";
     },
-    moduleDragEnd(moduleName, { clientX, clientY }) {
-      console.log(event);
-      console.log(this.lp, this.tp);
-      console.log(clientX, clientY);
-      console.log(-this.lp + clientX, -this.tp + clientY)
-      // console.log(screen);
-      // console.log()
+    // moduleDragEnd(moduleName, { offsetX, offsetY }) {
+    moduleDragEnd(moduleName, event) {
       switch (moduleName) {
         case "postit":
-          this.createPostit(`${-this.lp + clientX}px`, `${-this.tp + clientY - 60}px`);
+          this.createPostit(`${event.offsetX}`, `${event.offsetY}`);
           break;
         case "scheduler":
-          this.createScheduler(`${clientX}px`, `${clientY}px`);
+          this.createScheduler(`${event.offsetX}px`, `${event.offsetY}px`);
           break;
         case "poll":
-          this.createPoll(`${clientX}px`, `${clientY}px`);
+          this.createPoll(`${event.offsetX}px`, `${event.offsetY}px`);
           break;
         case "kanban":
-          this.createKanban(`${clientX}px`, `${clientY}px`);
+          this.createKanban(`${event.offsetX}px`, `${event.offsetY}px`);
           break;
       }
+      console.log("drag end at : ", event);
     },
     pleaseDrag() {
       this.createSnackbar(
@@ -818,6 +817,7 @@ export default {
       }
     },
     test3(event) {
+      console.log(event);
       // let lastOriginX = document.querySelector('.realBoard').style.transformOrigin.split(" ")[0];
       // let lastOriginY = document.querySelector('.realBoard').style.transformOrigin.split(" ")[1];
       // console.log("LastOrigin : ", lastOriginX, " ", lastOriginY);
@@ -837,6 +837,15 @@ export default {
       // // }
       // console.log("origin : ", document.querySelector('.realBoard').style.transformOrigin);
     },
+    test4(event){
+      console.log(event.target);
+      
+    },
+    test5(event){
+      // console.log(event.offsetX, event.offsetY);
+      this.moduleXP = event.offsetX;
+      this.moduleYP = event.offsetY;
+    },
     inviteMember(){
       alert('hi');
     },
@@ -852,6 +861,15 @@ export default {
     InviteModal,
   },
 };
+
+
+// document.addEventListener("dragenter", function( event ) {
+//       // highlight potential drop target when the draggable element enters it
+//       if ( event.target.className == "realBoard" ) {
+//           event.target.style.background = "purple";
+//       }
+
+//   }, false);
 </script>
 
 <style scoped>
