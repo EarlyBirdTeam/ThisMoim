@@ -40,7 +40,7 @@ public class DBSyncServiceImpl implements DBSyncService {
                 postit.setId(requestDbResult.get().getId());
             }
             //?
-            postit.setChannel(channelRepository.findByChannelId(board.getChannelId()));
+            postit.setChannel(channelRepository.findByChannelId(board.getChannelId()).get());
             postitRepository.save(postit);
         }
     }
@@ -154,7 +154,7 @@ public class DBSyncServiceImpl implements DBSyncService {
     @Override
     public void channelDBIdCountSync(String channelId, Long idCount) {
 
-        Channel channel = channelRepository.findByChannelId(channelId);
+        Channel channel = channelRepository.findByChannelId(channelId).get();
         channel.setIdCount(idCount);
 
         channelRepository.save(channel);

@@ -13,14 +13,14 @@
         <h3>멤버 초대</h3>
       </v-card-title>
       <v-card-text>
-        <v-form class="px-3" ref="form" v-model="valid">
+        <v-form ref="form" v-model="valid" @submit.prevent>
           <div class="mail-form">
             <v-text-field
               label="메일 주소"
               v-model="member"
               prepend-icon="mdi-mail"
               :rules="[rules.email]"
-              
+              @keyup.enter="append(valid)"
             ></v-text-field>
             <v-btn text class="primary white--text mx-2 mt-3" @click="append(valid)">추가</v-btn>
           </div>
@@ -78,7 +78,7 @@ export default {
       this.$store.state.inviteModal = false;
     },
     append(valid) {
-      if(!valid){
+      if(!valid){ 
         return
       }
       this.memberList.push(this.member)
@@ -91,7 +91,6 @@ export default {
       this.memberList.splice(idx, 1);
     },
     rndColor() {
-      console.log(this.colors[this.rnd(0, this.colors.length - 1)])
       return this.colors[this.rnd(0, this.colors.length - 1)];
     },
     rnd (a, b) {

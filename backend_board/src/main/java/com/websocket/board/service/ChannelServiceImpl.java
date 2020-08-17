@@ -11,6 +11,7 @@ import com.websocket.board.repo.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -50,7 +51,7 @@ public class ChannelServiceImpl implements ChannelService {
     @Override
     public Boolean saveInvitedChannel(InviteChannelRequest inviteChannelRequest, String channelId) {
 
-        Channel channelResponse = channelRepository.findByChannelId(channelId);
+        Optional<Channel> channelResponse = channelRepository.findByChannelId(channelId);
 
         Optional<User> user = userRepository.findByEmail(inviteChannelRequest.getUser().getEmail());
 
@@ -58,7 +59,7 @@ public class ChannelServiceImpl implements ChannelService {
         if(user.isPresent()) {
             UserChannel userChannel = new UserChannel().builder()
                     .user(user.get())
-                    .channel(channelResponse)
+                    .channel(channelResponse.get())
                     .build();
 
             userChannelRepository.save(userChannel);
@@ -82,5 +83,21 @@ public class ChannelServiceImpl implements ChannelService {
         }
 
         return channels;
+    }
+
+    @Override
+    public List<String> getChannelMember(String channelId) {
+        Optional<Channel> channel = channelRepository.findByChannelId(channelId);
+        List<String> memberNickList = new ArrayList<>();
+        if(channel.isPresent()) {
+            Optional<List<UserChannel>> userChannels = userChannelRepository.findAllByChannel(channel.get());
+            if(userChannels.isPresent()) {
+                for (UserChannel userChannel: userChannels.get()) {
+                    memberNickList.add(userChannel.getUser().getNickname());
+                }
+            }
+        }
+
+        return memberNickList;
     }
 }
