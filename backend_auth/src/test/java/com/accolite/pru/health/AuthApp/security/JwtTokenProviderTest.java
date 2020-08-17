@@ -15,6 +15,7 @@ package com.accolite.pru.health.AuthApp.security;
 
 import com.accolite.pru.health.AuthApp.model.CustomUserDetails;
 import com.accolite.pru.health.AuthApp.model.User;
+import io.jsonwebtoken.Jwts;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -61,5 +62,11 @@ public class JwtTokenProviderTest {
         User user = new User();
         user.setId((long) 100);
         return new CustomUserDetails(user);
+    }
+
+    @Test
+    public String validateToken(String token){
+        String secretKey = tokenProvider.getJwtSecret();
+        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
     }
 }

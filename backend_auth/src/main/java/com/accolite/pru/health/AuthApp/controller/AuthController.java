@@ -14,27 +14,23 @@
 package com.accolite.pru.health.AuthApp.controller;
 
 import com.accolite.pru.health.AuthApp.event.*;
-import com.accolite.pru.health.AuthApp.exception.InvalidTokenRequestException;
-import com.accolite.pru.health.AuthApp.exception.PasswordResetException;
-import com.accolite.pru.health.AuthApp.exception.PasswordResetLinkException;
-import com.accolite.pru.health.AuthApp.exception.TokenRefreshException;
-import com.accolite.pru.health.AuthApp.exception.UserLoginException;
-import com.accolite.pru.health.AuthApp.exception.UserRegistrationException;
+import com.accolite.pru.health.AuthApp.exception.*;
 import com.accolite.pru.health.AuthApp.model.CustomUserDetails;
 import com.accolite.pru.health.AuthApp.model.User;
+import com.accolite.pru.health.AuthApp.model.member.Member;
 import com.accolite.pru.health.AuthApp.model.payload.*;
 import com.accolite.pru.health.AuthApp.model.token.EmailVerificationToken;
 import com.accolite.pru.health.AuthApp.model.token.RefreshToken;
 import com.accolite.pru.health.AuthApp.security.JwtTokenProvider;
+import com.accolite.pru.health.AuthApp.security.JwtTokenValidator;
 import com.accolite.pru.health.AuthApp.service.AuthService;
+import com.accolite.pru.health.AuthApp.service.MemberService;
 import com.accolite.pru.health.AuthApp.service.UserService;
-import com.sun.jndi.toolkit.url.Uri;
+import io.jsonwebtoken.Jwts;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import javassist.NotFoundException;
 import org.apache.log4j.Logger;
-import org.omg.CORBA.UserException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.ResponseEntity;
@@ -43,14 +39,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
-
-import static org.springframework.web.util.UriComponentsBuilder.newInstance;
 
 //@RestController
 @Controller
@@ -64,13 +58,14 @@ public class AuthController {
     private final JwtTokenProvider tokenProvider;
     private final ApplicationEventPublisher applicationEventPublisher;
     private final UserService userService;
-
+    private final MemberService memberService;
     @Autowired
-    public AuthController(UserService userService,AuthService authService, JwtTokenProvider tokenProvider, ApplicationEventPublisher applicationEventPublisher) {
+    public AuthController(MemberService memberService,UserService userService,AuthService authService, JwtTokenProvider tokenProvider, ApplicationEventPublisher applicationEventPublisher) {
         this.userService = userService;
         this.authService = authService;
         this.tokenProvider = tokenProvider;
         this.applicationEventPublisher = applicationEventPublisher;
+        this.memberService = memberService;
     }
 
 
@@ -128,28 +123,65 @@ public class AuthController {
                 .orElseThrow(() -> new UserRegistrationException(registrationRequest.getEmail(), "Missing user object in database"));
     }
 
+
     @PostMapping("/invite")
     @ApiOperation(value = "invite member to channel")
     public ResponseEntity inviteUser(@ApiParam(value = "invitation payload") @Valid @RequestBody MailSendRequest mailSendRequest) {
 
+        List<Member> m = authService.inviteUser(mailSendRequest).orElse(null);
         return authService.inviteUser(mailSendRequest)
                 .map(member -> {
                     UriComponentsBuilder urlBuilder = ServletUriComponentsBuilder.newInstance().scheme("http").host("localhost").port(9004).path("/api/auth/inviteConfirmation");
 //                    UriComponentsBuilder urlBuilder = ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/auth/registrationConfirmation");
-                    OnInvitationCompleteEvent onUserRegistrationCompleteEvent = new OnInvitationCompleteEvent(member, urlBuilder);
+                    OnInvitationCompleteEvent onUserRegistrationCompleteEvent =
+                            new OnInvitationCompleteEvent(mailSendRequest.getEmail(),mailSendRequest.getChannelId(),member, urlBuilder);
+                    System.out.println(onUserRegistrationCompleteEvent.getMember().size()+" MEMBER SIZE");
                     applicationEventPublisher.publishEvent(onUserRegistrationCompleteEvent);
                     logger.info("Registered User returned [API[: " + member);
-                    return ResponseEntity.ok(new ApiResponse(true, "User registered successfully. Check your email for verification"));
+                    return ResponseEntity.ok(new ChannelResponse("data Object(json)", "String", true));
                 })
-                .orElseThrow(() -> new UserRegistrationException(mailSendRequest.getEmail(), "Missing user object in database"));
+                .orElseThrow(() -> new UserInvitationException(mailSendRequest.getEmail(), "Missing user object in database"));
     }
 
     @GetMapping("/inviteConfirmation")
+    @ResponseBody
     @ApiOperation(value = "Confirms the email verification token that has been generated for the user during registration")
-    public String confirmInvitation() {
-            return "redirect:http://localhost:3000";
+    public ChannelResponse confirmInvitation(@RequestParam String email, @RequestParam String channelId) {
+        ChannelRequest channelRequest = new ChannelRequest();
+        channelRequest.setChannelId(channelId);
+        User user = userService.findByEmail(email).orElseThrow(() -> new NoSuchElementException());
+        channelRequest.setUser(user);
+        ChannelResponse channelResponse = memberService.callPostBoardServer(channelRequest);
 
+        if(memberService.isMemberExist(email,channelId)==null) {
+            if(user==null){
+                System.out.println(email+" 님은 '이거모임'의 회원이 아닙니다.");
+            }else{
+                memberService.createMember(user, channelId);
+            }
+            return channelResponse;
+        }
+        else{
+            return channelResponse;
+        }
     }
+
+//    @GetMapping("/inviteConfirmation")
+//    @ApiOperation(value = "Confirms the email verification token that has been generated for the user during registration")
+//    public String confirmInvitation(@RequestParam String email, @RequestParam String channelId) {
+//        User user = userService.findByEmail(email).orElseThrow(() -> new NoSuchElementException());
+//        if(memberService.isMemberExist(email,channelId)==null) {
+//            if(user==null){
+//                System.out.println(email+" 님은 '이거모임'의 회원이 아닙니다.");
+//            }else{
+//                memberService.createMember(user, channelId);
+//            }
+//            return "redirect:http://i3a510.p.ssafy.io";
+//        }
+//        else{
+//            return "redirect:http://i3a510.p.ssafy.io";
+//        }
+//    }
 
     @PostMapping("/password/resetlink")
     @ApiOperation(value = "Receive the reset link request and publish event to send mail containing the password " +
@@ -229,5 +261,13 @@ public class AuthController {
                     return ResponseEntity.ok(new JwtAuthenticationResponse(updatedToken, refreshToken, tokenProvider.getExpiryDuration()));
                 })
                 .orElseThrow(() -> new TokenRefreshException(tokenRefreshRequest.getRefreshToken(), "Unexpected error during token refresh. Please logout and login again."));
+    }
+
+    @PostMapping("/verifyToken")
+    public Boolean validateToken(@RequestParam String token){
+        String secretKey = tokenProvider.getJwtSecret();
+        String str =  Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
+        if(str!=null) return true;
+        else return false;
     }
 }
