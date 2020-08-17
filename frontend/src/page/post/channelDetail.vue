@@ -43,7 +43,7 @@
             </template>
             <span>Kanban-Board</span>
           </v-tooltip>
-          
+
           <v-tooltip right>
             <template v-slot:activator="{ on }">
               <div v-on="on">
@@ -60,7 +60,7 @@
             </template>
             <span>Scheduler</span>
           </v-tooltip>
-          
+
           <v-tooltip right>
             <template v-slot:activator="{ on }">
               <div v-on="on">
@@ -93,7 +93,7 @@
               </div>
             </template>
             <span>멤버 초대하기</span>
-          </v-tooltip> -->
+          </v-tooltip>-->
         </div>
         <br />
       </div>
@@ -121,6 +121,15 @@
       </transition>
     </v-responsive>
 
+    <v-btn
+      class="resetButton text-center lighten-2 rounded-circle d-inline-flex align-center justify-center ma-3"
+      icon
+      color="black"
+      @click="reset"
+    >
+      <v-icon large>mdi-arrow-expand-all</v-icon>
+    </v-btn>
+
     <Moveable
       ref="moveable"
       class="moveable"
@@ -142,9 +151,7 @@
       @wheel="wheelEvent"
       style="height: 100%; width: 100%;"
     >
-      
-      <div class="MoveableBox realBoard" @click.right="test3" @dragenter="test4"
-      @dragover="test5">
+      <div class="MoveableBox realBoard" @click.right="test3" @dragenter="test4" @dragover="test5">
         <div
           class="postit"
           v-for="(pi, idx) in this.board.postitList"
@@ -155,7 +162,7 @@
         </div>
 
         <div class="kanban" @click.right="deleteAction('kanban', $event)">
-          <Kanban v-if="board.isKanban" :style="{left:board.kanban.left, top:board.kanban.top}"/>
+          <Kanban v-if="board.isKanban" :style="{left:board.kanban.left, top:board.kanban.top}" />
         </div>
         <div class="map" @click.right="deleteAction">
           <Map v-if="map.isPresent" />
@@ -174,15 +181,17 @@
             :style="{left: $store.state.poll.left, top: $store.state.poll.top}"
           />
         </div>
-        {{ board }}<br><br>
-        board : {{ board.poll }} 
+        {{ board }}
+        <br />
+        <br />
+        board : {{ board.poll }}
         <br />
         <br />
         <br />
 
         <!-- store : {{ $store.state.poll }}<br><br>
         {{$store.state.userData }}
-        <InviteModal v-model="$store.state.inviteModal"/> -->
+        <InviteModal v-model="$store.state.inviteModal"/>-->
       </div>
 
       <!-- <Postit :id="pi.id" :postit="pi" style="position: relative; display: inline-block"/> -->
@@ -262,16 +271,17 @@ export default {
         text: "",
         timeout: 1000,
       },
-      boardLength: 10000,
+      boardLengthX: 3250,
+      boardLengthY: 1750,
       boardScale: 1,
-      boardX: this.boardLength / 2,
-      boardY: this.boardLength / 2,
+      boardX: this.boardLengthX / 2,
+      boardY: this.boardLengthY / 2,
       lp: 0,
       tp: 0,
       lastBX: this.boardX,
       lastBY: this.boardY,
-      moduleXP : this.boardLength / 2,
-      moduleYP : this.boardLength / 2,
+      moduleXP: this.boardLengthX / 2,
+      moduleYP: this.boardLengthY / 2,
 
       memberView: false,
       idc: 0,
@@ -286,19 +296,20 @@ export default {
     this.initRecv();
   },
   mounted() {
-    document.querySelector(".realBoard").style.height = this.boardLength + "px";
-    document.querySelector(".realBoard").style.width = this.boardLength + "px";
+    document.querySelector(".realBoard").style.height =
+      this.boardLengthY + "px";
+    document.querySelector(".realBoard").style.width = this.boardLengthX + "px";
 
     // console.log((boardLength/2) - (window.innerWidth * 0.4));
     document.querySelector(".realBoard").style.left =
-      -(this.boardLength / 2) + window.innerWidth * 0.5 + "px";
+      -(this.boardLengthX / 2) + window.innerWidth * 0.5 + "px";
 
     document.querySelector(".realBoard").style.top =
-      -(this.boardLength / 2) + window.innerHeight * 0.5 + "px";
+      -(this.boardLengthY / 2) + window.innerHeight * 0.5 + "px";
 
     document.querySelector(".realBoard").style.transformOrigin = `${
-      this.boardLength / 2
-    }px ${this.boardLength / 2}px`;
+      this.boardLengthX / 2
+    }px ${this.boardLengthY / 2}px`;
   },
   methods: {
     init() {
@@ -337,24 +348,28 @@ export default {
       http
         .get(`/board/${this.board.channelId}`)
         .then((response) => {
-          console.log('initRecv@@@@');
+          console.log("initRecv@@@@");
           console.log(response.data);
           // this.board.postitList = response.data.postitList;
           // this.board.idCount = response.data.idCount;
-          if(!!response.data) {
+          if (!!response.data) {
             this.board = response.data;
           }
           this.board.delete = { moduleName: "", id: -1 };
-          if(response.data.kanban !== null) {
+          if (response.data.kanban !== null) {
             this.$store.state.Kanban.states = response.data.kanban.states;
           }
           // this.board.Kanban.columns = response.data.kanban.columns;
         })
         .catch((e) => {
-          console.log('initRecv 실패')
+          console.log("initRecv 실패");
           console.log(e);
         });
-        this.createSnackbar(`'${this.channelName}' 채널에 입장하였습니다!`, 3000, "info");
+      this.createSnackbar(
+        `'${this.channelName}' 채널에 입장하였습니다!`,
+        3000,
+        "info"
+      );
     },
     sendMessage: function (type) {
       this.ws.send(
@@ -421,9 +436,9 @@ export default {
       this.createSnackbar("보드가 생성되었습니다", 1500, "success");
     },
 
-    deleteKanban({ target }) { console.log(target);
+    deleteKanban({ target }) {
+      console.log(target);
       if (confirm("요소를 삭제하시겠습니까?") === true) {
-       
         target.remove();
         this.cloakMoveable();
         this.board.isKanban = false;
@@ -520,8 +535,8 @@ export default {
             this.boardX = this.lp * -1 + window.innerWidth / 2;
             this.boardY = this.tp * -1 + window.innerHeight / 2;
 
-            var limitUnit =
-              (this.boardScale / 0.05) * 250 - this.boardLength / 2;
+            // var limitUnit =
+            //   (this.boardScale / 0.05) * 250 - this.boardLengthX / 2;
 
             // console.log("origin : ", document.querySelector('.realBoard').style.transformOrigin);
             // if(this.lp > limitUnit) {
@@ -678,18 +693,19 @@ export default {
     wheelEvent: function (event) {
       if (event.deltaY < 0) {
         console.log("up!");
-        this.boardScale += 0.05;
+        this.boardScale += 0.025;
 
         if (this.boardScale > 1.3) {
           this.boardScale = 1.3;
           return;
         }
       } else if (event.deltaY > 0) {
-        this.boardScale -= 0.05;
+        this.boardScale -= 0.025;
 
-        if (this.boardScale < 0.6) {
-          this.boardScale = 0.6;
-          return 0;
+        if (this.boardScale < 0.4) {
+          this.boardScale = 0.425;
+          this.reset();
+          return;
         }
       }
       console.log(this.boardScale);
@@ -742,10 +758,10 @@ export default {
           this.crudMethod("SCHEDULER", "DELETE", this.board.scheduler);
           this.board.scheduler = null;
         } else if (moduleName == "poll") {
-          console.log('delete POLLLLLLLLLL')
+          console.log("delete POLLLLLLLLLL");
           this.crudMethod("POLL", "DELETE", this.board.poll);
           this.board.poll = null;
-        } else if (moduleName == "kanban"){
+        } else if (moduleName == "kanban") {
           this.crudMethod("KANBAN", "DELETE", this.board.kanban);
           this.board.isKanban = false;
           this.$store.state.Kanban.states = [
@@ -837,17 +853,56 @@ export default {
       // // }
       // console.log("origin : ", document.querySelector('.realBoard').style.transformOrigin);
     },
-    test4(event){
+    test4(event) {
       console.log(event.target);
-      
     },
-    test5(event){
+    test5(event) {
       // console.log(event.offsetX, event.offsetY);
       this.moduleXP = event.offsetX;
       this.moduleYP = event.offsetY;
     },
-    inviteMember(){
-      alert('hi');
+    inviteMember() {
+      alert("hi");
+    },
+    reset() {
+      console.log("reset!");
+      
+      this.boardScale = 0.425;
+      this.boardX = this.boardLengthX / 2,
+      this.boardY = this.boardLengthY / 2,
+      this.lp = 0,
+      this.tp = 0,
+      this.lastBX= this.boardLengthX / 2,
+      this.lastBY= this.boardLengthY / 2,
+      document.querySelector(
+        ".realBoard"
+      ).style.transformOrigin = `${this.boardX}px ${this.boardY}px`;
+
+      document.querySelector(
+        ".realBoard"
+      ).style.transform = `scale(${this.boardScale})`;
+
+      console.log(
+        "reset lp is : ",
+        (this.boardLengthX * this.boardScale)
+      );
+      
+      console.log(
+        "window is : ",
+        window.innerWidth,
+        window.innerHeight
+      );
+      document.querySelector(
+        '.realBoard'
+      // ).style.left = `${((this.boardLengthX * (this.boardScale)) - (window.innerWidth))}px`;
+      ).style.left = `-665px`;
+
+      document.querySelector(
+        '.realBoard'
+      // ).style.top =  `${((this.boardLengthY * this.boardScale) - window.innerHeight) *2 - 35}px`;
+      ).style.top =  `-435px`;
+      //-435px
+
     },
   },
   components: {
@@ -861,7 +916,6 @@ export default {
     // InviteModal,
   },
 };
-
 
 // document.addEventListener("dragenter", function( event ) {
 //       // highlight potential drop target when the draggable element enters it
@@ -903,8 +957,8 @@ export default {
   width: 2000px; */
   /* left: -680px;
   top: -680px; */
-  border: 1px solid pink;
-  background: rgb(247, 236, 236);
+  border: 1px solid rgb(173, 173, 173);
+  background: rgb(240, 240, 240);
 
   background-image: linear-gradient(
       0deg,
@@ -984,7 +1038,7 @@ export default {
   text-align: center;
   vertical-align: middle;
   border-radius: 20px;
-  border: 2px solid rgba(104, 104, 104, 0.5) ;
+  border: 2px solid rgba(104, 104, 104, 0.5);
 }
 
 .toolbar {
@@ -995,7 +1049,7 @@ export default {
 .userListBadge {
   position: fixed;
   z-index: 3;
-  bottom: 1%;
+  bottom: 20px;
   left: 20px;
 
   /* background-color: white; */
@@ -1005,7 +1059,7 @@ export default {
 }
 
 .vueBox {
-  background-color: rgba(0,0,0,0);
+  background-color: rgba(0, 0, 0, 0);
   /* background-color: white; */
   /* border: 1px solid black; */
   position: fixed;
@@ -1021,7 +1075,7 @@ export default {
   height: 40px;
   position: fixed;
   z-index: 2;
-  bottom: 1%;
+  bottom: 20px;
   left: 50px;
   text-align: right;
   padding-right: 1%;
@@ -1051,7 +1105,20 @@ export default {
 .testBox {
   display: inline;
 }
-.invite-mem{
+.invite-mem {
   margin-top: 20px;
+}
+
+.resetButton {
+  position: fixed;
+  z-index: 3;
+  bottom: 100px;
+  left: 20px;
+  border: solid black 1px;
+
+  /* background-color: white; */
+  /* border-radius: 50%; */
+  width: 64px;
+  height: 64px;
 }
 </style>
