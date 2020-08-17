@@ -26,6 +26,7 @@ import com.accolite.pru.health.AuthApp.security.JwtTokenValidator;
 import com.accolite.pru.health.AuthApp.service.AuthService;
 import com.accolite.pru.health.AuthApp.service.MemberService;
 import com.accolite.pru.health.AuthApp.service.UserService;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -42,6 +43,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
+import javax.xml.bind.DatatypeConverter;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -143,45 +145,45 @@ public class AuthController {
                 .orElseThrow(() -> new UserInvitationException(mailSendRequest.getEmail(), "Missing user object in database"));
     }
 
-    @GetMapping("/inviteConfirmation")
-    @ResponseBody
-    @ApiOperation(value = "Confirms the email verification token that has been generated for the user during registration")
-    public ChannelResponse confirmInvitation(@RequestParam String email, @RequestParam String channelId) {
-        ChannelRequest channelRequest = new ChannelRequest();
-        channelRequest.setChannelId(channelId);
-        User user = userService.findByEmail(email).orElseThrow(() -> new NoSuchElementException());
-        channelRequest.setUser(user);
-        ChannelResponse channelResponse = memberService.callPostBoardServer(channelRequest);
-
-        if(memberService.isMemberExist(email,channelId)==null) {
-            if(user==null){
-                System.out.println(email+" 님은 '이거모임'의 회원이 아닙니다.");
-            }else{
-                memberService.createMember(user, channelId);
-            }
-            return channelResponse;
-        }
-        else{
-            return channelResponse;
-        }
-    }
-
 //    @GetMapping("/inviteConfirmation")
+//    @ResponseBody
 //    @ApiOperation(value = "Confirms the email verification token that has been generated for the user during registration")
-//    public String confirmInvitation(@RequestParam String email, @RequestParam String channelId) {
+//    public ChannelResponse confirmInvitation(@RequestParam String email, @RequestParam String channelId) {
+//        ChannelRequest channelRequest = new ChannelRequest();
+//        channelRequest.setChannelId(channelId);
 //        User user = userService.findByEmail(email).orElseThrow(() -> new NoSuchElementException());
+//        channelRequest.setUser(user);
+//        ChannelResponse channelResponse = memberService.callPostBoardServer(channelRequest);
+//
 //        if(memberService.isMemberExist(email,channelId)==null) {
 //            if(user==null){
 //                System.out.println(email+" 님은 '이거모임'의 회원이 아닙니다.");
 //            }else{
 //                memberService.createMember(user, channelId);
 //            }
-//            return "redirect:http://i3a510.p.ssafy.io";
+//            return channelResponse;
 //        }
 //        else{
-//            return "redirect:http://i3a510.p.ssafy.io";
+//            return channelResponse;
 //        }
 //    }
+
+    @GetMapping("/inviteConfirmation")
+    @ApiOperation(value = "Confirms the email verification token that has been generated for the user during registration")
+    public String confirmInvitation(@RequestParam String email, @RequestParam String channelId) {
+        User user = userService.findByEmail(email).orElseThrow(() -> new NoSuchElementException());
+        if(memberService.isMemberExist(email,channelId)==null) {
+            if(user==null){
+                System.out.println(email+" 님은 '이거모임'의 회원이 아닙니다.");
+            }else{
+                memberService.createMember(user, channelId);
+            }
+            return "redirect:http://i3a510.p.ssafy.io";
+        }
+        else{
+            return "redirect:http://i3a510.p.ssafy.io";
+        }
+    }
 
     @PostMapping("/password/resetlink")
     @ApiOperation(value = "Receive the reset link request and publish event to send mail containing the password " +
@@ -263,11 +265,17 @@ public class AuthController {
                 .orElseThrow(() -> new TokenRefreshException(tokenRefreshRequest.getRefreshToken(), "Unexpected error during token refresh. Please logout and login again."));
     }
 
-    @PostMapping("/verifyToken")
-    public Boolean validateToken(@RequestParam String token){
+    @PostMapping("verifyToken")
+    public ResponseEntity validateToken(@RequestParam String token){
         String secretKey = tokenProvider.getJwtSecret();
-        String str =  Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
-        if(str!=null) return true;
-        else return false;
+        Claims claims =  Jwts.parser()
+                .setSigningKey(DatatypeConverter.parseBase64Binary(secretKey))
+                .parseClaimsJws(token).getBody();
+        String s = claims.getSubject();
+        System.out.println("user id : "+s);
+        User user = userService.findById(Long.parseLong(s)).orElse(null);
+        if(user!=null) return ResponseEntity.ok(true);
+        else return ResponseEntity.ok(false);
     }
+
 }

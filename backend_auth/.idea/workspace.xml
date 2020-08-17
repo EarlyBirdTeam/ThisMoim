@@ -36,19 +36,8 @@
       <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/accolite/pru/health/AuthApp/controller/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/accolite/pru/health/AuthApp/controller/AuthController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/accolite/pru/health/AuthApp/event/OnInvitationCompleteEvent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/accolite/pru/health/AuthApp/event/OnInvitationCompleteEvent.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/accolite/pru/health/AuthApp/event/listener/OnInvitationCompleteListener.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/accolite/pru/health/AuthApp/event/listener/OnInvitationCompleteListener.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/accolite/pru/health/AuthApp/exception/MailSendException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/accolite/pru/health/AuthApp/exception/MailSendException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/accolite/pru/health/AuthApp/model/member/Member.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/accolite/pru/health/AuthApp/model/member/Member.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/accolite/pru/health/AuthApp/model/payload/MailSendRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/accolite/pru/health/AuthApp/model/payload/MailSendRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/accolite/pru/health/AuthApp/repository/MemberRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/accolite/pru/health/AuthApp/repository/MemberRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/accolite/pru/health/AuthApp/security/JwtTokenProvider.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/accolite/pru/health/AuthApp/security/JwtTokenProvider.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/accolite/pru/health/AuthApp/service/AuthService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/accolite/pru/health/AuthApp/service/AuthService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/accolite/pru/health/AuthApp/service/MemberService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/accolite/pru/health/AuthApp/service/MemberService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/data.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/data.sql" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/com/accolite/pru/health/AuthApp/security/JwtTokenProviderTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/accolite/pru/health/AuthApp/security/JwtTokenProviderTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../backend_board/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/../backend_board/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/yarn.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/com/accolite/pru/health/AuthApp/security/JwtTokenValidatorTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/accolite/pru/health/AuthApp/security/JwtTokenValidatorTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -110,7 +99,26 @@
       <recent name="C:\Users\multicampus\Desktop\dd\s03p13a510\backend_auth\src\main\java\com\accolite\pru\health\AuthApp\model" />
     </key>
   </component>
-  <component name="RunManager" selected="Gradle.JwtTokenProviderTest.validateToken">
+  <component name="RunManager" selected="Spring Boot.AuthAppApplication (1)">
+    <configuration name="JwtTokenProviderTest.testGetUserIdFromJWT" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="--tests &quot;com.accolite.pru.health.AuthApp.security.JwtTokenProviderTest.testGetUserIdFromJWT&quot;" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":test" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <GradleScriptDebugEnabled>false</GradleScriptDebugEnabled>
+      <method v="2" />
+    </configuration>
     <configuration name="JwtTokenProviderTest.validateToken" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
@@ -152,8 +160,9 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Gradle.JwtTokenProviderTest.validateToken" />
         <item itemvalue="Spring Boot.AuthAppApplication (1)" />
+        <item itemvalue="Gradle.JwtTokenProviderTest.testGetUserIdFromJWT" />
+        <item itemvalue="Gradle.JwtTokenProviderTest.validateToken" />
       </list>
     </recent_temporary>
   </component>
@@ -175,7 +184,7 @@
       <workItem from="1597379606330" duration="3881000" />
       <workItem from="1597487611635" duration="282000" />
       <workItem from="1597539352481" duration="7228000" />
-      <workItem from="1597547877792" duration="15425000" />
+      <workItem from="1597547877792" duration="21258000" />
     </task>
     <servers />
   </component>
@@ -223,38 +232,38 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="549" y="167" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1597543068907" />
-    <state width="1493" height="313" key="GridCell.Tab.0.bottom" timestamp="1597632246177">
+    <state width="1493" height="117" key="GridCell.Tab.0.bottom" timestamp="1597695808951">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="313" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1597632246177" />
-    <state width="1493" height="313" key="GridCell.Tab.0.center" timestamp="1597632246177">
+    <state width="1493" height="117" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1597695808951" />
+    <state width="1493" height="117" key="GridCell.Tab.0.center" timestamp="1597695808951">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="313" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1597632246177" />
-    <state width="1493" height="313" key="GridCell.Tab.0.left" timestamp="1597632246177">
+    <state width="1493" height="117" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1597695808951" />
+    <state width="1493" height="117" key="GridCell.Tab.0.left" timestamp="1597695808951">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="313" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1597632246177" />
-    <state width="1493" height="313" key="GridCell.Tab.0.right" timestamp="1597632246177">
+    <state width="1493" height="117" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1597695808951" />
+    <state width="1493" height="117" key="GridCell.Tab.0.right" timestamp="1597695808951">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="313" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1597632246177" />
-    <state width="1493" height="95" key="GridCell.Tab.1.bottom" timestamp="1597632046938">
+    <state width="1493" height="117" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1597695808951" />
+    <state width="1493" height="117" key="GridCell.Tab.1.bottom" timestamp="1597695808951">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="95" key="GridCell.Tab.1.bottom/0.0.1536.824@0.0.1536.824" timestamp="1597632046938" />
-    <state width="1493" height="95" key="GridCell.Tab.1.center" timestamp="1597632046938">
+    <state width="1493" height="117" key="GridCell.Tab.1.bottom/0.0.1536.824@0.0.1536.824" timestamp="1597695808951" />
+    <state width="1493" height="117" key="GridCell.Tab.1.center" timestamp="1597695808951">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="95" key="GridCell.Tab.1.center/0.0.1536.824@0.0.1536.824" timestamp="1597632046938" />
-    <state width="1493" height="95" key="GridCell.Tab.1.left" timestamp="1597632046938">
+    <state width="1493" height="117" key="GridCell.Tab.1.center/0.0.1536.824@0.0.1536.824" timestamp="1597695808951" />
+    <state width="1493" height="117" key="GridCell.Tab.1.left" timestamp="1597695808951">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="95" key="GridCell.Tab.1.left/0.0.1536.824@0.0.1536.824" timestamp="1597632046938" />
-    <state width="1493" height="95" key="GridCell.Tab.1.right" timestamp="1597632046938">
+    <state width="1493" height="117" key="GridCell.Tab.1.left/0.0.1536.824@0.0.1536.824" timestamp="1597695808951" />
+    <state width="1493" height="117" key="GridCell.Tab.1.right" timestamp="1597695808951">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="95" key="GridCell.Tab.1.right/0.0.1536.824@0.0.1536.824" timestamp="1597632046938" />
+    <state width="1493" height="117" key="GridCell.Tab.1.right/0.0.1536.824@0.0.1536.824" timestamp="1597695808951" />
     <state x="475" y="97" width="585" height="630" key="find.popup" timestamp="1597541847628">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
