@@ -36,7 +36,8 @@
         <form>
         <div class="text-box" id="textBox">
           <textarea v-model="chatlog.message" id="msgForm" placeholder="메시지를 입력해주세요 :)" @keyup="enter" ></textarea>
-          <button id="sendChat" @click=sendChat>전송</button>
+          <button id="sendChat" @click="sendChat" v-show="chatlog.message != ''">전송</button>
+          <button id="sendChat_disable" disabled="true" v-show="chatlog.message == ''">전송</button>
           <div class="clearfix"></div>
         </div>
        </form>
@@ -91,7 +92,12 @@ export default {
   name: "Chat",
   created() {
     //console.log("chanelName : "+ localStorage.getItem("wsboard.channelName")); 채널 이름 가져오는 부분
-    var myname = this.makeRandomName();
+    // var myname = this.makeRandomName();
+    var myname = this.$store.getters.userData.nickname;
+    if(this.$store.getters.userData.nickname == ""){
+      myname = "Unknown_"+this.makeRandomName();
+    }
+    // console.log("my nickname is : ", myname);
     var chatcontainer = document.getElementById("chatContainer");
     var chatheader = document.getElementById("chatHeader");
     var chatbox = document.getElementById("chatBox");
@@ -456,7 +462,7 @@ export default {
     
     left: 75%;
     width: 25%;
-    top: 92%;
+    bottom: 0%;
 
   }
   
@@ -539,14 +545,26 @@ export default {
     background-color: orange;
     width: 60px;
     height: 60px;
-    color: white;
+    color: black;
     border: none;
     border-radius: 3px;
     cursor: pointer;
     margin-left: 10px;
     float: left;
   }
-  
+
+  #sendChat_disable {
+    background-color: orange;
+    color: gray;
+    width: 60px;
+    height: 60px;
+    border: none;
+    border-radius: 3px;
+    cursor: initial;
+    margin-left: 10px;
+    float: left;
+  }
+
   .clearfix {
     clear: both;
   }
