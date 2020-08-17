@@ -75,19 +75,11 @@ public class ChannelController {
     public InviteChannelResponse enterInvitedChannel(@RequestBody InviteChannelRequest inviteChannelRequest) {
         String channelId = inviteChannelRequest.getChannelId();
         // save channel in mariadb
-        // check token validation before creating channel
-
-        // 인증 서버에서 토큰 검증 api 완성되면 사용할 것
-//        ValidTokenRequest validTokenRequest = new ValidTokenRequest()
-//                .builder()
-//                .token(Authorization)
-//                .build();
-//        if(boardClientService.checkToken(validTokenRequest).getIsValid()) {
-//            channelService.saveChannel(createChannelRequest, channelId);
-//        }
-        // 인증 서버에서 토큰 검증 api 완성되기 전 테스트
-        channelService.saveInvitedChannel(inviteChannelRequest, channelId);
-        return new InviteChannelResponse().builder().message("Success Invitation").success(true).build();
+        if(channelService.saveInvitedChannel(inviteChannelRequest, channelId)) {
+            return new InviteChannelResponse().builder().message("Success Invitation").success(true).build();
+        } else {
+            return new InviteChannelResponse().builder().message("Fail Invitation").success(false).build();
+        }
     }
 
     @GetMapping("/channel/{channelId}")

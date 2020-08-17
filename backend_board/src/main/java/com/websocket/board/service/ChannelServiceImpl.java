@@ -48,12 +48,13 @@ public class ChannelServiceImpl implements ChannelService {
     }
 
     @Override
-    public Channel saveInvitedChannel(InviteChannelRequest inviteChannelRequest, String channelId) {
+    public Boolean saveInvitedChannel(InviteChannelRequest inviteChannelRequest, String channelId) {
 
         Channel channelResponse = channelRepository.findByChannelId(channelId);
 
         Optional<User> user = userRepository.findByEmail(inviteChannelRequest.getUser().getEmail());
 
+        Boolean isSaved = false;
         if(user.isPresent()) {
             UserChannel userChannel = new UserChannel().builder()
                     .user(user.get())
@@ -61,9 +62,10 @@ public class ChannelServiceImpl implements ChannelService {
                     .build();
 
             userChannelRepository.save(userChannel);
+            isSaved = true;
         }
 
-        return null;
+        return isSaved;
     }
 
     @Override
