@@ -50,14 +50,12 @@ public class OnInvitationCompleteListener implements ApplicationListener<OnInvit
 
         for (int i=0;i<recipientAddress.size();i++) {
             System.out.println(event.getEmail().get(i)+" parameter");
-        String emailConfirmationUrl = null;
-              emailConfirmationUrl =  event.getRedirectUrl().
+        String emailConfirmationUrl = event.getRedirectUrl().
                         queryParam("email", email.get(i)).
                         queryParam("channelId",channelId).toUriString();
         System.out.println("--------EVENTLISTNER CALLED------------");
 
         try {
-
                 mailService.sendInviteEmail(emailConfirmationUrl, recipientAddress.get(i));
 
             } catch (IOException | TemplateException | MessagingException e) {

@@ -47,6 +47,7 @@ import javax.xml.bind.DatatypeConverter;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.StringTokenizer;
 
 //@RestController
 @Controller
@@ -171,10 +172,16 @@ public class AuthController {
     @GetMapping("/inviteConfirmation")
     @ApiOperation(value = "Confirms the email verification token that has been generated for the user during registration")
     public String confirmInvitation(@RequestParam String email, @RequestParam String channelId) {
-        User user = userService.findByEmail(email).orElseThrow(() -> new NoSuchElementException());
-        if(memberService.isMemberExist(email,channelId)==null) {
+        StringTokenizer st = new StringTokenizer(email,",");
+        System.out.println("----confirm----" + email);
+        String mail = "";
+        for (int i=0; i<st.countTokens();i++) {
+            mail = st.nextToken();
+        }
+        User user = userService.findByEmail(mail).orElseThrow(() -> new NoSuchElementException());
+        if(memberService.isMemberExist(mail,channelId)==null) {
             if(user==null){
-                System.out.println(email+" 님은 '이거모임'의 회원이 아닙니다.");
+                System.out.println(mail+" 님은 '이거모임'의 회원이 아닙니다.");
             }else{
                 memberService.createMember(user, channelId);
             }
