@@ -145,7 +145,26 @@ io.on('connection', function(socket) {
         // io.to(id).emit('s2c chat', data);
     });
 
+    // 클라이언트로부터의 메시지가 수신되면
+    socket.on('text', function(data) {
+      console.log('Message from %s, 내용 : %s', socket.name, data.msg);
 
+      var msg = {
+          to: {
+              name: '',
+          },
+          from: {
+              name: socket.name, // 내 소켓 네임
+              userid: socket.userid
+          },
+          msg: data.msg,
+          id: '',
+      };
+      
+      io.to(room).emit('s2c text', msg);
+      console.log("상대한테 메시지 보내기 : "+data.msg);
+     
+  });
 
     //     // 메시지를 전송한 클라이언트를 제외한 모든 클라이언트에게 메시지를 전송한다
     //     // socket.broadcast.emit('chat', msg);

@@ -74,7 +74,10 @@
         <Calendar v-if="!!board.calendar.left"/>
       </div>
 
+     <div class="textBoard" id="textBoard" style="cursor: move;">
       
+     </div> 
+
     </div>
      
   <Chat/>
@@ -403,5 +406,22 @@ export default {
   font-weight: 100;
   letter-spacing: 1px;
   /* background-color: yellow; */
+}
+
+h3 {
+  /* margin: 20px; */
+  font-family: "Paytone One";
+  color: #202020;
+  text-transform: uppercase;
+  letter-spacing: -2px;
+}
+h3 span {
+  display: block;
+  margin: 11px 0 17px 0;
+  font-size: 80px;
+  line-height: 80px;
+  color: orange;
+  text-shadow: 0 13.36px 8.896px #c4b59d,0 -2px 1px #fff;
+  letter-spacing: -4px;
 }
 </style>

@@ -37,6 +37,7 @@
         <div class="text-box" id="textBox">
           <textarea v-model="chatlog.message" id="msgForm" placeholder="메시지를 입력해주세요 :)" @keyup="enter" ></textarea>
           <button id="sendChat" @click=sendChat>전송</button>
+          <button id="sendToBoard" @click=sendToBoard>보드로</button>
           <div class="clearfix"></div>
         </div>
        </form>
@@ -161,6 +162,15 @@ export default {
                     $('.chatbox').scrollTop($('.chatbox').prop('scrollHeight'));
                 }, 50);
     });
+
+    this.$socket.on("s2c text", (data) => {
+      var name = data.from.name;
+      var msg = data.msg;
+
+      $('.textBoard').append('<h3><span>'+msg+'</span></h3>');
+
+    });
+
     this.$socket.on("s2c chat me", (data) => {
       var name = data.from.name;
       var msg = data.msg;
@@ -249,6 +259,21 @@ export default {
 
 
       this.saveChatlog();
+    },
+
+    sendToBoard() {
+      event.preventDefault(); // 줄바꿈 방지?
+      event.stopPropagation();
+      var $msgForm = $('#msgForm').val();
+      // console.log("msgForm : "+$msgForm);
+      // console.log("channel : "+this.Channel);
+
+
+      this.$socket.emit("text", {msg: $msgForm});
+      $('#msgForm').val("");
+
+
+      //this.saveChatlog();
     },
 
      enter() { // 엔터 처리
@@ -539,6 +564,18 @@ export default {
   
   #sendChat {
     background-color: orange;
+    width: 60px;
+    height: 60px;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    margin-left: 10px;
+    float: left;
+  }
+
+   #sendToBoard {
+    background-color:skyblue;
     width: 60px;
     height: 60px;
     color: white;
