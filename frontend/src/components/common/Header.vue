@@ -1,25 +1,25 @@
 <template>
-    <div id="header" v-if="isHeader">
-        <h1>
-            <router-link v-bind:to="{name:constants.URL_TYPE.POST.MAIN}">
-                SS_log
+    <div id="header" style="background: rgb(0,0,0); border:solid 0px;
+">
+
+        <h1 >
+            <router-link class="white--text" style="color:rgb(0,0,0)" v-bind:to="{name:constants.URL_TYPE.POST.ENTER}">
+                   <img style="position:absolute;top:0px; width:auto;height:50px;" src="../../assets/img/Logo.png" />
             </router-link>
+
         </h1>
         <div class="right">
             <!-- <template v-if="this.$store.state.email == ''"> -->
             <template v-if="this.$store.getters.accessToken == ''">
-                <div class="headBox">
-                    <button @click="openModal">
-                        로그인
-                    </button>
+                <div class="headBox" style="height:35px; font-size:20px;c padding-top:5px; padding-bottom:12px; ">
+                    <LoginModal/>
                 </div>
             </template>
 
             <template v-else>
                 <div class="headBox">
-                    환영합니다! 
                     <router-link v-bind:to="{name:constants.URL_TYPE.USER.MYPAGE}" class="btn--text">
-                        {{this.$store.getters.userData.nickname}}
+                        {{this.$store.state.userData.email}}
                     </router-link> 
 
                     <button @click="logout">
@@ -35,44 +35,20 @@
 
         </div>  
         
-        
-            <loginModal @close="closeModal" v-if="this.$store.getters.modal">
-                
-                
-                <div class="input-wrap">
-                        <input v-model="email"
-                        id="email" 
-                        placeholder="이메일을 입력해주세요"
-                        type="text"/>
-                    </div>
-                    <div class="input-wrap">
-                        <input v-model="password" type="password"
-                        id="password"
-                        placeholder="비밀번호를 입력해주세요"/>
-                    </div>
-                
-                
-                <template slot="footer">
-                                <button class="btn btn--back btn--login" v-on:click="testMethod(email, password)">
-                                    로그인 하기
-                                </button>
-                                
-                </template>
 
-            </loginModal>
         
     </div>
 </template>   
 
 <script> 
-    import loginModal from '../../page/user/Login.vue'
+    import LoginModal from './LoginModal'
     import constants from '../../lib/constants'
     import cookies from 'vue-cookie'
-
+    import logo from '../../assets/img/Logo.png'
     export default {
         name: 'Header',
         components: { 
-            loginModal
+            LoginModal
         },
         props: ['isHeader'],
         watch: {
@@ -100,10 +76,10 @@
             
         },
         methods : {
-            openModal(){
-                this.modal = true;
-                this.$store.commit("toggleModal");
-            },
+            // openModal(){
+            //     this.modal = true;
+            //     this.$store.commit("toggleModal");
+            // },
             closeModal(){
                 this.modal = false;
                 this.$store.commit("toggleModal");

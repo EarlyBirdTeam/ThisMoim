@@ -21,6 +21,7 @@ export default {
         },
         POST: {
             MAIN : "main",
+            ENTER : "enter",
         },
     },
     METHODS:{
