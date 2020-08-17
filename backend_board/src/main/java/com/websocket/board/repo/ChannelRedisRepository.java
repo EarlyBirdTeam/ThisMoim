@@ -2,10 +2,8 @@ package com.websocket.board.repo;
 
 import com.websocket.board.model.Channel;
 import com.websocket.board.model.SocketBoardMessage;
-import com.websocket.board.model.scheduler.Scheduler;
 import com.websocket.board.model.kanban.Kanban;
-import com.websocket.board.model.poll.Poll;
-import com.websocket.board.model.postit.Postit;
+import com.websocket.board.model.scheduler.Scheduler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.ValueOperations;
@@ -35,7 +33,7 @@ public class ChannelRedisRepository {
     @Resource(name = "redisTemplate")
     private HashOperations<String, String, SocketBoardMessage> hashOpsBoard;
 //    @Resource(name = "redisTemplate")
-//    private HashOperations<String, String, Member> hashOpsMember;
+//    private HashOperations<String, String, User> hashOpsMember;
 
     // 모든 채널 조회
     public List<Channel> findAllChannel() {
@@ -61,10 +59,10 @@ public class ChannelRedisRepository {
         SocketBoardMessage board = new SocketBoardMessage()
                 .builder()
                 .channelId(channelId)
-                .postitList(new ArrayList<Postit>())
+                .postitList(new ArrayList<>())
                 .kanban(new Kanban())
                 .scheduler(new Scheduler())
-                .poll(new Poll())
+                .poll(new ArrayList<>())
                 .build();
         hashOpsBoard.put(BOARD, channelId, board);
     }
