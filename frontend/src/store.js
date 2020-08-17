@@ -106,7 +106,7 @@ export const store = new Vuex.Store({
           isSetAll: false,
           isEnd: false,
         },
-        
+        inviteModal: false,
     },
     actions: {
         async REQUEST_ADD_EVENT(context, event) {
@@ -186,14 +186,15 @@ export const store = new Vuex.Store({
                     cookies.set('AccessToken', res.data.accessToken);
                     store.commit(constants.METHODS.LOGIN_USER, [data, res.data.accessToken]);
                     // store.commit(constants.METHODS.GET_USER, res.data.userInfoResponse);
-                    const dataWhatINeed = res.data.userInfoResponse  ;
+                    const dataWhatINeed = res.data.user  ;
                     console.log("In store, dataWhatINeed is : ", dataWhatINeed);
                     store.commit(constants.METHODS.GET_USER, {
                         dataWhatINeed
                     });
                     //store.dispatch(constants.METHODS.GET_USER, data.email);
                     console.log("In store, state is : ", store.state);
-                    cookies.set('AccessData', _store.getters.userData.email);
+                    const userDataString = _store.userData
+                    cookies.set('AccessData', _store.getters.userDataStr);
                     return true;
                 }
             })
@@ -401,7 +402,11 @@ export const store = new Vuex.Store({
             // state.password = payload.password;
             // console.log("In Store, payload is : ", payload);
             state.userData.email = payload[0].email  ;
-            state.accessData = state.userData.email;
+            state.accessData = {
+              email: state.userData.email,
+              name: state.userData.name,
+              nickname: state.userData.nickname,
+            };
             state.accessToken = payload[1];
             state.modal = !state.modal;
         },
@@ -468,7 +473,10 @@ export const store = new Vuex.Store({
         
         },
         setDataAgain : (state, payload) => {
-            state.userData.email = payload.AccessData;
+          state.userData.email = payload.AccessData.email;
+          state.userData.name = payload.AccessData.name;
+          state.userData.nickname = payload.AccessData.nickname;
+          
             state.accessData = payload.AccessData;
             state.accessToken = payload.AccessToken;
         },
@@ -480,6 +488,11 @@ export const store = new Vuex.Store({
     getters:{
         userData: function(state){
             return state.userData;
+        },
+        userDataStr: function(state){
+          const dataStr = `email:${state.userData.email},name:${state.userData.name},nickname:${state.userData.nickname}`
+          console.log(dataStr);
+          return dataStr;
         },
         accessToken: function(state){
             return state.accessToken;

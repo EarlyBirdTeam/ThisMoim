@@ -1,4 +1,4 @@
-package com.websocket.board.model.dto.client;
+package com.websocket.board.payload;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,7 +11,7 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoginRequest implements Serializable {
-    private String email;
-    private String password;
+public class InviteChannelRequest implements Serializable {
+    private String channelId;
+    private UserInfoRequest user;
 }

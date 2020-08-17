@@ -3,7 +3,9 @@ package com.websocket.board.controller;
 import com.websocket.board.config.JwtTokenProvider;
 import com.websocket.board.model.Channel;
 import com.websocket.board.model.LoginInfo;
+import com.websocket.board.payload.*;
 import com.websocket.board.repo.ChannelRedisRepository;
+import com.websocket.board.service.BoardClientService;
 import com.websocket.board.service.ChannelService;
 import com.websocket.board.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +25,7 @@ public class ChannelController {
     private final ChannelRedisRepository channelRedisRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final ChannelService channelService;
+    private final BoardClientService boardClientService;
 
 //    @GetMapping("/channels")
 //    @ResponseBody
@@ -31,12 +34,13 @@ public class ChannelController {
 //        channels.stream().forEach(channel -> channel.setUserCount(channelRedisRepository.getUserCount(channel.getChannelId())));
 //        return channels;
 //    }
-
-    @GetMapping("/channels")
+    @PostMapping("/channels")
     @ResponseBody
-    public List<Channel> myChannel(@RequestHeader(name = "Authorization") String Authorization) {
+    public List<Channel> myChannel(
+            @RequestHeader(name = "Authorization") String Authorization,
+            @RequestBody UserInfoRequest userInfoRequest) {
         // 각 사용자가 가진 채널 리스트 전달하기 <- 디비에서 가져오기
-        List<Channel> channels = channelService.getMyChannels(Authorization);
+        List<Channel> channels = channelService.getMyChannels(userInfoRequest.getEmail());
         //List<Channel> channels = channelRedisRepository.findAllChannel();
         // 현재 채널에 접속해 있는 인원을 가져오는 부분
         //channels.stream().forEach(channel -> channel.setUserCount(channelRedisRepository.getUserCount(channel.getChannelId())));
@@ -45,13 +49,37 @@ public class ChannelController {
 
     @PostMapping("/channel")
     @ResponseBody
-    public Channel createChannel(@RequestHeader(name = "Authorization") String Authorization, @RequestParam("channelName") String channelName) {
+    public Channel createChannel(
+            @RequestHeader(name = "Authorization") String Authorization,
+            @RequestBody CreateChannelRequest createChannelRequest) {
         String channelId = UUID.randomUUID().toString();
         // save channel in redis
-        Channel channel = channelRedisRepository.createChannel(channelName, channelId);
+        Channel channel = channelRedisRepository.createChannel(createChannelRequest.getChannelName(), channelId);
         // save channel in mariadb
-        channelService.saveChannel(Authorization, channelName, channelId);
+        // check token validation before creating channel
+        // 인증 서버에서 토큰 검증 api 완성되면 사용할 것
+//        ValidTokenRequest validTokenRequest = new ValidTokenRequest()
+//                .builder()
+//                .token(Authorization)
+//                .build();
+//        if(boardClientService.checkToken(validTokenRequest).getIsValid()) {
+//            channelService.saveChannel(createChannelRequest, channelId);
+//        }
+        // 인증 서버에서 토큰 검증 api 완성되기 전 테스트
+        channelService.saveChannel(createChannelRequest, channelId);
         return channel;
+    }
+
+    @PostMapping("/channel/invitation")
+    @ResponseBody
+    public InviteChannelResponse enterInvitedChannel(@RequestBody InviteChannelRequest inviteChannelRequest) {
+        String channelId = inviteChannelRequest.getChannelId();
+        // save channel in mariadb
+        if(channelService.saveInvitedChannel(inviteChannelRequest, channelId)) {
+            return new InviteChannelResponse().builder().message("Success Invitation").success(true).build();
+        } else {
+            return new InviteChannelResponse().builder().message("Fail Invitation").success(false).build();
+        }
     }
 
     @GetMapping("/channel/{channelId}")

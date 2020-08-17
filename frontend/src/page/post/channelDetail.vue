@@ -10,7 +10,7 @@
       >{{ snackbar.text }}</v-snackbar>
       <div>
         <div class="toolBox">
-          <v-tooltip v-model="show" right>
+          <v-tooltip right>
             <template v-slot:activator="{ on }">
               <div v-on="on">
                 <v-btn
@@ -18,7 +18,6 @@
                   color="orange"
                   @click="pleaseDrag"
                   draggable="true"
-                  @dragenter="dragging=true"
                   @dragend="moduleDragEnd('postit', $event)"
                 >
                   <v-icon>mdi-message</v-icon>
@@ -28,7 +27,7 @@
             <span>Post-it</span>
           </v-tooltip>
 
-          <v-tooltip v-model="show" right>
+          <v-tooltip right>
             <template v-slot:activator="{ on }">
               <div v-on="on">
                 <v-btn
@@ -45,10 +44,7 @@
             <span>Kanban-Board</span>
           </v-tooltip>
           
-          <!-- <v-btn icon color="orange" @click="createMap">
-          <v-icon>mdi-map</v-icon>
-          </v-btn>-->
-          <v-tooltip v-model="show" right>
+          <v-tooltip right>
             <template v-slot:activator="{ on }">
               <div v-on="on">
                 <v-btn
@@ -65,7 +61,7 @@
             <span>Scheduler</span>
           </v-tooltip>
           
-          <v-tooltip v-model="show" right>
+          <v-tooltip right>
             <template v-slot:activator="{ on }">
               <div v-on="on">
                 <v-btn
@@ -81,13 +77,29 @@
             </template>
             <span>Poll</span>
           </v-tooltip>
-          
+
+          <v-tooltip right>
+            <template v-slot:activator="{ on }">
+              <div v-on="on">
+                <v-btn
+                  icon
+                  color="#FF5722"
+                  @click="$store.state.inviteModal = !$store.state.inviteModal"
+                  draggable="true"
+                  class="invite-mem"
+                >
+                  <v-icon>mdi-plus-circle-outline</v-icon>
+                </v-btn>
+              </div>
+            </template>
+            <span>멤버 초대하기</span>
+          </v-tooltip>
         </div>
         <br />
       </div>
     </div>
 
-    <v-responsive class="vueBox text-center ma-3"></v-responsive>
+    <!-- <v-responsive class="vueBox text-center ma-3"></v-responsive> -->
     <div class="testerDot"></div>
     <v-responsive>
       <v-responsive
@@ -130,7 +142,9 @@
       @wheel="wheelEvent"
       style="height: 100%; width: 100%;"
     >
-      <div class="MoveableBox realBoard" @click.right="test3">
+      
+      <div class="MoveableBox realBoard" @click.right="test3" @dragenter="test4"
+      @dragover="test5">
         <div
           class="postit"
           v-for="(pi, idx) in this.board.postitList"
@@ -166,7 +180,9 @@
         <br />
         <br />
 
-        store : {{ $store.state.poll }}
+        store : {{ $store.state.poll }}<br><br>
+        {{$store.state.userData }}
+        <InviteModal v-model="$store.state.inviteModal"/>
       </div>
 
       <!-- <Postit :id="pi.id" :postit="pi" style="position: relative; display: inline-block"/> -->
@@ -186,6 +202,7 @@ import Scheduler from "../../components/module/Scheduler";
 import Chat from "../../components/common/Chat";
 import Poll from "../../components/common/Poll";
 import Kanban from "../../components/module/Kanban";
+import InviteModal from "../../components/common/InviteModal"
 
 export default {
   computed: {
@@ -253,6 +270,8 @@ export default {
       tp: 0,
       lastBX: this.boardX,
       lastBY: this.boardY,
+      moduleXP : this.boardLength / 2,
+      moduleYP : this.boardLength / 2,
 
       memberView: false,
       idc: 0,
@@ -322,20 +341,20 @@ export default {
           console.log(response.data);
           // this.board.postitList = response.data.postitList;
           // this.board.idCount = response.data.idCount;
-          this.board = response.data;
+          if(!!response.data) {
+            this.board = response.data;
+          }
           this.board.delete = { moduleName: "", id: -1 };
-          this.$store.state.Kanban.states = response.data.kanban.states;
+          if(response.data.kanban !== null) {
+            this.$store.state.Kanban.states = response.data.kanban.states;
+          }
           // this.board.Kanban.columns = response.data.kanban.columns;
         })
         .catch((e) => {
           console.log('initRecv 실패')
           console.log(e);
         });
-        this.createSnackbar(
-        `'${this.channelName}' 채널에 입장하였습니다!`,
-        3000,
-        "info"
-      );
+        this.createSnackbar(`'${this.channelName}' 채널에 입장하였습니다!`, 3000, "info");
     },
     sendMessage: function (type) {
       this.ws.send(
@@ -365,7 +384,7 @@ export default {
         moduleObject: null,
       };
     },
-    createPostit(left = "500px", top = "170px") {
+    createPostit(left = this.boardX - 120 + "px", top = this.boardY - 120 + "px") {
       if (this.board.postitList.length > 20) {
         this.createSnackbar("포스트잇이 너무 많습니다!", 3000, "error");
         return;
@@ -375,8 +394,8 @@ export default {
       // postitList에 새로운 포스트잇 더하기
       var newPostit = {
         frontPostitId: idc,
-        left: this.boardX - 120 + "px",
-        top: this.boardY - 120 + "px",
+        left: this.moduleXP - 120 + "px",
+        top: this.moduleYP - 120 + "px",
         title: "",
         contents: "",
         channel: this.board.channelId,
@@ -395,8 +414,8 @@ export default {
       }
       this.board.isKanban = true;
       this.board.kanban = this.$store.state.Kanban;
-      this.board.kanban.left = left;
-      this.board.kanban.top = top;
+      this.board.kanban.left = this.moduleXP + "px";
+      this.board.kanban.top = this.moduleYP + "px";
       this.crudMethod("KANBAN", "CREATE", this.board.kanban);
       this.sendMessage();
       this.createSnackbar("보드가 생성되었습니다", 1500, "success");
@@ -439,8 +458,8 @@ export default {
         this.createSnackbar("이미 달력이 있습니다!", 3000, "error");
       } else {
         this.board.scheduler = {
-          left: left,
-          top: top,
+          left: this.moduleXP + "px",
+          top: this.moduleYP + "px",
           events: this.$store.state.scheduler.events,
         };
         console.log("create Scheduler");
@@ -457,8 +476,8 @@ export default {
       } else {
         const idc = this.board.idCount++;
         this.board.poll = this.$store.state.poll;
-        this.board.poll.left = left;
-        this.board.poll.top = top;
+        this.board.poll.left = this.moduleXP + "px";
+        this.board.poll.top = this.moduleYP + "px";
         this.crudMethod("POLL", "CREATE", this.board.poll);
         this.sendMessage();
         // snackbar
@@ -754,21 +773,23 @@ export default {
     cloakMoveable() {
       document.querySelector(".moveable-control-box").style.display = "none";
     },
-    moduleDragEnd(moduleName, { offsetX, offsetY }) {
+    // moduleDragEnd(moduleName, { offsetX, offsetY }) {
+    moduleDragEnd(moduleName, event) {
       switch (moduleName) {
         case "postit":
-          this.createPostit(`${offsetX}px`, `${offsetY}px`);
+          this.createPostit(`${event.offsetX}`, `${event.offsetY}`);
           break;
         case "scheduler":
-          this.createScheduler(`${offsetX}px`, `${offsetY}px`);
+          this.createScheduler(`${event.offsetX}px`, `${event.offsetY}px`);
           break;
         case "poll":
-          this.createPoll(`${offsetX}px`, `${offsetY}px`);
+          this.createPoll(`${event.offsetX}px`, `${event.offsetY}px`);
           break;
         case "kanban":
-          this.createKanban(`${offsetX}px`, `${offsetY}px`);
+          this.createKanban(`${event.offsetX}px`, `${event.offsetY}px`);
           break;
       }
+      console.log("drag end at : ", event);
     },
     pleaseDrag() {
       this.createSnackbar(
@@ -796,6 +817,7 @@ export default {
       }
     },
     test3(event) {
+      console.log(event);
       // let lastOriginX = document.querySelector('.realBoard').style.transformOrigin.split(" ")[0];
       // let lastOriginY = document.querySelector('.realBoard').style.transformOrigin.split(" ")[1];
       // console.log("LastOrigin : ", lastOriginX, " ", lastOriginY);
@@ -815,6 +837,18 @@ export default {
       // // }
       // console.log("origin : ", document.querySelector('.realBoard').style.transformOrigin);
     },
+    test4(event){
+      console.log(event.target);
+      
+    },
+    test5(event){
+      // console.log(event.offsetX, event.offsetY);
+      this.moduleXP = event.offsetX;
+      this.moduleYP = event.offsetY;
+    },
+    inviteMember(){
+      alert('hi');
+    },
   },
   components: {
     Moveable,
@@ -824,8 +858,18 @@ export default {
     Chat,
     Kanban,
     Poll,
+    InviteModal,
   },
 };
+
+
+// document.addEventListener("dragenter", function( event ) {
+//       // highlight potential drop target when the draggable element enters it
+//       if ( event.target.className == "realBoard" ) {
+//           event.target.style.background = "purple";
+//       }
+
+//   }, false);
 </script>
 
 <style scoped>
@@ -920,6 +964,7 @@ export default {
     );
 
   background-size: 250px 250px;
+  /* transition: all 0.05s; */
 }
 
 .moveable-control-box {
@@ -932,7 +977,7 @@ export default {
   position: fixed;
   z-index: 3;
   width: 64px;
-  bottom: 50%;
+  top: 30%;
   left: 2%;
   padding: 10px 0px;
   display: inline;
@@ -1006,5 +1051,8 @@ export default {
 }
 .testBox {
   display: inline;
+}
+.invite-mem{
+  margin-top: 20px;
 }
 </style>

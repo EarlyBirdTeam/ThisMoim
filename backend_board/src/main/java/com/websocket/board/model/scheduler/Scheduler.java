@@ -1,6 +1,7 @@
-package com.websocket.board.model.calendar;
+package com.websocket.board.model.scheduler;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.websocket.board.model.Channel;
 import lombok.AllArgsConstructor;
@@ -18,6 +19,7 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 @Builder
+@JsonIgnoreProperties("events")
 public class Scheduler implements Serializable {
 
     @Id

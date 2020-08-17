@@ -1,6 +1,7 @@
 package com.websocket.board.model.kanban;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.websocket.board.model.Channel;
 import lombok.*;
@@ -16,6 +17,7 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
+@JsonIgnoreProperties("states")
 public class Kanban implements Serializable {
 
     @Id

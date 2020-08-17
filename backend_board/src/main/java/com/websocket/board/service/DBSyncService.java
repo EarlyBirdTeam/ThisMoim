@@ -1,7 +1,7 @@
 package com.websocket.board.service;
 
 import com.websocket.board.model.SocketBoardMessage;
-import com.websocket.board.model.calendar.Scheduler;
+import com.websocket.board.model.scheduler.Scheduler;
 import com.websocket.board.model.crud.CRUDModule;
 import com.websocket.board.model.crud.CRUDType;
 import com.websocket.board.model.kanban.Kanban;

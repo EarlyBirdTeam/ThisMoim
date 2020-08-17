@@ -1,14 +1,13 @@
 package com.websocket.board.service;
 
 import com.websocket.board.model.Channel;
-import com.websocket.board.model.calendar.Scheduler;
+import com.websocket.board.model.SocketBoardMessage;
+import com.websocket.board.model.scheduler.Scheduler;
 import com.websocket.board.model.crud.CRUDModule;
 import com.websocket.board.model.crud.CRUDType;
 import com.websocket.board.model.crud.ModuleType;
 import com.websocket.board.model.kanban.Kanban;
-import com.websocket.board.model.poll.Poll;
 import com.websocket.board.model.postit.Postit;
-import com.websocket.board.model.SocketBoardMessage;
 import com.websocket.board.repo.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -41,7 +40,7 @@ public class DBSyncServiceImpl implements DBSyncService {
                 postit.setId(requestDbResult.get().getId());
             }
             //?
-            postit.setChannel(channelRepository.findByChannelId(board.getChannelId()));
+            postit.setChannel(channelRepository.findByChannelId(board.getChannelId()).get());
             postitRepository.save(postit);
         }
     }
@@ -65,7 +64,7 @@ public class DBSyncServiceImpl implements DBSyncService {
             case POSTIT:
                 ok = postitSync(crudType, (Postit) crudModule.getModuleObject());
                 break;
-            case CALENDAR:
+            case SCHEDULER:
                 ok = schedulerSync(crudType, (Scheduler)crudModule.getModuleObject());
                 break;
 //            case POLL:
@@ -155,7 +154,7 @@ public class DBSyncServiceImpl implements DBSyncService {
     @Override
     public void channelDBIdCountSync(String channelId, Long idCount) {
 
-        Channel channel = channelRepository.findByChannelId(channelId);
+        Channel channel = channelRepository.findByChannelId(channelId).get();
         channel.setIdCount(idCount);
 
         channelRepository.save(channel);
