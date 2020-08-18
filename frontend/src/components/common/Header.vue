@@ -55,12 +55,6 @@
                 console.log(val);
             }
         },
-        // computed: {
-        //   isLogged() {
-        //     this.$router.go(0)
-        //     return this.$store.state.isLogged;  
-        //   } 
-        // },
         created() {
             const arr = document.cookie.split(";");
             console.log(this.$store.getters.userData);
@@ -75,6 +69,9 @@
             // if(document.cookie.split(";")[0].split('=')[0])
             // console.log();
 
+            
+        },
+        computed: {
             
         },
         methods : {
