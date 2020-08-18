@@ -394,7 +394,7 @@ export default {
     
     left: 75%;
     width: 25%;
-    top: 58%;
+    bottom: 0%;
 
   }
   
