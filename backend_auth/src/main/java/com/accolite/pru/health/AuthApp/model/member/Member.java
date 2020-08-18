@@ -32,6 +32,9 @@ public class Member extends DateAudit {
     @Column
     private String channelId;
 
+    @Column
+    private String email;
+
     @ManyToOne
     @JoinColumn(name = "USER_ID")
     private User user;
