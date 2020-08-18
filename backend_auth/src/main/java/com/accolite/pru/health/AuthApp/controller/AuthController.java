@@ -173,17 +173,22 @@ public class AuthController {
     @ApiOperation(value = "Confirms the email verification token that has been generated for the user during registration")
     public String confirmInvitation(@RequestParam String email, @RequestParam String channelId) {
         StringTokenizer st = new StringTokenizer(email,",");
+        StringTokenizer st2 = new StringTokenizer(channelId,",");
         System.out.println("----confirm----" + email);
         String mail = "";
-        for (int i=0; i<st.countTokens();i++) {
+        String channel = "";
+        System.out.println(st.countTokens());
+        for (int i=0; i<=st.countTokens();i++) {
             mail = st.nextToken();
+            channel = st2.nextToken();
+            System.out.println("mail : "+ mail + " channel: "+channel);
         }
         User user = userService.findByEmail(mail).orElseThrow(() -> new NoSuchElementException());
-        if(memberService.isMemberExist(mail,channelId)==null) {
+        if(memberService.isMemberExist(mail,channel)==null) {
             if(user==null){
                 System.out.println(mail+" 님은 '이거모임'의 회원이 아닙니다.");
             }else{
-                memberService.createMember(user, channelId);
+                memberService.createMember(user, channel);
             }
             return "redirect:http://i3a510.p.ssafy.io";
         }
