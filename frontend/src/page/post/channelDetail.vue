@@ -77,7 +77,7 @@
             </template>
             <span>Poll</span>
           </v-tooltip>
-
+          <v-spacer/>
           <v-tooltip right>
             <template v-slot:activator="{ on }">
               <div v-on="on">
@@ -93,6 +93,22 @@
               </div>
             </template>
             <span>멤버 초대하기</span>
+          </v-tooltip>
+
+          <v-tooltip right>
+            <template v-slot:activator="{ on }">
+              <div v-on="on">
+                <v-btn
+                  icon
+                  color="#FF5722"
+                  @click="$store.state.withdrawalModal = !$store.state.withdrawalModal"
+                  draggable="true"
+                >
+                  <v-icon>mdi-close-circle</v-icon>
+                </v-btn>
+              </div>
+            </template>
+            <span>모임 나가기</span>
           </v-tooltip>
         </div>
         <br />
@@ -148,10 +164,10 @@
       ref="whiteBoard"
       @dblclick="focusAction"
       @click="changeTargetAction"
-      @wheel="wheelEvent"
+      
       style="height: 100%; width: 100%;"
     >
-      <div class="MoveableBox realBoard" @click.right="test3" @dragenter="test4" @dragover="test5">
+      <div ref="realBoard" class="MoveableBox realBoard" @click.right="test3" @dragenter="test4" @dragover="test5">
         <div
           class="postit"
           v-for="(pi, idx) in this.board.postitList"
@@ -192,6 +208,7 @@
         store : {{ $store.state.poll }}<br><br>
         {{$store.state.userData }}
         <InviteModal v-model="$store.state.inviteModal"/>
+        <WithdrawalModal v-model="$store.state.withdrawalModal"/>
       </div>
 
       <!-- <Postit :id="pi.id" :postit="pi" style="position: relative; display: inline-block"/> -->
@@ -212,6 +229,8 @@ import Chat from "../../components/common/Chat";
 import Poll from "../../components/common/Poll";
 import Kanban from "../../components/module/Kanban";
 import InviteModal from "../../components/common/InviteModal"
+import WithdrawalModal from "../../components/common/WithdrawalModal"
+import { renderer } from './renderer';
 
 export default {
   computed: {
@@ -296,6 +315,7 @@ export default {
       return false;
     };
     this.initRecv();
+
   },
   mounted() {
     document.querySelector(".realBoard").style.height =
@@ -312,6 +332,27 @@ export default {
     document.querySelector(".realBoard").style.transformOrigin = `${
       this.boardLengthX / 2
     }px ${this.boardLengthY / 2}px`;
+
+    const container = this.$refs.realBoard;
+    const instance = renderer({ scaleSensitivity: 10, minScale: .3, maxScale: 2, element: container });
+    container.addEventListener("wheel", (event) => {
+        // if (!event.ctrlKey) {
+        //     return;
+        // }
+        event.preventDefault();
+        instance.zoom({
+            deltaScale: Math.sign(event.deltaY) > 0 ? -1 : 1,
+            x: event.pageX,
+            y: event.pageY
+        });
+    });
+    container.addEventListener("dblclick", () => {
+        instance.panTo({
+            originX: 0,
+            originY: 0,
+            scale: 1,
+        });
+    });
   },
   methods: {
     init() {
@@ -917,6 +958,7 @@ export default {
     Kanban,
     Poll,
     InviteModal,
+    WithdrawalModal,
   },
 };
 
