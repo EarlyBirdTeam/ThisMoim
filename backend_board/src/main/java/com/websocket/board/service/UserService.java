@@ -15,10 +15,9 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public void saveUser(LoginResponse loginResponse) {
-
-        UserInfoResponse userInfoResponse = loginResponse.getUser();
+    public boolean saveUser(UserInfoResponse userInfoResponse) {
         Optional<User> user = userRepository.findByUserId(userInfoResponse.getId());
+        boolean isSaved = false;
 
         if(!user.isPresent()) {
 
@@ -29,7 +28,10 @@ public class UserService {
                     .build();
 
             userRepository.save(boardUser);
+            isSaved = true;
         }
+
+        return true;
     }
 
 //    public void saveUserTest(LoginResponse loginResponse, UserInfoResponse userResponse) {

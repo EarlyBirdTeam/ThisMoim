@@ -27,7 +27,7 @@ public class UserController {
         //loginResponse.setUserInfoResponse(userInfoResponse);
 
         // 보드 서버에 로그인한 사용자 정보 저장
-        userService.saveUser(loginResponse);
+        userService.saveUser(loginResponse.getUser());
         // 분기되서 요청할때
         // userService.saveUserTest(loginResponse, userInfoResponse);
 
