@@ -25,6 +25,7 @@ public class ChannelController {
     private final ChannelRedisRepository channelRedisRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final ChannelService channelService;
+    private final UserService userService;
     private final BoardClientService boardClientService;
 
 //    @GetMapping("/channels")
@@ -75,7 +76,13 @@ public class ChannelController {
     public InviteChannelResponse enterInvitedChannel(@RequestBody InviteChannelRequest inviteChannelRequest) {
         String channelId = inviteChannelRequest.getChannelId();
         // save channel in mariadb
-        if(channelService.saveInvitedChannel(inviteChannelRequest, channelId)) {
+        // 사용자를 먼저 저장
+        boolean isUserSaved = false;
+        if(userService.saveUser(inviteChannelRequest.getUser())) {
+            isUserSaved = true;
+        }
+        // 채널과 사용자를 매핑해서 저장
+        if(isUserSaved & channelService.saveInvitedChannel(inviteChannelRequest, channelId)) {
             return new InviteChannelResponse().builder().message("Success Invitation").success(true).build();
         } else {
             return new InviteChannelResponse().builder().message("Fail Invitation").success(false).build();
