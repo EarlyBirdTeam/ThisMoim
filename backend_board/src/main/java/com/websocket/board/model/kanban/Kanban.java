@@ -17,7 +17,7 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
-@JsonIgnoreProperties("states")
+//@JsonIgnoreProperties("states")
 public class Kanban implements Serializable {
 
     @Id
