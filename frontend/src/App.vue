@@ -1,10 +1,10 @@
 <template>
   <v-app>
     <v-main id="bg">
-      <Header :isHeader="isHeader"/>
+        <Header v-if="!isBoard"/>
       <!-- <Sidebar :isSidebar="isSidebar"/> -->
       <!-- <Sidebar> </Sidebar> -->
-      <router-view id="container"/>
+      <router-view id="container" />
     </v-main>
   </v-app>
 </template>
@@ -16,84 +16,80 @@ import constants from './lib/constants'
 import axios from 'axios'
 
 export default {
-  name: 'App',
-  components: { 
+  name: "App",
+  components: {
     Header,
     
   },
   created() {
-      let url = this.$route.name;
+    let url = this.$route.name;
+ console.log(url);
+    this.checkBoard(url);
+   
+    
 
-      this.checkUrl(url);
-
-      console.log("refresh!");
-      console.log(this.$store);
-      const arr = document.cookie.split(";");
-      console.log(this.$store.getters.userData);
-      const logInfo = {
-          "AccessData" : '',
-          "AccessToken" : ''
-      };
-      arr.forEach(element => {
-        console.log("In App, element is : ", element);
-          if(element.split('=')[0].trim() == 'AccessToken'){
-              // logInfo.AccessToken = element.split('=')[1];
-              logInfo.AccessToken = element.split('=')[1];
-          }
-          if(element.split('=')[0].trim() == 'AccessData'){
-            console.log("AccessData@")
-            const a = element.split('=')[1].split('%2C')
-            logInfo.AccessData = {
-              email: unescape(a[0].split('%3A')[1]),
-              name: decodeURI(a[1].split('%3A')[1]),
-              nickname: unescape(a[2].split('%3A')[1]),
-            }
-              // logInfo.AccessData = unescape(element.split('=')[1]);
-          }
-      });
-
-      console.log("In App, logInfo is : ", logInfo);
-
-      if(logInfo.AccessData != '' && logInfo.AccessData != ''){
-        this.$store.commit("setDataAgain", logInfo);
-        this.$store.dispatch(constants.METHODS.GET_USER, logInfo.AccessData);
+    
+    console.log("refresh!");
+    console.log(this.$store);
+    const arr = document.cookie.split(";");
+    console.log(this.$store.getters.userData);
+    const logInfo = {
+      AccessData: "",
+      AccessToken: "",
+    };
+    arr.forEach((element) => {
+      console.log("In App, element is : ", element);
+      if (element.split("=")[0].trim() == "AccessToken") {
+        // logInfo.AccessToken = element.split('=')[1];
+        logInfo.AccessToken = element.split("=")[1];
       }
+      if (element.split("=")[0].trim() == "AccessData") {
+        console.log("AccessData@");
+        const a = element.split("=")[1].split("%2C");
+        logInfo.AccessData = {
+          email: unescape(a[0].split("%3A")[1]),
+          name: decodeURI(a[1].split("%3A")[1]),
+          nickname: unescape(a[2].split("%3A")[1]),
+        };
+        // logInfo.AccessData = unescape(element.split('=')[1]);
+      }
+    });
+
+    console.log("In App, logInfo is : ", logInfo);
+
+    if (logInfo.AccessData != "" && logInfo.AccessData != "") {
+      this.$store.commit("setDataAgain", logInfo);
+      this.$store.dispatch(constants.METHODS.GET_USER, logInfo.AccessData);
+    }
   },
   watch: {
-      $route (to){
-
-          this.checkUrl(to.name);
-      }
+    $route(to) {
+      this.checkBoard(to.name);
+    },
   },
-  methods : {
-      checkUrl(url) { 
-          console.log(url);
-          let array = [
-              constants.URL_TYPE.USER.LOGIN,
-              constants.URL_TYPE.USER.JOIN,
-              constants.URL_TYPE.USER.JOINDONE
-          ];
+  methods: {
 
-          let isHeader = true;
-          let isSidebar = true;
-          // array.map(path => {
-          //     if (url === path)
-          //         isHeader = false;
-          //         isSidebar = false;
-          // })
-          this.isHeader = isHeader;
-          this.isSidebar = isSidebar;
-
-      },
+    checkBoard(url) {
+      let array = ["enter"];
+      console.log(url);
+      let isBoard = false;
+      array.map((path) => {
+     
+        
+        if (url === path) 
+        {isBoard = true;}
+      });
+      this.isBoard = isBoard;
+    },
   },
   data: function () {
-        return {
-            isHeader: true,
-            isSidebar: true,
-            constants,
-        } 
-    }
-}
+    return {
+      isHeader: true,
+      isBoard: false,
+      constants,
+    };
+  },
+};
 </script>
 
 <style >
@@ -117,7 +113,7 @@ export default {
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale; 
+  -moz-osx-font-smoothing: grayscale;
   /* text-align: center; */
   color: #2c3e50;
 }

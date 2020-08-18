@@ -23,6 +23,7 @@ import PasswordReset from '../page/user/PasswordReset.vue'
 import DeleteUser from '../page/user/ReallyDelete.vue'
 
 // 포스트
+import Enter from '../page/post/Enter.vue'
 import List from '../page/post/List.vue'
 import Board from '../page/post/Test_Board.vue'
 
@@ -100,11 +101,6 @@ export default new Router({
       path: '/',
       name: constants.URL_TYPE.POST.ENTER,
       component: Enter,
-    },
-    { 
-      path: '/introduce',
-      name: constants.URL_TYPE.POST.INTRODUCE,
-      component: Introduce,
     },
     { 
       path: '/main',

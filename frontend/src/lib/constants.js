@@ -22,7 +22,7 @@ export default {
         POST: {
             ENTER : "enter",
             MAIN : "main",
-            INTRODUCE : "introduce"
+            ENTER : "enter",
         },
     },
     METHODS:{

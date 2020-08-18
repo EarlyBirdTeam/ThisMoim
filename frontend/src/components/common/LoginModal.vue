@@ -10,7 +10,7 @@
           v-on="on"
           color="rgb(223, 223, 223)"
         >
-          로그인
+          Login
         </button>
       </template>
       <v-card style="width:350px; height:220px">

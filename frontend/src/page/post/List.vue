@@ -14,25 +14,63 @@
           <span>생성하거나 가입된 모임이 없습니다 🤦‍♀️🤦‍♂️      </span>
           <a @click="openModal">만들기</a>
         </div>
+      <v-btn icon @click="showAlbum">
+        <v-icon>mdi-view-module</v-icon>
+      </v-btn>
+      <v-btn icon @click="showList">
+        <v-icon>mdi-view-list</v-icon>
+      </v-btn>
+
+      <v-row style="width:80%; margin:auto;" v-if="howto">
         <v-col
-          v-for="card in channels"
+          v-for="card in listChannels"
           :key="card.channelId"
           cols="4"
-          md="3"
+          md="4"
           @click="enterRoom(card.channelId, card.channelName)"
         >
-          <v-card class="card-channel">
-            <v-img
-              :src="getRandomImage(card.channelName)"
-              class="white--text align-end"
-              gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
-              height="300px"
-            >
-              <v-card-title v-text="card.channelName"></v-card-title>
-            </v-img>
-          </v-card>
+          <v-hover v-slot:default="{ hover }">
+            <v-card class="card-channel">
+              <v-img
+                :src="getRandomImage(card.channelName)"
+                class="white--text align-end"
+                gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
+                height="300px"
+              >
+                <v-expand-transition>
+                  <div
+                    v-if="hover"
+                    flex
+                    class="d-flex transition-fast-in-fast-out black darken-2 v-card--reveal display-3 white--text"
+                    style="height: 100%; align-items: center;
+                          bottom: 0;
+                          justify-content: center;
+                          opacity: .5;
+                          position: absolute;
+                          width: 100%; "
+                  >
+                    <br />
+                    <br />
+                    <div class="btn">입장하기</div>
+                  </div>
+                </v-expand-transition>
+                <v-card-title v-text="card.channelName"></v-card-title>
+              </v-img>
+            </v-card>
+          </v-hover>
         </v-col>
       </v-row>
+      <ul style="width:80%; margin:auto;" class="list-group" v-if="!howto">
+        <li
+          class="list-group-item list-group-item-action"
+          v-for="item in listChannels"
+          v-bind:key="item.channelId"
+          style
+          v-on:click="enterRoom(item.channelId, item.channelName)"
+        >
+          <h6 style="text-align:left">{{item.channelName}}</h6>
+        </li>
+      </ul>
     </v-container>
 
     <v-dialog max-width="600px" persistent v-model="modal">
@@ -62,7 +100,7 @@
   </v-dialog>
   </div>
 </template>
- 
+
 <script>
 import "../../assets/css/post.scss";
 import constants from "../../lib/constants";
@@ -70,11 +108,13 @@ import SockJS from "sockjs-client";
 import Stomp from "stomp-websocket";
 import axios from "axios";
 import http from "../../http-common.js";
+import lodash from "lodash";
 
 export default {
   data: () => ({
     channel_name: "",
     channels: [],
+    howto: true,
     modal: false,
     rules: [v => ((4 <= v.length) && (v.length<= 20 ))|| '모임 이름은 4-20자여야 합니다!'],
     valid: false,
@@ -83,6 +123,12 @@ export default {
     this.findAllChannel();
   },
   methods: {
+    showAlbum() {
+      this.howto = true;
+    },
+    showList() {
+      this.howto = false;
+    },
     getRandomImage(idString) {
       return `https://picsum.photos/seed/${idString}/200/300`;
     },
@@ -94,13 +140,15 @@ export default {
           headers: {
             "Authorization" : "Bearer " + this.$store.getters.accessToken
           }
-      }
-      ).then((response) => {
-        console.log(response);
-        // prevent html, allow json array
-        if (Object.prototype.toString.call(response.data) === "[object Array]")
-          this.channels = response.data;
-      });
+        )
+        .then((response) => {
+          console.log(response);
+          // prevent html, allow json array
+          if (
+            Object.prototype.toString.call(response.data) === "[object Array]"
+          )
+            this.channels = response.data;
+        });
     },
     createChannel: function (valid) {
       if(this.$cookie.get('AccessToken') === null){
@@ -115,14 +163,14 @@ export default {
         const params = {
           channelName: this.channel_name,
           email: this.$store.state.userData.email,
-        }
+        };
         console.log(params);
         // params.append("token", this.$store.getters.accessToken)
         const config = {
           headers: {
-            "Authorization" : "Bearer " + this.$store.getters.accessToken
-          }
-        }
+            Authorization: "Bearer " + this.$store.getters.accessToken,
+          },
+        };
         http
           .post("/board/channel", params, config)
           .then((response) => {
