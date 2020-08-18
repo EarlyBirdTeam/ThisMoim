@@ -14,6 +14,7 @@
           <span>생성하거나 가입된 모임이 없습니다 🤦‍♀️🤦‍♂️      </span>
           <a @click="openModal">만들기</a>
         </div>
+      </v-row>
       <v-btn icon @click="showAlbum">
         <v-icon>mdi-view-module</v-icon>
       </v-btn>
@@ -140,7 +141,7 @@ export default {
           headers: {
             "Authorization" : "Bearer " + this.$store.getters.accessToken
           }
-        )
+      })
         .then((response) => {
           console.log(response);
           // prevent html, allow json array

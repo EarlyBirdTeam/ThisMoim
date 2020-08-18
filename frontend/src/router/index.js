@@ -8,10 +8,6 @@ import constants from '../lib/constants'
 import ChannelDetail from '../page/post/channelDetail.vue'
 import Server from '../page/post/server.vue'
 
-
-import Enter from '../page/post/Enter.vue'
-import Introduce from '../page/post/IntroDev.vue'
-
 // 유저
 import Login from '../page/user/Login.vue'
 import Join from '../page/user/Join.vue'
