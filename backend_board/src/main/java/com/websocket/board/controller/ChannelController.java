@@ -9,7 +9,6 @@ import com.websocket.board.service.BoardClientService;
 import com.websocket.board.service.ChannelService;
 import com.websocket.board.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -56,15 +55,17 @@ public class ChannelController {
     public Channel createChannel(
             @RequestHeader(name = "Authorization") String Authorization,
             @RequestBody CreateChannelRequest createChannelRequest) {
-        String channelId = UUID.randomUUID().toString();
-        // save channel in redis
-        Channel channel = channelRedisRepository.createChannel(createChannelRequest.getChannelName(), channelId);
-        // save channel in mariadb
+        
         // check token validation before creating channel
-        // 인증 서버에서 토큰 검증 api 완성되면 사용할 것
-        if(boardClientService.checkToken(Authorization).getIsValid()) {
-            channelService.saveChannel(createChannelRequest, channelId);
+        boolean isValid = boardClientService.checkToken(Authorization).getIsValid();
+        // save channel in mariadb
+        Channel channel = null;
+        if(isValid) {
+            channel = channelService.createChannel(createChannelRequest);
+            // save channel in redis
+            channelRedisRepository.createChannel(createChannelRequest.getChannelName(), channel.getChannelId());
         }
+        
         // 인증 서버에서 토큰 검증 api 완성되기 전 테스트
         //channelService.saveChannel(createChannelRequest, channelId);
         return channel;

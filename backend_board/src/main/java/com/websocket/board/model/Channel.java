@@ -12,6 +12,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Entity
 @NoArgsConstructor
@@ -50,6 +51,12 @@ public class Channel implements Serializable {
     @JsonManagedReference
     @Builder.Default
     private List<UserChannel> userList = new ArrayList<>();
+
+    public Channel createChannel() {
+        Channel channel = new Channel().builder().build();
+        channel.setChannelId(UUID.randomUUID().toString());
+        return channel;
+    }
 
     public Channel(String channelName) {
         this.channelName = channelName;

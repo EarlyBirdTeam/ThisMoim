@@ -12,7 +12,6 @@ import com.websocket.board.repo.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,15 +26,14 @@ public class ChannelServiceImpl implements ChannelService {
     private final UserChannelRepository userChannelRepository;
 
     @Override
-    public Channel saveChannel(CreateChannelRequest createChannelRequest, String channelId) {
+    public Channel createChannel(CreateChannelRequest createChannelRequest) {
 
-        Channel channel = new Channel().builder()
-                .channelId(channelId)
-                .channelName(createChannelRequest.getChannelName())
-                .build();
+        Channel channel = new Channel().createChannel();
+        channel.setChannelName(createChannelRequest.getChannelName());
 
         Channel channelResponse = channelRepository.save(channel);
 
+        // Channel - User Mapping
         Optional<User> user = userRepository.findByEmail(createChannelRequest.getEmail());
 
         if(user.isPresent()) {

@@ -8,7 +8,7 @@ import com.websocket.board.payload.WithdrawalRequest;
 import java.util.List;
 
 public interface ChannelService {
-    Channel saveChannel(CreateChannelRequest createChannelRequest, String channelId);
+    Channel createChannel(CreateChannelRequest createChannelRequest);
     Boolean saveInvitedChannel(InviteChannelRequest inviteChannelRequest, String channelId);
     List<Channel> getMyChannels(String token);
     Boolean withdrawalChannel(WithdrawalRequest withdrawalRequest);
