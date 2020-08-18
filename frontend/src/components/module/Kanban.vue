@@ -1,5 +1,5 @@
 <template>
-  <kanban class="kanban MoveableBox">
+  <div class="kanban MoveableBox" ref="kanban">
     <div class="flex justify-center">
       <div class="d-flex">
 
@@ -72,7 +72,7 @@
         </v-card-text>
       </v-card>
     </v-dialog>
-  </kanban>
+  </div>
 </template>
 
 <script>

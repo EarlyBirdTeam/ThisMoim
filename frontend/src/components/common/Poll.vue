@@ -242,6 +242,7 @@ h3{
 }
 
 .label-25 {
+  display: block;
   font-size: 25px; 
   margin-bottom: 5px;
 }

@@ -28,7 +28,7 @@ import Board from '../page/post/Test_Board.vue'
 
 // test
 import Poll from '../components/common/Poll.vue'
-import Map from '../components/module/Map.vue'
+import Kanban from '../components/module/Kanban.vue'
 import Scheduler from '../components/module/Scheduler.vue'
 import InviteModal from '../components/common/InviteModal.vue'
 
@@ -137,9 +137,9 @@ export default new Router({
       component: Poll,
     },
     { 
-      path: '/map',
-      name: 'map',
-      component: Map,
+      path: '/kanban',
+      name: 'kanban',
+      component: Kanban,
     },
     { 
       path: '/scheduler',
