@@ -91,7 +91,6 @@ import ChatlogDataService from "../../services/ChatlogDataService"
 export default {
   name: "Chat",
   components:{
-    Moveable,
   },
   created() {
     //console.log("chanelName : "+ localStorage.getItem("wsboard.channelName")); 채널 이름 가져오는 부분
@@ -298,36 +297,6 @@ export default {
              //this.saveChatlog();
           }
         }
-
-    sendChat() {
-      event.preventDefault(); // 줄바꿈 방지?
-      event.stopPropagation();
-      var $msgForm = $('#msgForm').val();
-      console.log("msgForm : "+$msgForm);
-      console.log("channel : "+this.Channel);
-
-
-      this.$socket.emit("chat", {msg: $msgForm});
-      $('#msgForm').val("");
-
-
-        this.saveChatlog();
-    },
-
-     enter() { // 엔터 처리
-       var code = event.keyCode;
-        if(code==13){
-
-          if(event.shiftKey === true){ // Shift + Enter 처리
-            //console.log("Shift도 눌러짐");
-          
-          }
-          else{
-             this.sendChat();
-             //this.saveChatlog();
-          }
-        }
-
     },
 
     minimize(){
