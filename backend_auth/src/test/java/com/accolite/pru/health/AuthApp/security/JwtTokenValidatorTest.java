@@ -16,6 +16,8 @@ package com.accolite.pru.health.AuthApp.security;
 import com.accolite.pru.health.AuthApp.cache.LoggedOutJwtTokenCache;
 import com.accolite.pru.health.AuthApp.event.OnUserLogoutSuccessEvent;
 import com.accolite.pru.health.AuthApp.exception.InvalidTokenRequestException;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -23,6 +25,7 @@ import org.junit.rules.ExpectedException;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import javax.xml.bind.DatatypeConverter;
 import java.util.concurrent.TimeUnit;
 
 import static org.mockito.Mockito.times;
@@ -95,4 +98,6 @@ public class JwtTokenValidatorTest {
     private OnUserLogoutSuccessEvent stubLogoutEvent(String email, String token) {
         return new OnUserLogoutSuccessEvent(email, token, null);
     }
+
+
 }

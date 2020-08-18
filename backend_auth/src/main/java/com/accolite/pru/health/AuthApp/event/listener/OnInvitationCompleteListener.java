@@ -13,6 +13,9 @@ import org.springframework.stereotype.Component;
 
 import javax.mail.MessagingException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 @Component
 public class OnInvitationCompleteListener implements ApplicationListener<OnInvitationCompleteEvent> {
 
@@ -32,17 +35,34 @@ public class OnInvitationCompleteListener implements ApplicationListener<OnInvit
     }
 
     private void sendEmailVerification(OnInvitationCompleteEvent event) {
-        User user = event.getMember().getUser();
-
-        String recipientAddress = user.getEmail();
-        String emailConfirmationUrl =
-                event.getRedirectUrl().toUriString();
-        System.out.println("--------------------");
-        try {
-            mailService.sendInviteEmail(emailConfirmationUrl, recipientAddress);
-        } catch (IOException | TemplateException | MessagingException e) {
-            logger.error(e);
-            throw new MailSendException(recipientAddress, "Email Verification");
+        List<User> user = new ArrayList<>();
+        for (int i=0;i<event.getMember().size();i++){
+            user.add(event.getMember().get(i).getUser());
         }
+
+
+        List<String> recipientAddress = new ArrayList<>();
+        for (User u:user) {
+            recipientAddress.add(u.getEmail());
+        }
+        List<String> email = event.getEmail();
+        String channelId = event.getChannelId();
+
+        for (int i=0;i<recipientAddress.size();i++) {
+            System.out.println(event.getEmail().get(i)+" parameter");
+        String emailConfirmationUrl = event.getRedirectUrl().
+                        queryParam("email", email.get(i)).
+                        queryParam("channelId",channelId).toUriString();
+        System.out.println("--------EVENTLISTNER CALLED------------");
+
+        try {
+                mailService.sendInviteEmail(emailConfirmationUrl, recipientAddress.get(i));
+
+            } catch (IOException | TemplateException | MessagingException e) {
+                logger.error(e);
+                throw new MailSendException(recipientAddress.get(i), "Email Verification");
+            }
+        }
+
     }
 }

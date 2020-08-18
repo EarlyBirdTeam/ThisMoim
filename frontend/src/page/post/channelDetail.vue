@@ -77,7 +77,7 @@
             </template>
             <span>Poll</span>
           </v-tooltip>
-
+          <v-spacer/>
           <v-tooltip right>
             <template v-slot:activator="{ on }">
               <div v-on="on">
@@ -93,6 +93,22 @@
               </div>
             </template>
             <span>멤버 초대하기</span>
+          </v-tooltip>
+
+          <v-tooltip right>
+            <template v-slot:activator="{ on }">
+              <div v-on="on">
+                <v-btn
+                  icon
+                  color="#FF5722"
+                  @click="$store.state.withdrawalModal = !$store.state.withdrawalModal"
+                  draggable="true"
+                >
+                  <v-icon>mdi-close-circle</v-icon>
+                </v-btn>
+              </div>
+            </template>
+            <span>모임 나가기</span>
           </v-tooltip>
         </div>
         <br />
@@ -171,10 +187,10 @@
       ref="whiteBoard"
       @dblclick="focusAction"
       @click="changeTargetAction"
-      @wheel="wheelEvent"
+      
       style="height: 100%; width: 100%;"
     >
-      <div class="MoveableBox realBoard" @click.right="test3" @dragenter="test4" @dragover="test5">
+      <div ref="realBoard" class="MoveableBox realBoard" @click.right="test3" @dragenter="test4" @dragover="test5">
         <div
           class="postit"
           v-for="(pi, idx) in this.board.postitList"
@@ -218,6 +234,7 @@
         store : {{ $store.state.poll }}<br><br>
         {{$store.state.userData }}
         <InviteModal v-model="$store.state.inviteModal"/>
+        <WithdrawalModal v-model="$store.state.withdrawalModal"/>
       </div>
 
       <!-- <Postit :id="pi.id" :postit="pi" style="position: relative; display: inline-block"/> -->
@@ -238,6 +255,8 @@ import Chat from "../../components/common/Chat";
 import Poll from "../../components/common/Poll";
 import Kanban from "../../components/module/Kanban";
 import InviteModal from "../../components/common/InviteModal"
+import WithdrawalModal from "../../components/common/WithdrawalModal"
+import { renderer } from './renderer';
 
 export default {
   computed: {
@@ -310,6 +329,7 @@ export default {
       moduleXP: this.boardLengthX / 2,
       moduleYP: this.boardLengthY / 2,
 
+
       memberView: false,
       idc: 0,
       isPoll: false,
@@ -322,6 +342,7 @@ export default {
       return false;
     };
     this.initRecv();
+
   },
   mounted() {
     document.querySelector(".realBoard").style.height =
@@ -338,6 +359,27 @@ export default {
     document.querySelector(".realBoard").style.transformOrigin = `${
       this.boardLengthX / 2
     }px ${this.boardLengthY / 2}px`;
+
+    const container = this.$refs.realBoard;
+    const instance = renderer({ scaleSensitivity: 10, minScale: .3, maxScale: 2, element: container });
+    container.addEventListener("wheel", (event) => {
+        // if (!event.ctrlKey) {
+        //     return;
+        // }
+        event.preventDefault();
+        instance.zoom({
+            deltaScale: Math.sign(event.deltaY) > 0 ? -1 : 1,
+            x: event.pageX,
+            y: event.pageY
+        });
+    });
+    container.addEventListener("dblclick", () => {
+        instance.panTo({
+            originX: 0,
+            originY: 0,
+            scale: 1,
+        });
+    });
   },
   methods: {
     init() {
@@ -721,16 +763,21 @@ export default {
       }
     },
     wheelEvent: function (event) {
+      console.log(event.target.getAttribute("class"));
+      if(event.target.getAttribute("class") != "MoveableBox realBoard") {
+        // 모듈 위에서는 휠업을 방지한다.
+        return;
+      }
       if (event.deltaY < 0) {
         console.log("up!");
-        this.boardScale += 0.025;
+        this.boardScale += 0.05;
 
         if (this.boardScale > 1.3) {
           this.boardScale = 1.3;
           return;
         }
       } else if (event.deltaY > 0) {
-        this.boardScale -= 0.025;
+        this.boardScale -= 0.05;
 
         if (this.boardScale < 0.4) {
           this.boardScale = 0.425;
@@ -768,10 +815,10 @@ export default {
       console.log("realBoard left and top : ", leftPoint, ", ", topPoint);
       console.log("so its now  :  ", leftPoint + diffX, ", ", topPoint + diffY);
 
-      // if(this.boardScale != 1){
-      // document.querySelector('.realBoard').style.left = (leftPoint + diffX)+'px';
-      // document.querySelector('.realBoard').style.top =  (topPoint + diffY)+'px';
-      // }
+      if(Math.abs(diffX) > 100 || Math.abs(diffY) > 100){
+        document.querySelector('.realBoard').style.left = (leftPoint + (diffX/2))+'px';
+        document.querySelector('.realBoard').style.top =  (topPoint + (diffY/2))+'px';
+      }
 
       console.log(
         "origin : ",
@@ -924,13 +971,13 @@ export default {
       );
       document.querySelector(
         '.realBoard'
-      // ).style.left = `${((this.boardLengthX * (this.boardScale)) - (window.innerWidth))}px`;
-      ).style.left = `-665px`;
+      ).style.left = `${-1 * ((this.boardLengthX - window.innerWidth)/2)}px`;
+      // ).style.left = `-665px`;
 
       document.querySelector(
         '.realBoard'
-      // ).style.top =  `${((this.boardLengthY * this.boardScale) - window.innerHeight) *2 - 35}px`;
-      ).style.top =  `-435px`;
+      ).style.top =  `${-1 * ((this.boardLengthY - window.innerHeight)/2)}px`;
+      // ).style.top =  `-435px`;
       //-435px
 
     },
@@ -944,6 +991,7 @@ export default {
     Kanban,
     Poll,
     InviteModal,
+    WithdrawalModal,
   },
 };
 

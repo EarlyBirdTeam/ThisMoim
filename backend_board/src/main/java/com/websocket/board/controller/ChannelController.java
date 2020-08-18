@@ -25,6 +25,7 @@ public class ChannelController {
     private final ChannelRedisRepository channelRedisRepository;
     private final JwtTokenProvider jwtTokenProvider;
     private final ChannelService channelService;
+    private final UserService userService;
     private final BoardClientService boardClientService;
 
 //    @GetMapping("/channels")
@@ -39,6 +40,9 @@ public class ChannelController {
     public List<Channel> myChannel(
             @RequestHeader(name = "Authorization") String Authorization,
             @RequestBody UserInfoRequest userInfoRequest) {
+//        if(boardClientService.checkToken(Authorization).getIsValid()) {
+//            channelService.saveChannel(createChannelRequest, channelId);
+//        }
         // 각 사용자가 가진 채널 리스트 전달하기 <- 디비에서 가져오기
         List<Channel> channels = channelService.getMyChannels(userInfoRequest.getEmail());
         //List<Channel> channels = channelRedisRepository.findAllChannel();
@@ -58,15 +62,11 @@ public class ChannelController {
         // save channel in mariadb
         // check token validation before creating channel
         // 인증 서버에서 토큰 검증 api 완성되면 사용할 것
-//        ValidTokenRequest validTokenRequest = new ValidTokenRequest()
-//                .builder()
-//                .token(Authorization)
-//                .build();
-//        if(boardClientService.checkToken(validTokenRequest).getIsValid()) {
-//            channelService.saveChannel(createChannelRequest, channelId);
-//        }
+        if(boardClientService.checkToken(Authorization).getIsValid()) {
+            channelService.saveChannel(createChannelRequest, channelId);
+        }
         // 인증 서버에서 토큰 검증 api 완성되기 전 테스트
-        channelService.saveChannel(createChannelRequest, channelId);
+        //channelService.saveChannel(createChannelRequest, channelId);
         return channel;
     }
 
@@ -75,6 +75,9 @@ public class ChannelController {
     public InviteChannelResponse enterInvitedChannel(@RequestBody InviteChannelRequest inviteChannelRequest) {
         String channelId = inviteChannelRequest.getChannelId();
         // save channel in mariadb
+        // 사용자를 먼저 저장
+        userService.saveUser(inviteChannelRequest.getUser());
+        // 채널과 사용자를 매핑해서 저장
         if(channelService.saveInvitedChannel(inviteChannelRequest, channelId)) {
             return new InviteChannelResponse().builder().message("Success Invitation").success(true).build();
         } else {
@@ -82,10 +85,18 @@ public class ChannelController {
         }
     }
 
-    @GetMapping("/channel/{channelId}")
+//    @GetMapping("/channel/{channelId}")
+//    @ResponseBody
+//    public Channel channelInfo(@PathVariable String channelId) {
+//        return channelRedisRepository.findChannelById(channelId);
+//    }
+
+    @DeleteMapping("/channel/withdrawal")
     @ResponseBody
-    public Channel channelInfo(@PathVariable String channelId) {
-        return channelRedisRepository.findChannelById(channelId);
+    public WithdrawalResponse channelInfo(@RequestBody WithdrawalRequest request) {
+        //channelRedisRepository.removeUserEnterInfo(request.getChannelId());
+        channelService.withdrawalChannel(request);
+        return new WithdrawalResponse().builder().message("Success Withdrawal Channel").success(true).build();
     }
 
     @GetMapping("/user")

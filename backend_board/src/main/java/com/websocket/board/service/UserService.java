@@ -15,13 +15,9 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    public void saveUser(LoginResponse loginResponse) {
-
-        UserInfoResponse userInfoResponse = loginResponse.getUser();
+    public void saveUser(UserInfoResponse userInfoResponse) {
         Optional<User> user = userRepository.findByUserId(userInfoResponse.getId());
-
         if(!user.isPresent()) {
-
             User boardUser = new User().builder()
                     .userId(userInfoResponse.getId())
                     .email(userInfoResponse.getEmail())

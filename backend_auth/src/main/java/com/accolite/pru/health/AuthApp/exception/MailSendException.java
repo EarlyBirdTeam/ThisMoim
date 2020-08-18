@@ -21,7 +21,6 @@ public class MailSendException extends RuntimeException {
 
     private final String recipientAddress;
     private final String message;
-
     public MailSendException(String recipientAddress, String message) {
         super(String.format("Error sending [%s] for user [%s]", message, recipientAddress));
         this.recipientAddress = recipientAddress;

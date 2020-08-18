@@ -11,7 +11,7 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class InviteChannelRequest implements Serializable {
+public class WithdrawalRequest implements Serializable {
     private String channelId;
-    private UserInfoResponse user;
+    private String email;
 }

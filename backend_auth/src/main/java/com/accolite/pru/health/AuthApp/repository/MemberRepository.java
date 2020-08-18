@@ -1,5 +1,6 @@
 package com.accolite.pru.health.AuthApp.repository;
 
+import com.accolite.pru.health.AuthApp.model.User;
 import com.accolite.pru.health.AuthApp.model.member.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -11,5 +12,7 @@ import java.util.Optional;
 public interface MemberRepository extends JpaRepository<Member,String> {
 
     Optional<List<Member>> findAllByChannelId(String channelId);
+
+    Optional<Member> findByEmailAndChannelId(String email, String channelId);
 }
 

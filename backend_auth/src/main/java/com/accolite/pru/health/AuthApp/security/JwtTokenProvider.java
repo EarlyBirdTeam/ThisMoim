@@ -17,12 +17,16 @@ import com.accolite.pru.health.AuthApp.model.CustomUserDetails;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
 import java.util.Date;
 
+@Getter
+@Setter
 @Component
 public class JwtTokenProvider {
 
