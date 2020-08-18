@@ -123,17 +123,43 @@
         @mouseover="testIn"
         @mouseout="testOut"
       >
-        <v-img src="@/assets/img/user.png">{{userCount}}</v-img>
+        <v-img v-show="!memberView" src="@/assets/img/user.png">{{userCount}}</v-img>
+        <v-img v-show="memberView" src="@/assets/img/user2.jpg"></v-img>
       </v-responsive>
 
       <transition name="slide-fade">
         <v-responsive
           id="memberList"
-          class="text-center ma-3 badge-info"
+          class="text-center"
           v-if="memberView"
           align="center"
           justify="center"
-        >김강현, 배민규, 정용우, 최문경, 김동률, 배재원</v-responsive>
+        >
+          <main role="main" class="container">
+          <div class="d-flex align-items-center p-3 my-3 text-white-50 bg-purple rounded shadow-sm">
+            <img class="moimimg mr-3" src="@/assets/img/user2.jpg" alt="" width="20" height="20">
+          </div>
+
+          <div class="my-3 p-3 bg-white rounded shadow-sm">
+            <h2 class="border-bottom border-gray pb-2 mb-0">OOO모임</h2>
+            <div class="media text-muted pt-3">
+              <svg class="bd-placeholder-img mr-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: 32x32"><title>Placeholder</title><rect width="100%" height="100%" fill="#007bff"/><text x="50%" y="50%" fill="#007bff" dy=".3em">32x32</text></svg>
+              <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+                <strong class="d-block text-gray-dark" style="text-align:left; font-size:30px;">회원1</strong>
+                <p style="text-align:right;"> 모임원 </p>     
+              </p>
+            </div>
+            <div class="media text-muted pt-3">
+              <svg class="bd-placeholder-img mr-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: 32x32"><title>Placeholder</title><rect width="100%" height="100%" fill="#007bff"/><text x="50%" y="50%" fill="#007bff" dy=".3em">32x32</text></svg>
+              <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+                <strong class="d-block text-gray-dark" style="text-align:left; font-size:30px;">회원2</strong>     
+                <p style="text-align:right;"> 모임원 </p> 
+              </p>
+            </div>
+          </div>
+        </main>
+        
+        </v-responsive>
       </transition>
     </v-responsive>
 
@@ -196,6 +222,9 @@
             v-if="!!board.poll"
             :style="{left: $store.state.poll.left, top: $store.state.poll.top}"
           />
+        </div>
+        
+        <div class="textBoard">
         </div>
         {{ board }}
         <br />
@@ -443,6 +472,7 @@ export default {
         moduleObject: null,
       };
       this.board.memberList = recv.memberList;
+      console.log("memberList[] : "+this.memberList);
     },
     createPostit(left = this.boardX - 120 + "px", top = this.boardY - 120 + "px") {
       if (this.board.postitList.length > 20) {
@@ -1104,7 +1134,7 @@ export default {
   bottom: 20px;
   left: 20px;
 
-  /* background-color: white; */
+  background-color: white;
   /* border-radius: 50%; */
   width: 64px;
   height: 64px;
@@ -1124,7 +1154,7 @@ export default {
 
 #memberList {
   width: auto;
-  height: 40px;
+  height: auto;
   position: fixed;
   z-index: 2;
   bottom: 20px;
@@ -1134,43 +1164,8 @@ export default {
   padding-left: 5%;
 }
 
-.slide-fade-enter-active {
-  transition: all 0.4s ease;
-}
-.slide-fade-leave-active {
-  transition: all 0.4s cubic-bezier(1, 0.5, 0.8, 1);
-}
-.slide-fade-enter, .slide-fade-leave-to
-/* .slide-fade-leave-active below version 2.1.8 */ {
-  transform: translateX(-10px);
-  opacity: 0;
+.moimimg{
+  border-radius: 50%;
 }
 
-.testerDot {
-  height: 4px;
-  width: 4px;
-  background-color: black;
-  position: fixed;
-  z-index: 4;
-  display: none;
-}
-.testBox {
-  display: inline;
-}
-.invite-mem {
-  margin-top: 20px;
-}
-
-.resetButton {
-  position: fixed;
-  z-index: 3;
-  bottom: 100px;
-  left: 20px;
-  border: solid black 1px;
-
-  /* background-color: white; */
-  /* border-radius: 50%; */
-  width: 64px;
-  height: 64px;
-}
 </style>
