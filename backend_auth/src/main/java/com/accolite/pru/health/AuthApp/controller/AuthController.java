@@ -297,9 +297,9 @@ public class AuthController {
                 .orElseThrow(() -> new TokenRefreshException(tokenRefreshRequest.getRefreshToken(), "Unexpected error during token refresh. Please logout and login again."));
     }
 
-    @PostMapping("verifyToken")
-    public ResponseEntity validateToken(@RequestParam String token){
-        StringTokenizer st = new StringTokenizer(token," ");
+    @PostMapping("/verifyToken")
+    public ResponseEntity validateToken(@RequestBody ValidTokenRequest validTokenRequest){
+        StringTokenizer st = new StringTokenizer(validTokenRequest.getToken()," ");
         st.nextToken();
         String tokenBody = st.nextToken();
         String secretKey = tokenProvider.getJwtSecret();
