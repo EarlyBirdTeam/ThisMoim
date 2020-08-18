@@ -1128,7 +1128,7 @@ export default {
   /* position: relative; */
   position: fixed;
   z-index: 3;
-  /* width: 64px; */
+  width: 64px;
   top: 30%;
   left: 2%;
   padding: 10px 0px;
