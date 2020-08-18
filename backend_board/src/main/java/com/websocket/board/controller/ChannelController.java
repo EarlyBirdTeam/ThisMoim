@@ -40,6 +40,9 @@ public class ChannelController {
     public List<Channel> myChannel(
             @RequestHeader(name = "Authorization") String Authorization,
             @RequestBody UserInfoRequest userInfoRequest) {
+//        if(boardClientService.checkToken(Authorization).getIsValid()) {
+//            channelService.saveChannel(createChannelRequest, channelId);
+//        }
         // 각 사용자가 가진 채널 리스트 전달하기 <- 디비에서 가져오기
         List<Channel> channels = channelService.getMyChannels(userInfoRequest.getEmail());
         //List<Channel> channels = channelRedisRepository.findAllChannel();
@@ -59,15 +62,11 @@ public class ChannelController {
         // save channel in mariadb
         // check token validation before creating channel
         // 인증 서버에서 토큰 검증 api 완성되면 사용할 것
-//        ValidTokenRequest validTokenRequest = new ValidTokenRequest()
-//                .builder()
-//                .token(Authorization)
-//                .build();
-//        if(boardClientService.checkToken(validTokenRequest).getIsValid()) {
-//            channelService.saveChannel(createChannelRequest, channelId);
-//        }
+        if(boardClientService.checkToken(Authorization).getIsValid()) {
+            channelService.saveChannel(createChannelRequest, channelId);
+        }
         // 인증 서버에서 토큰 검증 api 완성되기 전 테스트
-        channelService.saveChannel(createChannelRequest, channelId);
+        //channelService.saveChannel(createChannelRequest, channelId);
         return channel;
     }
 

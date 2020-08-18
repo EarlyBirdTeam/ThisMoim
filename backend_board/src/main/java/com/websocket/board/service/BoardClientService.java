@@ -20,13 +20,18 @@ public class BoardClientService {
         return apiService.post("http://i3a510.p.ssafy.io:9004/api/auth/login", HttpHeaders.EMPTY, request, LoginResponse.class).getBody();
     }
 
-    // 토큰 유효성 확
-    public ValidTokenResponse checkToken(ValidTokenRequest request) {
+    // 토큰 유효성 확인
+    public ValidTokenResponse checkToken(String Authorization) {
+        ValidTokenRequest validTokenRequest = new ValidTokenRequest()
+                .builder()
+                .token(Authorization)
+                .build();
+
         return tokenApiService
                 .post(
                         "http://localhost:9004/api/auth/login",
                         HttpHeaders.EMPTY,
-                        request,
+                        validTokenRequest,
                         ValidTokenResponse.class)
                 .getBody();
     }
