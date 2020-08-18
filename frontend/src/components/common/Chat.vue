@@ -87,10 +87,15 @@
       // })
 
 import ChatlogDataService from "../../services/ChatlogDataService"
- 
+import Moveable from 'vue-moveable';
 export default {
   name: "Chat",
+  components:{
+    Moveable,
+  },
   created() {
+    //dragElement(document.getElementById("textBoard"));
+
     //console.log("chanelName : "+ localStorage.getItem("wsboard.channelName")); 채널 이름 가져오는 부분
     var myname = this.makeRandomName();
     var chatcontainer = document.getElementById("chatContainer");
@@ -100,6 +105,7 @@ export default {
     var $msgForm = $('#msgForm').val();
     this.naname = myname;
     this.Channel = localStorage.getItem("wsboard.channelName");
+
 
     console.log(this.naname);
     
@@ -216,12 +222,47 @@ export default {
         message: "",
         userid: "",
         roomid: "",
-      }
+      },
 
-      
+       moveable: {
+      draggable: true,
+      throttleDrag: 0,
+      resizable: false,
+      throttleResize: 1,
+      keepRatio: true,
+      scalable: true,
+      throttleScale: 0,
+      rotatable: true,
+      throttleRotate: 0,
+    },
     };
   },
   methods: {
+     handleDrag({ target, left, top }) {
+      console.log('onDrag left, top', left, top);
+      target.style.left = `${left}px`;
+      target.style.top = `${top}px`;
+    },
+    handleResize({
+      target, width, height, delta,
+    }) {
+      console.log('onResize', width, height);
+      delta[0] && (target.style.width = `${width}px`);
+      delta[1] && (target.style.height = `${height}px`);
+    },
+    handleScale({ target, transform, scale }) {
+      console.log('onScale scale', scale);
+      target.style.transform = transform;
+    },
+    handleRotate({ target, dist, transform }) {
+      console.log('onRotate', dist);
+      target.style.transform = transform;
+    },
+    handleWarp({ target, transform }) {
+      console.log('onWarp', target);
+      target.style.transform = transform;
+    },
+    
     saveChatlog(){
       event.preventDefault(); // 줄바꿈 방지?
       event.stopPropagation();
@@ -275,6 +316,7 @@ export default {
 
       //this.saveChatlog();
     },
+
 
      enter() { // 엔터 처리
        var code = event.keyCode;
@@ -553,7 +595,7 @@ export default {
   .text-box textarea {
     height: 60px;
     float: left;
-    width: calc(100% - 70px);
+    width: calc(100% - 140px);
     border-radius: 3px;
     background-color: #ffffff;
     border: solid 0.5px #d7d7d7;

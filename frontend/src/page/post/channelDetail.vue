@@ -74,9 +74,12 @@
         <Calendar v-if="!!board.calendar.left"/>
       </div>
 
-     <div class="textBoard" id="textBoard" style="cursor: move;">
-      
+
+    
+     <div class="textBoard" id="textBoard">
+       
      </div> 
+
 
     </div>
      
