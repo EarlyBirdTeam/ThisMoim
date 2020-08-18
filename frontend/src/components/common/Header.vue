@@ -5,7 +5,7 @@
       <router-link
         class="white--text"
         style="color:rgb(0,0,0);"
-        v-bind:to="{name:constants.URL_TYPE.POST.ENTER}"
+        v-bind:to="{name:constants.URL_TYPE.POST.MAIN}"
       >
         <img
           style="position:absolute;top:0px;  margin-top:7px; width:auto;height:50px;"

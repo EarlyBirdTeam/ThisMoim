@@ -20,6 +20,8 @@
             <li> 사용자는 모든 서비스에 대한 액세스 권한을 즉시 상실하게 됩니다.</li>
             <li>사용자가 만든 콘텐츠는 서비스 내에 남습니다.</li>
           </ul>
+
+          <div v-if="success" style="text-align: center;">✔성공적으로 탈퇴되었습니다</div>
         </div>
         <div v-if="loading" class="d-flex justify-content-center mb-2">
           <v-progress-circular
@@ -45,6 +47,7 @@ export default {
     return {
       loading: false,
       snackbar: false,
+      success: false,
     };
   },
   computed: {
@@ -56,21 +59,26 @@ export default {
     withdrawal() {       
       this.loading = true;
       const url = "/api/auth/login";
-      const data = {
+      const mydata = {
+        data: {
           "channelId": localStorage.getItem("wsboard.channelId"),
           "email": this.$cookie.get('AccessData').split(',')[0].split(':')[1], 
+        }
       }
-      console.log(data);
       setTimeout(() => {
-        http.delete("/channel/withdrawal")
+        http.delete("/board/channel/withdrawal", mydata)
         .then((response) => {
-          
+          console.log(response.data);
+          this.success = true;
+          setTimeout(() => {
+            this.$store.state.withdrawalModal = false;
+            this.$router.go(-1);
+          },1000)
         }).catch((err) => {
-          
+          alert(err);
         }) 
         
         this.loading = false;
-        this.$store.state.withdrawalModal = false;
       },1000)
     },
     close() {

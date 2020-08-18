@@ -202,6 +202,11 @@ export default {
       this.modal = false;
     },
   },
+  computed: {
+    listChannels() {
+      return _.orderBy(this.channels, "channelName", "asc");
+    },
+  },
 };
 </script>
 
