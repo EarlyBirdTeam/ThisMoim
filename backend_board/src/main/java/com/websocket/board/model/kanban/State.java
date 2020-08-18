@@ -16,7 +16,7 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
-@JsonIgnoreProperties("tasks")
+//@JsonIgnoreProperties("tasks")
 public class State implements Serializable {
 
     @Id

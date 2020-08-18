@@ -19,7 +19,7 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 @Builder
-@JsonIgnoreProperties("events")
+//@JsonIgnoreProperties("events")
 public class Scheduler implements Serializable {
 
     @Id

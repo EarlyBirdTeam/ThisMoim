@@ -3,7 +3,7 @@ package com.websocket.board.controller;
 import com.websocket.board.model.SocketBoardMessage;
 import com.websocket.board.repo.ChannelRedisRepository;
 import com.websocket.board.service.BoardService;
-import com.websocket.board.service.DBSyncService;
+//import com.websocket.board.service.DBSyncService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -17,7 +17,7 @@ public class BoardController {
     //private final JwtTokenProvider jwtTokenProvider;
     private final ChannelRedisRepository channelRedisRepository;
     private final BoardService boardService;
-    private final DBSyncService dbSyncService;
+    //private final DBSyncService dbSyncService;
 
     /**
      * websocket "/pub/board/message"로 들어오는 메시징을 처리한다.
