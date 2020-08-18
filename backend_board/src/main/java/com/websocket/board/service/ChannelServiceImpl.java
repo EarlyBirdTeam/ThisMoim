@@ -5,6 +5,7 @@ import com.websocket.board.model.user.User;
 import com.websocket.board.model.user.UserChannel;
 import com.websocket.board.payload.CreateChannelRequest;
 import com.websocket.board.payload.InviteChannelRequest;
+import com.websocket.board.payload.WithdrawalRequest;
 import com.websocket.board.repo.ChannelRepository;
 import com.websocket.board.repo.UserChannelRepository;
 import com.websocket.board.repo.UserRepository;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.swing.text.html.Option;
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -83,6 +85,24 @@ public class ChannelServiceImpl implements ChannelService {
         }
 
         return channels;
+    }
+
+    @Override
+    @Transactional
+    public Boolean withdrawalChannel(WithdrawalRequest withdrawalRequest) {
+        Optional<User> user = userRepository.findByEmail(withdrawalRequest.getEmail());
+        Optional<Channel> channel = channelRepository.findByChannelId(withdrawalRequest.getChannelId());
+        boolean isDeleted = false;
+
+        if(user.isPresent()) {
+            Optional<UserChannel> userChannel = userChannelRepository.findByUserAndChannel(user.get(), channel.get());
+            if(userChannel.isPresent()) {
+               userChannelRepository.delete(userChannel.get());
+               isDeleted = true;
+            }
+        }
+
+        return isDeleted;
     }
 
     @Override
