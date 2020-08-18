@@ -177,22 +177,29 @@ public class AuthController {
     @GetMapping("/inviteConfirmation")
     @ApiOperation(value = "Confirms the email verification token that has been generated for the user during registration")
     public String confirmInvitation(@RequestParam String email, @RequestParam String channelId) {
-        User newUser = userService.findByEmail(email).orElse(null);
-        InviteChannelRequest inviteChannelRequest = new InviteChannelRequest(newUser,channelId);
+        StringTokenizer st = new StringTokenizer(email,",");
+        StringTokenizer st2 = new StringTokenizer(channelId,",");
+        String mail = "";
+        String channel = "";
+        System.out.println(st.countTokens());
+        for (int i=0; i<=st.countTokens();i++) {
+            mail = st.nextToken();
+            channel = st2.nextToken();
+            System.out.println("mail : " + mail + " channel: " + channel);
+        }
+        System.out.println("--------------------------------------------------------"+email);
+        User newUser = userService.findByEmail(mail).orElse(null);
+        System.out.println("--------------------------------------------------------"+newUser.getEmail());
+        InviteChannelRequest inviteChannelRequest = new InviteChannelRequest(newUser,channel);
+        System.out.println("--------------------------------------------------------"+inviteChannelRequest.getUser().getEmail());
         InviteChannelResponse inviteChannelResponse = memberService.callPostBoardServer(inviteChannelRequest);
-        System.out.println();
+        System.out.println(inviteChannelResponse.getSuccess());
+        System.out.println(inviteChannelResponse.getMessage());
+        System.out.println(inviteChannelResponse.getData());
         // 멤버등록 후 리다이렉트
+
         if(inviteChannelResponse.getSuccess()){
-            StringTokenizer st = new StringTokenizer(email,",");
-            StringTokenizer st2 = new StringTokenizer(channelId,",");
-            String mail = "";
-            String channel = "";
-            System.out.println(st.countTokens());
-            for (int i=0; i<=st.countTokens();i++) {
-                mail = st.nextToken();
-                channel = st2.nextToken();
-                System.out.println("mail : "+ mail + " channel: "+channel);
-            }
+
             User user = userService.findByEmail(mail).orElseThrow(() -> new NoSuchElementException());
             if(memberService.isMemberExist(mail,channel)==null) {
                 if(user==null){

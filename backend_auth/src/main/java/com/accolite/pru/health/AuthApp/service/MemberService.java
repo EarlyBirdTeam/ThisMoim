@@ -46,6 +46,8 @@ public class MemberService {
     public InviteChannelResponse callPostBoardServer(InviteChannelRequest inviteChannelRequest) {
 //        return apiService.post("http://i3a510.p.ssafy.io/board/channel/invitation"
 //                , HttpHeaders.EMPTY, inviteChannelRequest, InviteChannelResponse.class).getBody();
+        InviteChannelRequest inviteChannelRequest1 = inviteChannelRequest;
+        System.out.println(inviteChannelRequest1.getChannelId()+"--------"+inviteChannelRequest1.getUser().getEmail());
         return apiService.post("http://localhost:8080/board/channel/invitation"
                 , HttpHeaders.EMPTY, inviteChannelRequest, InviteChannelResponse.class).getBody();
     }
