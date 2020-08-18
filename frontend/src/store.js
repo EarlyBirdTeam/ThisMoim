@@ -22,6 +22,7 @@ export const store = new Vuex.Store({
         host: 'http://127.0.0.1:3000',
         token: '',
         role:'',
+        isLogged: false,
         userData:{
             email:'',
             name:'',
@@ -45,18 +46,20 @@ export const store = new Vuex.Store({
           },
         },
         // 캘린더
-        calendar: {
-            event: {
-                startDate: '',
-                startTime: '',
-                endDate: '',
-                endTime: '',
-                content: '',
-                title: '',
-            },
-            events: [{ "name": "오프라인", "content": "hello", "start": "2020-08-05T12:30:00", "end": "2020-08-05T18:00:00" }],
-            dialog: false,
-            eventDetail: false,
+        scheduler: {
+          left: '600px',
+          top: '270px',
+          event: {
+              startDate: '',
+              startTime: '',
+              endDate: '',
+              endTime: '',
+              content: '',
+              title: '',
+          },
+          events: [{ "name": "오프라인", "content": "hello", "start": "2020-08-05T12:30:00", "end": "2020-08-05T18:00:00" }],
+          dialog: false,
+          eventDetail: false,
         },
         joining:{
             canIUseIt:"",
@@ -66,38 +69,51 @@ export const store = new Vuex.Store({
             status:"",
         },
         Kanban:{
+            left: '200px',
+            top: '200px',
             task: {
                 taskTitle:'',
                 taskContents:'',
                 taskAssigner:'',
               },
-              columns: [
-                {
-                  columnTitle: '할 일',
-                  tasks: [],
-                },
-                {
-                  columnTitle: "진행중",
-                  tasks: [],
-                },
-                {
-                  columnTitle: "완료",
-                  tasks: [],
-                },
-              ],
+            states: [
+              {
+                columnTitle: 'TO DO',
+                tasks: [],
+              },
+              {
+                columnTitle: "IN PROGRESS",
+                tasks: [],
+              },
+              {
+                columnTitle: "DONE",
+                tasks: [],
+              },
+            ],
         },
-        kanban: {
-            frontKanbanId:'', 
-            kanban: {}, 
-            channel:""
+        // kanban: {
+        //     frontKanbanId:'', 
+        //     kanban: {}, 
+        //     channel:"",
+        // },
+        poll: {
+          left: "500px",
+          top: "170px",
+          question: "",
+          answers: [ {answer: "", voted: 0}, {answer: "", voted: 0},],
+          multipleVotes: false,
+          totalVotes: 0,
+          userVoted: [ ],
+          isSetAll: false,
+          isEnd: false,
         },
-        
+        inviteModal: false,
     },
     actions: {
         async REQUEST_ADD_EVENT(context, event) {
             try {
                 console.log(event);
-                // const response = await requestAddEvent(calendar);
+                // const response = await requestAddEvent(scheduler);
                 // const addedEvent = makeEvent(response.data);
                 const addedEvent = makeEvent(event);
                 context.commit('ADD_EVENT', addedEvent);
@@ -153,54 +169,41 @@ export const store = new Vuex.Store({
                     store.dispatch("throwError", exp);
                 });
         },
-        /**
-         * 유저 프로필 업데이트. 미구현. => 구현이 필요한가?
-         */
-        // [constants.METHODS.UPDATE_USER] : (store, payload) =>{
-        //     http.put('http://localhost:8080/account',
-        //             {
-        //                 email: payload.email,
-        //                 password: payload.password,
-        //                 nickname: payload.nickName,
-        //                 name: payload.realName
-        //             }
-        //         )
-        //         .then(() => {
-        //             console.log("update req success");
-        //             alert("수정되었습니다.");
-        //     })
-        //         .catch(exp => {
-        //             store.dispatch("throwError", exp);
-        //         });
-        // },
-
 
         /**
             회원 로그인 메소드
         */
        [constants.METHODS.LOGIN_USER] : (_store, payload) =>{
-        const url = "api/auth/login";
+        const url = "/api/auth/login";
         const data = {
             "email": payload.email,
             "password": payload.password
         }   
-            authConnect
+            http
             .post(url, data)
             .then(res => {
                 console.log("In store, res is : ", res);
                 if (res.status == 200) {
                     cookies.set('AccessToken', res.data.accessToken);
                     store.commit(constants.METHODS.LOGIN_USER, [data, res.data.accessToken]);
-                    store.dispatch(constants.METHODS.GET_USER, data.email);
+                    // store.commit(constants.METHODS.GET_USER, res.data.userInfoResponse);
+                    const dataWhatINeed = res.data.user  ;
+                    console.log("In store, dataWhatINeed is : ", dataWhatINeed);
+                    store.commit(constants.METHODS.GET_USER, {
+                        dataWhatINeed
+                    });
+                    //store.dispatch(constants.METHODS.GET_USER, data.email);
                     console.log("In store, state is : ", store.state);
-                    
-                    cookies.set('AccessData', _store.getters.userData.email);
+                    const userDataString = _store.userData
+                    cookies.set('AccessData', _store.getters.userDataStr);
+                    store.commit('toggleLogin');
+                    router.go(0);
                     return true;
                 }
             })
             .catch(err => {
                 console.log(err.message);
-                 alert("로그인 정보가 잘못되었습니다.");
+                alert("로그인 정보가 잘못되었습니다.");
                 return false;
             });
             
@@ -213,6 +216,8 @@ export const store = new Vuex.Store({
     [constants.METHODS.LOGOUT_USER] : (store) =>{
         store.commit(constants.METHODS.LOGOUT_USER);
         state.commit("reSetAll");
+        this.$store.state.isLogged = false;
+        this.$router.go(0);
     },
 
     /**
@@ -241,27 +246,27 @@ export const store = new Vuex.Store({
     /**
      * 유저 정보 가져오기
      */
-    [constants.METHODS.GET_USER] : (store, payload) =>{
-        // console.log("data : " + payload);
+    // [constants.METHODS.GET_USER] : (store, payload) =>{
+    //     // console.log("data : " + payload);
 
-        const data = payload;
-        const url = `/api/user/userInfo?email=${data}`;
-        authConnect.get(url, {
-            headers: {
-                Authorization: 'Bearer ' + store.getters.accessToken
-            }
-        })
-            .then(res => {
-                const dataWhatINeed = res.data  ;
-                console.log("In store, dataWhatINeed is : ", dataWhatINeed);
-                store.commit(constants.METHODS.GET_USER, {
-                    dataWhatINeed
-                });
-            })
-            .catch(exp => {
-                store.dispatch("throwError", exp);
-            });
-    },
+    //     const data = payload;
+    //     const url = `/api/user/userInfo?email=${data}`;
+    //     authConnect.get(url, {
+    //         headers: {
+    //             Authorization: 'Bearer ' + store.getters.accessToken
+    //         }
+    //     })
+    //         .then(res => {
+    //             const dataWhatINeed = res.data  ;
+    //             console.log("In store, dataWhatINeed is : ", dataWhatINeed);
+    //             store.commit(constants.METHODS.GET_USER, {
+    //                 dataWhatINeed
+    //             });
+    //         })
+    //         .catch(exp => {
+    //             store.dispatch("throwError", exp);
+    //         });
+    // },
 
     /**
      * 이메일 중복 체크 메소드
@@ -352,21 +357,21 @@ export const store = new Vuex.Store({
 
     },
     mutations: {
-        OPEN_CALENDAR_DIALOG(state, payload) {
-            state.calendar.event.startDate = payload.date;
-            state.calendar.event.endDate = payload.date;
-            state.calendar.event.startTime = payload.time;
-            state.calendar.dialog = true;
+        OPEN_SCHEDULER_DIALOG(state, payload) {
+            state.scheduler.event.startDate = payload.date;
+            state.scheduler.event.endDate = payload.date;
+            state.scheduler.event.startTime = payload.time;
+            state.scheduler.dialog = true;
         },
-        CLOSE_CALENDAR_DIALOG(state) {
+        CLOSE_SCHEDULER_DIALOG(state) {
             console.log("CLOSE_DIALOG");
-            state.calendar.dialog = false;
+            state.scheduler.dialog = false;
         },
         ADD_EVENT(state, getEvent) {
             console.log("ADD_EVENT");
-            state.calendar.events.push(getEvent);
-            state.calendar.dialog = false;
-            state.calendar.event = {
+            state.scheduler.events.push(getEvent);
+            state.scheduler.dialog = false;
+            state.scheduler.event = {
                 startDate: '',
                 startTime: '',
                 endDate: '',
@@ -375,8 +380,8 @@ export const store = new Vuex.Store({
                 title: '',
             };
         },
-        OPEN_CALENDAR_EVENT(state, payload) {
-            state.calendar.event = {
+        OPEN_SCHEDULER_EVENT(state, payload) {
+            state.scheduler.event = {
                 startDate: payload.eventParsed.start.date,
                 startTime: payload.eventParsed.start.time,
                 endDate: payload.eventParsed.end.date,
@@ -384,10 +389,10 @@ export const store = new Vuex.Store({
                 content: payload.event.content,
                 title: payload.event.name,
             }
-            state.calendar.eventDetail = true;
+            state.scheduler.eventDetail = true;
         },
-        CLOSE_CALENDAR_EVENT(state) {
-            state.calendar.event = {
+        CLOSE_SCHEDULER_EVENT(state) {
+            state.scheduler.event = {
                 startDate: '',
                 startTime: '',
                 endDate: '',
@@ -395,14 +400,18 @@ export const store = new Vuex.Store({
                 content: '',
                 title: '',
             };
-            state.calendar.eventDetail = false;
+            state.scheduler.eventDetail = false;
             
         },
         [constants.METHODS.LOGIN_USER] : (state, payload) =>{
             // state.password = payload.password;
             // console.log("In Store, payload is : ", payload);
             state.userData.email = payload[0].email  ;
-            state.accessData = state.userData.email;
+            state.accessData = {
+              email: state.userData.email,
+              name: state.userData.name,
+              nickname: state.userData.nickname,
+            };
             state.accessToken = payload[1];
             state.modal = !state.modal;
         },
@@ -469,18 +478,28 @@ export const store = new Vuex.Store({
         
         },
         setDataAgain : (state, payload) => {
-            state.userData.email = payload.AccessData;
+          state.userData.email = payload.AccessData.email;
+          state.userData.name = payload.AccessData.name;
+          state.userData.nickname = payload.AccessData.nickname;
+          
             state.accessData = payload.AccessData;
             state.accessToken = payload.AccessToken;
         },
         toggleModal : (state) => {
             state.modal = !state.modal;
+        },
+        toggleLogin : (state) => {
+            state.isLogged = !state.isLogged;
         }
-
     },
     getters:{
         userData: function(state){
             return state.userData;
+        },
+        userDataStr: function(state){
+          const dataStr = `email:${state.userData.email},name:${state.userData.name},nickname:${state.userData.nickname}`
+          console.log(dataStr);
+          return dataStr;
         },
         accessToken: function(state){
             return state.accessToken;
@@ -493,6 +512,9 @@ export const store = new Vuex.Store({
         },
         modal: function(state){
             return state.modal;
-        }
+        },
+        isLogged: function(state) {
+          return state.isLogged;
+        },
     }
 });

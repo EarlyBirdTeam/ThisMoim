@@ -12,8 +12,8 @@ import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 const socket = io('http://localhost:3030');
-
-
+Vue.use(cookies);
+Vue.use(router);
 Vue.prototype.$socket = socket;
 Vue.prototype.$axios = axios;
 

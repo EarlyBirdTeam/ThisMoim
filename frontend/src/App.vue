@@ -41,8 +41,14 @@ export default {
               logInfo.AccessToken = element.split('=')[1];
           }
           if(element.split('=')[0].trim() == 'AccessData'){
-              
-              logInfo.AccessData = unescape(element.split('=')[1]);
+            console.log("AccessData@")
+            const a = element.split('=')[1].split('%2C')
+            logInfo.AccessData = {
+              email: unescape(a[0].split('%3A')[1]),
+              name: decodeURI(a[1].split('%3A')[1]),
+              nickname: unescape(a[2].split('%3A')[1]),
+            }
+              // logInfo.AccessData = unescape(element.split('=')[1]);
           }
       });
 
@@ -94,12 +100,15 @@ export default {
   #container{
     /* width: 90vw; */
     /* border: solid gray 1px; */
-    /* background-color: white;
-    border-radius: 2%;
-    height: 90%;
-    margin: 25px;
-    padding: 10px;
-    margin-left: 50px; */
+    background-color: white;
+    /* border-radius: 2%; */
+    height: 100vh;
+    /* margin: 25px; */
+    /* padding: 10px; */
+    /* margin-left: 50px; */
+  }
+  #bg{
+    background-color: rgba(180, 179, 179, 0.26);
   }
   
 </style>
@@ -109,8 +118,7 @@ export default {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale; 
-  text-align: center;
-  /* color: #2c3e50; */
-  margin-top: 60px;
+  /* text-align: center; */
+  color: #2c3e50;
 }
 </style>

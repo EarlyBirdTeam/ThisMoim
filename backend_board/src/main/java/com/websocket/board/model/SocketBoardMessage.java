@@ -1,8 +1,10 @@
 package com.websocket.board.model;
 
-import com.websocket.board.dto.Postit;
-import com.websocket.board.model.calendar.Calendar;
+import com.websocket.board.model.scheduler.Scheduler;
+import com.websocket.board.model.crud.CRUDModule;
 import com.websocket.board.model.kanban.Kanban;
+import com.websocket.board.model.poll.Poll;
+import com.websocket.board.model.postit.Postit;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,35 +21,20 @@ import java.util.List;
 public class SocketBoardMessage implements Serializable {
 
     // 채널 자체 정보
-    private String channelId;
-    private long userCount;
-    //private String channelName;
-    //private String sender;
+    private String channelId;       // 채널 아이디
+    private long userCount;         // 현재 참여하고 있는 사용자 수
+    private List<String> memberList;// 채널 참여 멤버 닉네임 리스트
 
-    // 보드 전달 모듈 관련 인자
-    private long idCount;
-    private List<Postit> postitList; // 포스트잇 리스트
-    private Boolean isDelete;
-    private Kanban kanban;
-    private Boolean isKanban;
-    private Calendar calendar;
-    private DeletedModule delete;
-    // List<Calendar> calendarList; // 캘린더 리스트
-    // List<Canvas> canvas; // 캔버스 리스트
-    // List<Map> mapList; // 맵 리스트
-    // List<Attendance> attendenceList; // 출석부 리스트
-    // List<Attendance> voteList; // 출석부 리스트
+    // 모듈 관련 정보
+    private long idCount;           // 프론트 생성 아이디 카운트
+    private List<Postit> postitList;// 포스트잇 리스트 객체
+    private Boolean isKanban;       // 칸반 생성 여부
+    private Kanban kanban;          // 칸반 객체
+    private Scheduler scheduler;    // 스케줄러 객체
+    private List<Poll> poll;        // 투표 리스트 객체
 
-    // 멤버, 부착물 관련 인자
-    //private final int MAX_FIXTURES = 100; // 최대 부착물 갯수
-    //private final int MAX_MEMBERS = 50; // 최대 멤버 수
-    //private long userCount; // 멤버 수
-    //private long numOfFixtures; //부착물 갯수
-    //private boolean overMaxMembers; // 최대 멤버 수를 넘었는지
-    //private boolean overMaxFixtures; // 최대 부착물 수를 넘었는지
-
-    // 라이브채팅, 화상채팅
-    //private boolean liveChat; // 라이브챗 켜져있는지
-    //private boolean videoChat; // 화상채팅 켜져있는지
+    // DB 동기화를 위한 필드
+    private CRUDModule crudModule;  // 수행 CRUD 메소드 종류
+    private Boolean isDelete;       // Delete 수행여부
 
 }

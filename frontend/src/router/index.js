@@ -29,7 +29,8 @@ import Board from '../page/post/Test_Board.vue'
 // test
 import Poll from '../components/common/Poll.vue'
 import Map from '../components/module/Map.vue'
-import Calendar from '../components/module/Calendar.vue'
+import Scheduler from '../components/module/Scheduler.vue'
+import InviteModal from '../components/common/InviteModal.vue'
 
 Vue.use(Router) 
 Vue.use(Vuex)
@@ -60,7 +61,7 @@ export default new Router({
       component: Login
     },
     {
-      path: '/user/join',
+      path: '/user/signup',
       name: constants.URL_TYPE.USER.JOIN,
       component: Join
     },
@@ -69,13 +70,8 @@ export default new Router({
       name: constants.URL_TYPE.USER.JOINDONE,
       component: JoinDone
     },
-    {
-      path:'/user/MyPage',
-      name: constants.URL_TYPE.USER.MYPAGE,
-      component: MyPage
-    },
     { // 유저 정보 - 가입 확인
-      path: '/api/auth/registrationConfirmation',
+      path: '/user/signup/done/registrationConfirmation',
       name: constants.URL_TYPE.USER.CONFIRMDONE,
       component: ConfirmDone
     },
@@ -93,6 +89,11 @@ export default new Router({
       path: '/user/DeleteAccount',
       name: constants.URL_TYPE.USER.DELETEUSER,
       component: DeleteUser
+    },
+    { // 유저 정보 - 마이 페이지
+      path:'/user/info/*',
+      name: constants.URL_TYPE.USER.MYPAGE,
+      component: MyPage
     },
     // 포스트
     { 
@@ -141,9 +142,14 @@ export default new Router({
       component: Map,
     },
     { 
-      path: '/calendar',
-      name: 'Calendar',
-      component: Calendar,
+      path: '/scheduler',
+      name: 'Scheduler',
+      component: Scheduler,
+    },    
+    { 
+      path: '/invite',
+      name: 'InviteModal',
+      component: InviteModal,
     },
   ]
 })

@@ -29,7 +29,7 @@ public class RefreshTokenService {
 
     private final RefreshTokenRepository refreshTokenRepository;
 
-    @Value("${app.token.refresh.duration}")
+    @Value("${app.token.refresh.duration}00")
     private Long refreshTokenDurationMs;
 
     @Autowired

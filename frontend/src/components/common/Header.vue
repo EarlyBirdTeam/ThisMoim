@@ -16,8 +16,9 @@
 
             <template v-else>
                 <div class="headBox">
+                    환영합니다! 
                     <router-link v-bind:to="{name:constants.URL_TYPE.USER.MYPAGE}" class="btn--text">
-                        {{this.$store.state.userData.email}}
+                        {{this.$store.getters.userData.nickname}}
                     </router-link> 
 
                     <button @click="logout">
@@ -54,6 +55,12 @@
                 console.log(val);
             }
         },
+        // computed: {
+        //   isLogged() {
+        //     this.$router.go(0)
+        //     return this.$store.state.isLogged;  
+        //   } 
+        // },
         created() {
             const arr = document.cookie.split(";");
             console.log(this.$store.getters.userData);
@@ -70,9 +77,6 @@
 
             
         },
-        computed: {
-            
-        },
         methods : {
             // openModal(){
             //     this.modal = true;
@@ -87,7 +91,8 @@
                 try{
                    await this.$router.push('/');
                 } catch(error) {
-                    console.log("route same path!");
+                    // console.log("route same path!");
+                    this.$router.go(0);
                 } 
             },
             check(){
@@ -114,11 +119,11 @@
                     const result = this.$store.dispatch(constants.METHODS.LOGIN_USER, {email, password});
                     console.log(this.userData);this.modal = !this.modal;
                     this.email = '';
+                    
                 };
 
                     
                     this.password = '';
-                
             },
             
         },
@@ -130,6 +135,7 @@
                 userinfo: '',
                 email:"",
                 password:"",
+                isLogged: this.$store.getters.isLogged,
            }
         },
 

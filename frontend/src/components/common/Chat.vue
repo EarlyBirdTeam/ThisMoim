@@ -87,17 +87,20 @@
       // })
 
 import ChatlogDataService from "../../services/ChatlogDataService"
-import Moveable from 'vue-moveable';
+ 
 export default {
   name: "Chat",
   components:{
     Moveable,
   },
   created() {
-    //dragElement(document.getElementById("textBoard"));
-
     //console.log("chanelName : "+ localStorage.getItem("wsboard.channelName")); 채널 이름 가져오는 부분
-    var myname = this.makeRandomName();
+    // var myname = this.makeRandomName();
+    var myname = this.$store.getters.userData.nickname;
+    if(this.$store.getters.userData.nickname == ""){
+      myname = "Unknown_"+this.makeRandomName();
+    }
+    // console.log("my nickname is : ", myname);
     var chatcontainer = document.getElementById("chatContainer");
     var chatheader = document.getElementById("chatHeader");
     var chatbox = document.getElementById("chatBox");
@@ -105,7 +108,6 @@ export default {
     var $msgForm = $('#msgForm').val();
     this.naname = myname;
     this.Channel = localStorage.getItem("wsboard.channelName");
-
 
     console.log(this.naname);
     
@@ -222,47 +224,12 @@ export default {
         message: "",
         userid: "",
         roomid: "",
-      },
+      }
 
-       moveable: {
-      draggable: true,
-      throttleDrag: 0,
-      resizable: false,
-      throttleResize: 1,
-      keepRatio: true,
-      scalable: true,
-      throttleScale: 0,
-      rotatable: true,
-      throttleRotate: 0,
-    },
+      
     };
   },
   methods: {
-     handleDrag({ target, left, top }) {
-      console.log('onDrag left, top', left, top);
-      target.style.left = `${left}px`;
-      target.style.top = `${top}px`;
-    },
-    handleResize({
-      target, width, height, delta,
-    }) {
-      console.log('onResize', width, height);
-      delta[0] && (target.style.width = `${width}px`);
-      delta[1] && (target.style.height = `${height}px`);
-    },
-    handleScale({ target, transform, scale }) {
-      console.log('onScale scale', scale);
-      target.style.transform = transform;
-    },
-    handleRotate({ target, dist, transform }) {
-      console.log('onRotate', dist);
-      target.style.transform = transform;
-    },
-    handleWarp({ target, transform }) {
-      console.log('onWarp', target);
-      target.style.transform = transform;
-    },
-    
     saveChatlog(){
       event.preventDefault(); // 줄바꿈 방지?
       event.stopPropagation();
@@ -332,6 +299,44 @@ export default {
           }
         }
 
+    sendChat() {
+      event.preventDefault(); // 줄바꿈 방지?
+      event.stopPropagation();
+      var $msgForm = $('#msgForm').val();
+      console.log("msgForm : "+$msgForm);
+      console.log("channel : "+this.Channel);
+
+
+      this.$socket.emit("chat", {msg: $msgForm});
+      $('#msgForm').val("");
+
+
+        this.saveChatlog();
+    },
+
+     enter() { // 엔터 처리
+       var code = event.keyCode;
+        if(code==13){
+
+          if(event.shiftKey === true){ // Shift + Enter 처리
+            //console.log("Shift도 눌러짐");
+          
+          }
+          else{
+             this.sendChat();
+             //this.saveChatlog();
+          }
+        }
+
+    },
+
+    minimize(){
+      this.chattingBox = false;
+      //alert("최소화");
+    },
+    maximize(){
+      this.chattingBox = true;
+      this.notread = 0;
     },
 
     minimize(){

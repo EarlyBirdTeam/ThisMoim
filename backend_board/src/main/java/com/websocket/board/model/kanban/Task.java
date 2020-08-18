@@ -1,18 +1,28 @@
 package com.websocket.board.model.kanban;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import lombok.*;
 
+import javax.persistence.*;
 import java.io.Serializable;
 
-@AllArgsConstructor
+@Entity
 @NoArgsConstructor
-@Data
+@AllArgsConstructor
+@Getter
+@Setter
 @Builder
 public class Task implements Serializable {
+
+    @Id
+    @Column(nullable = false, name = "task_id")
+    private String id;
     private String taskTitle;
     private String taskContents;
     private String taskAssigner;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "state_id")
+    @JsonBackReference
+    private State state;
 }

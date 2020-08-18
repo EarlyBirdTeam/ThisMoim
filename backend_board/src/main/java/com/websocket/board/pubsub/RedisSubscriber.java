@@ -1,6 +1,5 @@
 package com.websocket.board.pubsub;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.websocket.board.model.SocketBoardMessage;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +19,7 @@ public class RedisSubscriber {
      * Redis에서 메시지가 발행(publish)되면 대기하고 있던 Redis Subscriber가 해당 메시지를 받아 처리한다.
      * Socket 에서 Client 로 보내는 부분
      */
-    public void sendMessage(String publishMessage) {
+    public void sendBoardStatus(String publishMessage) {
         try {
             // Board 객채로 맵핑
             //SocketBoardMessage board = objectMapper.readValue(publishMessage, SocketBoardMessage.class);

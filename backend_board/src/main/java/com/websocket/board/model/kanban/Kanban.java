@@ -1,18 +1,39 @@
 package com.websocket.board.model.kanban;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.websocket.board.model.Channel;
+import lombok.*;
 
+import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
-@AllArgsConstructor
+@Entity
 @NoArgsConstructor
-@Data
+@AllArgsConstructor
+@Getter
+@Setter
 @Builder
+@JsonIgnoreProperties("states")
 public class Kanban implements Serializable {
+
+    @Id
+    private String id;
     private String kanbanName;
-    private List<Column> columns;
+    @Column(name = "\"left\"")
+    private String left;
+    private String top;
+
+    @OneToMany(mappedBy = "kanban")
+    @JsonManagedReference
+    @Builder.Default
+    private List<State> states = new ArrayList<>();
+
+    @OneToOne
+    @JoinColumn(name = "channel_id")
+    @JsonBackReference
+    private Channel channel;
 }
