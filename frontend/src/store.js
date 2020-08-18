@@ -226,11 +226,12 @@ export const store = new Vuex.Store({
      * 회원가입 메소드
      */
     [constants.METHODS.CREATE_USER] : (_store, payload) =>{
+        console.log(payload);
         store.commit(constants.METHODS.EMAILCHECK, "reset");
         const url = 'api/auth/register';
         const data = {
-            "email": payload.email[0].value,
-            "password": payload.password[0].value,
+            "email": payload.email.value,
+            "password": payload.password.value,
             "registerAsAdmin": false,
             "username": payload.realName.value,
             "nickname": payload.nickName.value,

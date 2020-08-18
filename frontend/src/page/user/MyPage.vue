@@ -6,86 +6,33 @@
     <p class="lead">프로필 수정을 하실 수 있습니다.</p>
   </div>
 
-  <div class="row">
-    <div class="col-md-4 order-md-2 mb-4">
-      <h4 class="d-flex justify-content-between align-items-center mb-3">
-        <span class="text-muted">가입한 모임</span>
-        <span class="badge badge-secondary badge-pill">3</span>
-      </h4>
-      <ul class="list-group mb-3">
-        <li class="list-group-item d-flex justify-content-between lh-condensed">
-          <div>
-            <h6 class="my-0">스프링부트 스터디</h6>
-            <small class="text-muted">Spring Framework 모임입니다.</small>
-          </div>
-          <span class="text-muted">16/30(명)</span>
-        </li>
-        <li class="list-group-item d-flex justify-content-between lh-condensed">
-          <div>
-            <h6 class="my-0">출사 모임</h6>
-            <small class="text-muted">한강으로 출사~</small>
-          </div>
-          <span class="text-muted">12/30(명)</span>
-        </li>
-        <li class="list-group-item d-flex justify-content-between lh-condensed">
-          <div>
-            <h6 class="my-0">술 모임</h6>
-            <small class="text-muted">소주 적셔</small>
-          </div>
-          <span class="text-muted">29/30(명)</span>
-        </li>
-        <li class="list-group-item d-flex justify-content-between bg-light">
-          <div class="text-success">
-            <h6 class="my-0">가장 최근에 참여한 모임</h6>
-            <small>스프링부트</small>
-          </div>
-          <!-- <span class="text-success"></span> -->
-        </li>
-        <li class="list-group-item d-flex justify-content-between">
-          <span>총 모임</span>
-          <strong>3개</strong>
-        </li>
-      </ul>
-
-      <form class="card p-2">
-        <div class="input-group">
-          <input type="text" class="form-control" placeholder="모임 검색">
-          <div class="input-group-append">
-            <button type="submit" class="btn btn-secondary">검색</button>
-          </div>
-        </div>
-      </form>
-    </div>
-    <div class="col-md-8 order-md-1">
+    
+  <div class="col-md-8 order-md-1" style="margin-right: auto;
+    margin-left: auto;">
       <h4 class="mb-3">내 프로필</h4>
       <form class="needs-validation" novalidate>
-        <div class="row">
-          <div class="col-md-6 mb-3">
+
+        <div class="mb-3">
             <label for="firstName">이름</label>
-            <input type="text" class="form-control" id="Name" placeholder="" value="" required>
-            <div class="invalid-feedback">
+            <input type="text" class="form-control" id="Name" placeholder="Name" v-model="this.userData.name" required>
+            <div class="invalid-feedback" style="width: 100%;">
               이름을 작성해주세요.
             </div>
-          </div>
         </div>
         
 
-        <div class="row">
-          <div class="col-md-6 mb-3">
+        <div class="mb-3">
             <label for="firstName">비밀번호</label>
-            <input type="password" class="form-control" id="password" placeholder="" value="" required>
-            <div class="invalid-feedback">
+            <input type="password" class="form-control" id="password" placeholder="Password" v-model="this.userData.password" required>
+            <div class="invalid-feedback" style="width: 100%;">
               비밀번호를 작성해주세요.
             </div>
-          </div>
         </div>
 
         <div class="mb-3">
           <label for="username">닉네임</label>
           <div class="input-group">
-            <div class="input-group-prepend">
-            </div>
-            <input type="text" class="form-control" id="username" placeholder="Nickname" required>
+            <input type="text" class="form-control" id="username" placeholder="Nickname" v-model="this.userData.nickname" required>
             <div class="invalid-feedback" style="width: 100%;">
               닉네임을 작성해주세요.
             </div>
@@ -93,17 +40,24 @@
         </div>
 
         <div class="mb-3">
-          <label for="email">Email <span class="text-muted"></span></label>
-          <input type="email" class="form-control" id="email" placeholder="you@example.com">
+          <label for="email">Email</label>
+          <input type="email" class="form-control" id="email" placeholder="you@example.com" v-model="this.userData.email">
           <div class="invalid-feedback">
             이메일을 작성해주세요.
           </div>
         </div>
 
-        
+        <br>
         <button class="btn btn-primary btn-lg btn-block" type="submit" @click="submit">수정</button>
+        <!-- <button class="btn btn-danger btn-lg btn-block" >회원 탈퇴</button> -->
+
+        <router-link
+         v-bind:to="{name:constants.URL_TYPE.USER.DELETEUSER}"
+          class="btn btn-danger btn-lg btn-block" style="color:white;">
+                                회원 탈퇴
+        </router-link> 
+    
       </form>
-    </div>
   </div>
 
   <footer class="my-5 pt-5 text-muted text-center text-small">
@@ -125,6 +79,7 @@
         components: {
         },
         created(){
+          this.userData = this.$store.getters.userData;
         },
         methods: {         
             submit(){
@@ -150,6 +105,12 @@
         },
         data: () => {
             return {
+                userData:{
+                  email:'',
+                  name:'',
+                  password:'',
+                  nickname:'',
+                },
                 passwordConfirm: '',
                 isTerm: false,
                 passwordType:"password",

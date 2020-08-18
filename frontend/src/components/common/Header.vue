@@ -26,10 +26,11 @@
 
       <template v-else>
         <div class="headBox">
-          <router-link
+          환영합니다!
+          <router-link style="margin-left: 20px;"
             v-bind:to="{name:constants.URL_TYPE.USER.MYPAGE}"
             class="btn--text"
-          >{{this.$store.state.userData.email}}</router-link>
+          >{{ decodeURI(this.$store.state.userData.nickname)}}</router-link>
 
           <button @click="logout">로그아웃</button>
         </div>

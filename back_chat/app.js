@@ -8,7 +8,7 @@ const cors = require("cors");
 
 const db = require("./app/models");
 
-app.use(cors({origin: 'http://localhost:8081'}));
+app.use(cors({origin: 'http://localhost:3000'}));
 
 //parse requests of content-type - application/json
 app.use(bodyParser.json());

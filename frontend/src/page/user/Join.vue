@@ -55,10 +55,10 @@
             </div>
             <div style="margin:auto">
               <label class="middle" style="text-align:center">
-                <v-dialog v-model="dialog" width="600px" style="text-align:center">
+                <v-dialog width="600px" style="text-align:center">
                   <template v-slot:activator="{ on, attrs }" style="text-align:center">
                     <div class="d-flex" style="width:400px">
-                      <v-checkbox class="d-flex" style="margin:0" v-model="checkbox1" />
+                      <v-checkbox class="d-flex" style="margin:0" v-model="isTerm" />
                       <div class="d-flex" style="margin-right:5px">Agree to the</div>
                       <p
                         class="d-flex"

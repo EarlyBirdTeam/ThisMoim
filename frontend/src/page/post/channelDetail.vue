@@ -122,34 +122,32 @@
         @mouseover="testIn"
         @mouseout="testOut"
       >
-        <v-img v-show="!memberView" src="@/assets/img/user.png">{{userCount}}</v-img>
-        <v-img v-show="memberView" src="@/assets/img/user2.jpg"></v-img>
+        <v-img src="@/assets/img/team.png" style="color:white;" ><div v-if="userCount != 0">{{userCount}}</div></v-img>
+        <!-- <v-img v-show="memberView" src="@/assets/img/user2.jpg"></v-img> -->
       </v-responsive>
 
       <transition name="slide-fade">
         <v-responsive
           id="memberList"
           class="text-center"
-          v-if="memberView"
+          v-show="memberView"
           align="center"
           justify="center"
         >
           <main role="main" class="container">
-          <div class="d-flex align-items-center p-3 my-3 text-white-50 bg-purple rounded shadow-sm">
+          <!-- <div class="d-flex align-items-center p-3 my-3 text-white-50 bg-purple rounded shadow-sm">
             <img class="moimimg mr-3" src="@/assets/img/user2.jpg" alt="" width="20" height="20">
-          </div>
+          </div> -->
 
-          <div class="my-3 p-3 bg-white rounded shadow-sm">
-            <h2 class="border-bottom border-gray pb-2 mb-0">OOO모임 </h2>
+          <div class="my-3 p-3 bg-white rounded shadow-sm ">
+            <h4 class="border-bottom border-gray pb-2 mb-0">{{this.channelName}} </h4>
             
-            <div class="media text-muted pt-3"
-              v-for="(member, idx) in board.memberList"
-              :key="idx"
-              >
-              <svg class="bd-placeholder-img mr-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: 32x32"><title>Placeholder</title><rect width="100%" height="100%" fill="#007bff"/><text x="50%" y="50%" fill="#007bff" dy=".3em">32x32</text></svg>
-              <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
-                <strong class="d-block text-gray-dark" style="text-align:left; font-size:30px;">{{ member }}</strong>
-                <p style="text-align:right;"> 모임원 </p>     
+            <div class="media pt-3 border-bottom asdf">
+              <!-- <svg class="bd-placeholder-img mr-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: 32x32"><title>Placeholder</title><rect width="100%" height="100%" fill="#007bff"/><text x="50%" y="50%" fill="#007bff" dy=".3em">32x32</text></svg> -->
+              <div v-for="(member, idx) in board.memberList"
+              :key="idx" 
+              class="media-body small lh-125 border-gray member">
+                {{ member }}
               </div>
             </div>
           </div>
@@ -480,7 +478,8 @@ export default {
         moduleObject: null,
       };
       this.board.memberList = recv.memberList;
-      console.log("memberList[] : "+this.memberList);
+      // this.board.memberList = ["김강현","ㅁㄴㅇㄹ","정용우","최문경","배미이규"];
+      console.log("memberList[] : "+this.board.memberList);
     },
     createPostit(left = this.boardX - 120 + "px", top = this.boardY - 120 + "px") {
       if (this.board.postitList.length > 20) {
@@ -1132,7 +1131,7 @@ export default {
   top: 30%;
   left: 2%;
   padding: 10px 0px;
-  display: inline;
+  /* display: inline; */
   background-color: white;
   text-align: center;
   vertical-align: middle;
@@ -1170,7 +1169,7 @@ export default {
 }
 
 #memberList {
-  width: auto;
+  width: 350px;
   height: auto;
   position: fixed;
   z-index: 2;
@@ -1212,4 +1211,16 @@ export default {
   height: 64px;
 }
 
+.member{
+  /* overflow: scroll; */
+  /* margin-left: 5px; */
+  margin: 5px;
+  display: inline-block;
+  /* margin-right: 5px; */
+}
+
+.asdf{
+  width: 100%;
+  display: contents;
+}
 </style>
