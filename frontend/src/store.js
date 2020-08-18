@@ -71,6 +71,7 @@ export const store = new Vuex.Store({
         Kanban:{
             left: '200px',
             top: '200px',
+            kanbanName: 'kanban',
             task: {
                 taskTitle:'',
                 taskContents:'',

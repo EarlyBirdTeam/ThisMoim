@@ -77,18 +77,17 @@
             </template>
             <span>Poll</span>
           </v-tooltip>
-          <v-spacer/>
+          <v-divider> </v-divider>
           <v-tooltip right>
             <template v-slot:activator="{ on }">
-              <div v-on="on">
+              <div v-on="on" class="tool-divide">
                 <v-btn
                   icon
                   color="#FF5722"
                   @click="$store.state.inviteModal = !$store.state.inviteModal"
                   draggable="true"
-                  class="invite-mem"
                 >
-                  <v-icon>mdi-plus-circle-outline</v-icon>
+                  <v-icon>mdi-account-supervisor-outline</v-icon>
                 </v-btn>
               </div>
             </template>
@@ -178,7 +177,9 @@
         </div>
 
         <div class="kanban" @click.right="deleteAction('kanban', $event)">
-          <Kanban v-if="board.isKanban" :style="{left:board.kanban.left, top:board.kanban.top}" />
+          <Kanban 
+            v-if="!!board.isKanban"
+            :style="{left:board.kanban.left, top:board.kanban.top}" />
         </div>
         <div class="map" @click.right="deleteAction">
           <Map v-if="map.isPresent" />
@@ -186,26 +187,29 @@
 
         <div class="Scheduler" @click.right="deleteAction('scheduler', $event)">
           <Scheduler
-            v-if="!!board.scheduler"
+            v-if="!!board.scheduler.left"
             :style="{left:board.scheduler.left, top:board.scheduler.top}"
           />
         </div>
 
         <div class="Poll" @click.right="deleteAction('poll', $event)">
-          <Poll
-            v-if="!!board.poll"
-            :style="{left: $store.state.poll.left, top: $store.state.poll.top}"
-          />
+          <div 
+            v-for="(poll, idx) in this.board.poll"
+            :key="idx">
+            <Poll
+              :style="{left: $store.state.poll.left, top: $store.state.poll.top}"
+            />
+          </div>
         </div>
         {{ board }}
         <br />
         <br />
-        board : {{ board.poll }}
+        board : {{ board.kanban }}
         <br />
         <br />
         <br />
 
-        store : {{ $store.state.poll }}<br><br>
+        store : {{ $store.state.Kanban }}<br><br>
         {{$store.state.userData }}
         <InviteModal v-model="$store.state.inviteModal"/>
         <WithdrawalModal v-model="$store.state.withdrawalModal"/>
@@ -255,7 +259,7 @@ export default {
         postitList: [],
         isKanban: false,
         kanban: this.$store.state.Kanban,
-        scheduler: {},
+        scheduler: { "id": null, "left": null, "top": null },
         // poll: {},
         isDelete: false,
         delete: {
@@ -388,8 +392,9 @@ export default {
     },
     initRecv() {
       // 접속시 처음 값을 받아오도록 하기
+      const config = {headers: {"Authorization" : "Bearer " + this.$store.getters.accessToken}}
       http
-        .get(`/board/${this.board.channelId}`)
+        .get(`/board/${this.board.channelId}`, config)
         .then((response) => {
           console.log("initRecv@@@@");
           console.log(response.data);
@@ -399,8 +404,14 @@ export default {
             this.board = response.data;
           }
           this.board.delete = { moduleName: "", id: -1 };
-          if (response.data.kanban !== null) {
-            this.$store.state.Kanban.states = response.data.kanban.states;
+          if (response.data.kanban.left !== null) {
+            this.board.kanban.states = response.data.kanban.states;
+          }
+          else {
+            this.board.kanban.states = this.$store.state.Kanban.states;
+          }
+          if (response.data.poll === []) {
+
           }
           // this.board.Kanban.columns = response.data.kanban.columns;
         })
@@ -434,7 +445,7 @@ export default {
       this.board.poll = recv.poll;
       this.$store.state.poll = recv.poll;
       this.board.kanban = recv.kanban;
-      this.$store.state.Kanban = recv.kanban;
+      // this.$store.state.Kanban = recv.kanban;
       //crudModule 초기화
       this.board.crudModule = {
         modulType: "",
@@ -472,9 +483,10 @@ export default {
         return;
       }
       this.board.isKanban = true;
-      this.board.kanban = this.$store.state.Kanban;
+      this.board.kanban.states = this.$store.state.Kanban.states;
       this.board.kanban.left = this.moduleXP + "px";
       this.board.kanban.top = this.moduleYP + "px";
+      console.log(this.$store.state.Kanban);
       this.crudMethod("KANBAN", "CREATE", this.board.kanban);
       this.sendMessage();
       this.createSnackbar("보드가 생성되었습니다", 1500, "success");
@@ -513,7 +525,7 @@ export default {
     //   }
     // },
     createScheduler(left = "600px", top = "270px") {
-      if (!!this.board.scheduler) {
+      if (!!this.board.scheduler.left) {
         this.createSnackbar("이미 달력이 있습니다!", 3000, "error");
       } else {
         this.board.scheduler = {
@@ -530,14 +542,18 @@ export default {
     },
 
     createPoll(left = "500px", top = "170px") {
-      if (!!this.board.poll) {
+      if (this.board.poll.length >= 1) {
         this.createSnackbar("이미 투표가 있습니다!", 3000, "error");
       } else {
         const idc = this.board.idCount++;
-        this.board.poll = this.$store.state.poll;
-        this.board.poll.left = this.moduleXP + "px";
-        this.board.poll.top = this.moduleYP + "px";
-        this.crudMethod("POLL", "CREATE", this.board.poll);
+        const newPoll = this.$store.state.poll;
+        newPoll.left = this.moduleXP + "px";
+        newPoll.top = this.moduleYP + "px";
+        this.board.poll.push(newPoll);
+        // this.board.poll = this.$store.state.poll;
+        // this.board.poll.left = this.moduleXP + "px";
+        // this.board.poll.top = this.moduleYP + "px";
+        this.crudMethod("POLL", "CREATE", this.board.newPoll);
         this.sendMessage();
         // snackbar
         this.createSnackbar("투표가 생성되었습니다!", 1500, "success");
@@ -571,6 +587,9 @@ export default {
           } else if (clas[cla] == "Pollx") {
             // this.board.poll.left = `${left}px`
             // this.board.poll.top = `${top}px`
+          } else if (clas[cla] == "kanban") {
+          this.board.kanban.left = `${left}px`;
+          this.board.kanban.top = `${top}px`;
           } else if (clas[cla] == "realBoard") {
             this.lp = target.style.left.replace("px", "");
             this.tp = target.style.top.replace("px", "");
@@ -629,6 +648,7 @@ export default {
           break;
         case "DIV":
           return;
+        
       }
       this.crudMethod(target.nodeName, "UPDATE", moduleObj);
       this.sendMessage();
@@ -800,11 +820,11 @@ export default {
       if (confirm("요소를 삭제하시겠습니까?") === true) {
         if (moduleName == "scheduler") {
           this.crudMethod("SCHEDULER", "DELETE", this.board.scheduler);
-          this.board.scheduler = null;
+          this.board.scheduler = { "id": null, "left": null, "top": null };
         } else if (moduleName == "poll") {
           console.log("delete POLLLLLLLLLL");
           this.crudMethod("POLL", "DELETE", this.board.poll);
-          this.board.poll = null;
+          this.board.poll = [];
         } else if (moduleName == "kanban") {
           this.crudMethod("KANBAN", "DELETE", this.board.kanban);
           this.board.isKanban = false;
@@ -1151,8 +1171,7 @@ export default {
 .testBox {
   display: inline;
 }
-.invite-mem {
-  margin-top: 20px;
+.tool-divide {
 }
 
 .resetButton {

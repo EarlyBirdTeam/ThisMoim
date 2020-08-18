@@ -1,7 +1,7 @@
 <template>
   <v-dialog max-width="600px" persistent v-model="dialog">
     <v-card>
-      
+  
       <v-snackbar
         app
         top
@@ -9,6 +9,7 @@
         timeout="2000"
         color="success"
       >성공적으로 전송 되었습니다</v-snackbar>
+
       <v-card-title>
         <h3>모임 탈퇴</h3>
       </v-card-title>
@@ -19,6 +20,13 @@
             <li> 사용자는 모든 서비스에 대한 액세스 권한을 즉시 상실하게 됩니다.</li>
             <li>사용자가 만든 콘텐츠는 서비스 내에 남습니다.</li>
           </ul>
+        </div>
+        <div v-if="loading" class="d-flex justify-content-center mb-2">
+          <v-progress-circular
+            :size="25"
+            color="orange"
+            indeterminate
+          ></v-progress-circular>
         </div>
         <div class="text-center">
           <v-btn text class="red lighten-1 white--text mx-2 mt-3" @click="withdrawal">탈퇴</v-btn>
@@ -35,18 +43,8 @@ import http from "../../http-common.js";
 export default {
   data() {
     return {
-      memberList: [],
-      member : '',
+      loading: false,
       snackbar: false,
-      valid: true,
-      rules : {
-        // required: value => !!value || 'Required.',
-        email: value => {
-          const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-          return pattern.test(value) || 'Invalid e-mail.'
-        },
-      },
-      colors: ['#fffacc', '#ffebba', '#ffd0b5', '#ffb2b2', '#6dc9c9', '#a5d8d8'],
     };
   },
   computed: {
@@ -56,19 +54,24 @@ export default {
   },
   methods: {
     withdrawal() {       
+      this.loading = true;
       const url = "/api/auth/login";
       const data = {
           "channelId": localStorage.getItem("wsboard.channelId"),
           "email": this.$cookie.get('AccessData').split(',')[0].split(':')[1], 
       }
       console.log(data);
-      http.delete("/channel/withdrawal")
-      .then((response) => {
+      setTimeout(() => {
+        http.delete("/channel/withdrawal")
+        .then((response) => {
+          
+        }).catch((err) => {
+          
+        }) 
         
-      }).catch((err) => {
-
-      }) 
-      this.$store.state.withdrawalModal = false;
+        this.loading = false;
+        this.$store.state.withdrawalModal = false;
+      },1000)
     },
     close() {
       this.$store.state.withdrawalModal = false;
