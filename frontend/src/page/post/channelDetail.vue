@@ -151,7 +151,7 @@
               <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
                 <strong class="d-block text-gray-dark" style="text-align:left; font-size:30px;">{{ member }}</strong>
                 <p style="text-align:right;"> 모임원 </p>     
-              </p>
+              
             </div>
           </div>
         </main>
@@ -1163,6 +1163,33 @@ export default {
 
 .moimimg{
   border-radius: 50%;
+}
+
+.testerDot {
+  height: 4px;
+  width: 4px;
+  background-color: black;
+  position: fixed;
+  z-index: 4;
+  display: none;
+}
+
+
+.invite-mem {
+  margin-top: 20px;
+}
+
+.resetButton {
+  position: fixed;
+  z-index: 3;
+  bottom: 100px;
+  left: 20px;
+  border: solid black 1px;
+
+  /* background-color: white; */
+  /* border-radius: 50%; */
+  width: 64px;
+  height: 64px;
 }
 
 </style>
