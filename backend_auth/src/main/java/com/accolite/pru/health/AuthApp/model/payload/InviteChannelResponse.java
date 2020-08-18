@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ChannelResponse {
+public class InviteChannelResponse {
     String data;
     String message;
     Boolean success;

@@ -22,7 +22,6 @@ import com.accolite.pru.health.AuthApp.model.payload.*;
 import com.accolite.pru.health.AuthApp.model.token.EmailVerificationToken;
 import com.accolite.pru.health.AuthApp.model.token.RefreshToken;
 import com.accolite.pru.health.AuthApp.security.JwtTokenProvider;
-import com.accolite.pru.health.AuthApp.security.JwtTokenValidator;
 import com.accolite.pru.health.AuthApp.service.AuthService;
 import com.accolite.pru.health.AuthApp.service.MemberService;
 import com.accolite.pru.health.AuthApp.service.UserService;
@@ -141,62 +140,76 @@ public class AuthController {
                     System.out.println(onUserRegistrationCompleteEvent.getMember().size()+" MEMBER SIZE");
                     applicationEventPublisher.publishEvent(onUserRegistrationCompleteEvent);
                     logger.info("Registered User returned [API[: " + member);
-                    return ResponseEntity.ok(new ChannelResponse("data Object(json)", "String", true));
+                    return ResponseEntity.ok(new InviteChannelResponse("data Object(json)", "String", true));
                 })
                 .orElseThrow(() -> new UserInvitationException(mailSendRequest.getEmail(), "Missing user object in database"));
     }
 
+
 //    @GetMapping("/inviteConfirmation")
-//    @ResponseBody
 //    @ApiOperation(value = "Confirms the email verification token that has been generated for the user during registration")
-//    public ChannelResponse confirmInvitation(@RequestParam String email, @RequestParam String channelId) {
-//        ChannelRequest channelRequest = new ChannelRequest();
-//        channelRequest.setChannelId(channelId);
-//        User user = userService.findByEmail(email).orElseThrow(() -> new NoSuchElementException());
-//        channelRequest.setUser(user);
-//        ChannelResponse channelResponse = memberService.callPostBoardServer(channelRequest);
-//
-//        if(memberService.isMemberExist(email,channelId)==null) {
+//    public String confirmInvitation(@RequestParam String email, @RequestParam String channelId) {
+//        StringTokenizer st = new StringTokenizer(email,",");
+//        StringTokenizer st2 = new StringTokenizer(channelId,",");
+//        System.out.println("----confirm----" + email);
+//        String mail = "";
+//        String channel = "";
+//        System.out.println(st.countTokens());
+//        for (int i=0; i<=st.countTokens();i++) {
+//            mail = st.nextToken();
+//            channel = st2.nextToken();
+//            System.out.println("mail : "+ mail + " channel: "+channel);
+//        }
+//        User user = userService.findByEmail(mail).orElseThrow(() -> new NoSuchElementException());
+//        if(memberService.isMemberExist(mail,channel)==null) {
 //            if(user==null){
-//                System.out.println(email+" 님은 '이거모임'의 회원이 아닙니다.");
+//                System.out.println(mail+" 님은 '이거모임'의 회원이 아닙니다.");
 //            }else{
-//                memberService.createMember(user, channelId);
+//                memberService.createMember(user, channel);
 //            }
-//            return channelResponse;
+//            return "redirect:http://i3a510.p.ssafy.io";
 //        }
 //        else{
-//            return channelResponse;
+//            return "redirect:http://i3a510.p.ssafy.io";
 //        }
 //    }
 
     @GetMapping("/inviteConfirmation")
     @ApiOperation(value = "Confirms the email verification token that has been generated for the user during registration")
     public String confirmInvitation(@RequestParam String email, @RequestParam String channelId) {
-        StringTokenizer st = new StringTokenizer(email,",");
-        StringTokenizer st2 = new StringTokenizer(channelId,",");
-        System.out.println("----confirm----" + email);
-        String mail = "";
-        String channel = "";
-        System.out.println(st.countTokens());
-        for (int i=0; i<=st.countTokens();i++) {
-            mail = st.nextToken();
-            channel = st2.nextToken();
-            System.out.println("mail : "+ mail + " channel: "+channel);
-        }
-        User user = userService.findByEmail(mail).orElseThrow(() -> new NoSuchElementException());
-        if(memberService.isMemberExist(mail,channel)==null) {
-            if(user==null){
-                System.out.println(mail+" 님은 '이거모임'의 회원이 아닙니다.");
-            }else{
-                memberService.createMember(user, channel);
+        User newUser = userService.findByEmail(email).orElse(null);
+        InviteChannelRequest inviteChannelRequest = new InviteChannelRequest(newUser,channelId);
+        InviteChannelResponse inviteChannelResponse = memberService.callPostBoardServer(inviteChannelRequest);
+        System.out.println();
+        // 멤버등록 후 리다이렉트
+        if(inviteChannelResponse.getSuccess()){
+            StringTokenizer st = new StringTokenizer(email,",");
+            StringTokenizer st2 = new StringTokenizer(channelId,",");
+            String mail = "";
+            String channel = "";
+            System.out.println(st.countTokens());
+            for (int i=0; i<=st.countTokens();i++) {
+                mail = st.nextToken();
+                channel = st2.nextToken();
+                System.out.println("mail : "+ mail + " channel: "+channel);
             }
-            return "redirect:http://i3a510.p.ssafy.io";
+            User user = userService.findByEmail(mail).orElseThrow(() -> new NoSuchElementException());
+            if(memberService.isMemberExist(mail,channel)==null) {
+                if(user==null){
+                    System.out.println(mail+" 님은 '이거모임'의 회원이 아닙니다.");
+                }else{
+                    memberService.createMember(user, channel);
+                }
+                return "redirect:http://i3a510.p.ssafy.io";
+            }
+            else{
+                return "redirect:http://i3a510.p.ssafy.io";
+            }
+        }else{
+            return "redirect:http://i3a510.p.ssafy.io/error";
         }
-        else{
-            return "redirect:http://i3a510.p.ssafy.io";
-        }
-    }
 
+    }
     @PostMapping("/password/resetlink")
     @ApiOperation(value = "Receive the reset link request and publish event to send mail containing the password " +
             "reset link")

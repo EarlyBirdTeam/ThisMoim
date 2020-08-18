@@ -10,7 +10,7 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ChannelRequest implements Serializable {
+public class InviteChannelRequest implements Serializable {
     User user;
     String channelId;
 }
