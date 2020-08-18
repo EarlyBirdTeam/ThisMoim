@@ -32,11 +32,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="be227e13-619a-489d-8166-3b9497ebcabf" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.gradle/5.4.1/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/5.4.1/fileHashes/fileHashes.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/accolite/pru/health/AuthApp/controller/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/accolite/pru/health/AuthApp/controller/AuthController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/accolite/pru/health/AuthApp/service/MemberService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/accolite/pru/health/AuthApp/service/MemberService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -187,6 +184,7 @@
       <workItem from="1597487611635" duration="282000" />
       <workItem from="1597539352481" duration="7228000" />
       <workItem from="1597547877792" duration="30824000" />
+      <workItem from="1597734527085" duration="17000" />
     </task>
     <servers />
   </component>

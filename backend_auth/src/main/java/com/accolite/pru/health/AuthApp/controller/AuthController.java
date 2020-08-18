@@ -299,10 +299,13 @@ public class AuthController {
 
     @PostMapping("verifyToken")
     public ResponseEntity validateToken(@RequestParam String token){
+        StringTokenizer st = new StringTokenizer(token," ");
+        st.nextToken();
+        String tokenBody = st.nextToken();
         String secretKey = tokenProvider.getJwtSecret();
         Claims claims =  Jwts.parser()
                 .setSigningKey(DatatypeConverter.parseBase64Binary(secretKey))
-                .parseClaimsJws(token).getBody();
+                .parseClaimsJws(tokenBody).getBody();
         String s = claims.getSubject();
         System.out.println("user id : "+s);
         User user = userService.findById(Long.parseLong(s)).orElse(null);
