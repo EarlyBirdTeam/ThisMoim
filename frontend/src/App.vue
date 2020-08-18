@@ -27,7 +27,7 @@ export default {
     this.checkBoard(url);
    
     
-    this.checkUrl(url);
+
     
     console.log("refresh!");
     console.log(this.$store);

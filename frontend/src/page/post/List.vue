@@ -6,26 +6,33 @@
         <button @click="alertStore($store.state.userData)">store</button>
         {{ this.$store.state.userData }}
         <div class="d-flex">
-          <v-text-field @keyup.enter="createChannel" placeholder="채널 제목" v-model="channel_name"></v-text-field>
-          <button @click="createChannel" class="circleScaleBtn">
-            <span>채널 생성</span>
-          </button>
+          <v-text-field
+            @keyup.enter="createChannel"
+            placeholder="채널 제목"
+            style="height:30px; padding:0"
+            v-model="channel_name"
+          ></v-text-field>
+          <button
+            @click="createChannel"
+            style="padding:2px; margin-top:7px; height:30px; background-color:rgb(0,0,0)"
+            class="white--text"
+          >채널 생성</button>
         </div>
       </div>
 
-      <v-btn icon  @click="showAlbum">
+      <v-btn icon @click="showAlbum">
         <v-icon>mdi-view-module</v-icon>
       </v-btn>
-      <v-btn icon  @click="showList">
+      <v-btn icon @click="showList">
         <v-icon>mdi-view-list</v-icon>
       </v-btn>
 
-      <v-row v-if="howto">
+      <v-row style="width:80%; margin:auto;" v-if="howto">
         <v-col
           v-for="card in listChannels"
           :key="card.channelId"
           cols="4"
-          md="3"
+          md="4"
           @click="enterRoom(card.channelId, card.channelName)"
         >
           <v-hover v-slot:default="{ hover }">
@@ -40,10 +47,17 @@
                   <div
                     v-if="hover"
                     flex
-                    class="transition-fast-in-fast-out text-center purple white--text darken-3 v-card--reveal display-3"
-                    style="height: 100%; align-items: center; bottom: 0; justify-content: center; opacity:.5; position: absolute; width: 100%;"
+                    class="d-flex transition-fast-in-fast-out black darken-2 v-card--reveal display-3 white--text"
+                    style="height: 100%; align-items: center;
+                          bottom: 0;
+                          justify-content: center;
+                          opacity: .5;
+                          position: absolute;
+                          width: 100%; "
                   >
-                    <p>입장하기</p>
+                    <br />
+                    <br />
+                    <div class="btn">입장하기</div>
                   </div>
                 </v-expand-transition>
                 <v-card-title v-text="card.channelName"></v-card-title>
@@ -52,11 +66,12 @@
           </v-hover>
         </v-col>
       </v-row>
-      <ul class="list-group" v-if="!howto">
+      <ul style="width:80%; margin:auto;" class="list-group" v-if="!howto">
         <li
           class="list-group-item list-group-item-action"
           v-for="item in listChannels"
           v-bind:key="item.channelId"
+          style
           v-on:click="enterRoom(item.channelId, item.channelName)"
         >
           <h6 style="text-align:left">{{item.channelName}}</h6>
@@ -154,7 +169,7 @@ export default {
       console.log(this.$store.state.userData);
     },
   },
-  
+
   computed: {
     listChannels() {
       return _.orderBy(this.channels, "channelName", "asc");

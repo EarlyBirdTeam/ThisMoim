@@ -4,11 +4,11 @@
     <h1>
       <router-link
         class="white--text"
-        style="color:rgb(0,0,0)"
+        style="color:rgb(0,0,0);"
         v-bind:to="{name:constants.URL_TYPE.POST.ENTER}"
       >
         <img
-          style="position:absolute;top:0px; width:auto;height:50px;"
+          style="position:absolute;top:0px;  margin-top:7px; width:auto;height:50px;"
           src="../../assets/img/Logo.png"
         />
       </router-link>
@@ -20,7 +20,7 @@
           class="headBox"
           style="height:35px; font-size:20px;c padding-top:5px; padding-bottom:12px; "
         >
-          <LoginModal v-model="$store.state.loginModal"/>
+          <LoginModal/>
         </div>
       </template>
 

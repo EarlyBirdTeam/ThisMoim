@@ -1,16 +1,15 @@
 <template>
   <div style=" padding:0px; margin:0px;">
     <div style="left:30px; top:30px; position:fixed; ">
-      <a class="white--text" @click="ScrollDown" href="#First">Home</a>
+      <a class="white--text" @click="ScrollDown1">Home</a>
       <br />
-      <a class="white--text" href="#Second">About</a>
+      <a class="white--text" @click="ScrollDown2">About</a>
       <br />
-      <a class="white--text" href="#Third">Developers</a>
+      <a class="white--text" @click="ScrollDown3">Developers</a>
     </div>
     <div style="position:fixed; top:30px; right:30px">
       <LoginModal />
     </div>
-
 
     <section
       id="First"
@@ -34,39 +33,56 @@
     </section>
 
     <section
-    
       id="Second"
       style="width: 100vw;
             height: 100vh;
             background: linear-gradient(90deg, rgba(33,33,33,1) 50%, rgba(37,37,37,1) 50%);"
       class="white--text d-flex box2"
     >
-      <div class="d-flex" style="padding:20vh; padding:10vw ">
-        <div class="d-flex" style="width:50%; text-align: center; ">
-          <h4 style=" font-size:30px;">이거모임은 포스트잇, 캘린더, 칸반보드 등의 기능을 제공하여 다양한 사람들과의 협업을 도와드립니다</h4>
-        </div>
-        <div class="d-flex" style="width:50%; ">
-          <img style="width:100%" src="../../assets/img/Exampleboard.png" />
-        </div>
+      <div
+        class="d-flex"
+        style="width:50%; text-align: center; margin-top: 100px padding:20vh; padding:10vw "
+      >
+        <h4 style=" font-size:30px; ">
+          ㅇㄱㅁㅇ은 포스트잇, 캘린더, 칸반보드 등의 다양한 모듈을 제공하여 다양한 사람들과의 협업을 도와드립니다
+         
+           
+          <br/>
+             <router-link to="main" style="background-color:rgba(0,0,0,1); border:solid 0px" class="btn  white--text">
+              Try It!
+             
+            </router-link>
+             
+        </h4>
+      </div>
+      <div class style="width:50%; padding:20vh; padding:10vw ">
+        <v-carousel style="width:100%; height:100%" hide-delimiters>
+          <v-carousel-item v-for="(item,i) in items" :key="i" :src="item.src"></v-carousel-item>
+        </v-carousel>
       </div>
     </section>
     <section
+      id="Second2"
       class="d-flex"
       style="width: 100vw;
             height: 100vh; background: linear-gradient(90deg, rgba(33,33,33,1) 50%, rgba(37,37,37,1) 50%);"
     >
-      <div style="width:50%; padding:20vh; padding:10vw ">
-        <h4 class="white--text" style=" font-size:30px;">이거모임은 최상의 서비스를 제공하기위해 다양한 기술들을 통해 구현하였습니다</h4>
+      <div style="width:50%; padding:20vh; padding:10vw; text-align: center;  ">
+        <h4 class="white--text" style=" font-size:30px;">ㅇㄱㅁㅇ은 다양한 기술스택을 사용하여 여러분들이 최상의 서비스를 제공하기 위해 노력하였습니다</h4>
       </div>
       <div style="width:50%;  padding:20vh; padding:10vw">
         <img style="width:100% " src="../../assets/img/Used.png" />
       </div>
     </section>
 
-    <section id="Third" class="box3 d-flex black--text" style="width: 100vw;
+    <section
+      id="Third"
+      class="box3 d-flex black--text"
+      style="width: 100vw;
             height: 100vh;
 
- ">
+ "
+    >
       <div
         class="white--text"
         style="width:40%; padding:10vw; padding-top: 50px; background:rgb(33,33,33);"
@@ -76,42 +92,37 @@
           <br />Early Bird
         </h2>
       </div>
-      <div style="width:100%; padding:60px; padding-top:90px;">
+      <div style="width:100%; margin-left:10vw; padding:60px; padding-top:90px;">
         열정적인 이거모임!
         <p />
         <h4 style=" font-size:30px;">이거모임은 열정적인 개발자들과 함께 하고 있습니다</h4>
         <v-row style="width:50%">
-        <v-col
-          v-for="(slide, i) in slides" :key="i"
-          md="4"
-           
-        >
-          <v-hover v-slot:default="{ hover }">
-            <v-card>
-              <v-img
-                :src="slide.src"
-                class="white--text align-end"
-                gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
-                
-                
-              >
-                <v-expand-transition>
-                  <div
-                    v-if="hover"
-                    flex
-                    class="transition-fast-in-fast-out text-center black white--text darken-3 v-card--reveal"
-                    style="font-size:10px; padding:10px ;height: 100%; align-items: center; bottom: 0; justify-content: center; opacity:.5; position: absolute; width: 100%;"
-                  >
-                    <h2>{{slide.name}}</h2>
-                    <p >{{slide.text}}</p>
-                  </div>
-                </v-expand-transition>
-                
-              </v-img>
-            </v-card>
-          </v-hover>
-        </v-col>
-      </v-row>
+          <v-col v-for="(slide, i) in slides" :key="i" md="4">
+            <v-hover v-slot:default="{ hover }">
+              <v-card>
+                <v-img
+                  :src="slide.src"
+                  class="white--text align-end"
+                  gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
+                >
+                  <v-expand-transition>
+                    <div
+                      v-if="hover"
+                      flex
+                      class="transition-fast-in-fast-out text-center black white--text darken-3 v-card--reveal"
+                      style="font-size:15px; padding:10px ;height: 100%; align-items: center; bottom: 0; justify-content: center; opacity:.5; position: absolute; width: 100%;"
+                    >
+                      <h2>{{slide.name}}</h2>
+                      <br />
+                      <br />
+                      <p>{{slide.text}}</p>
+                    </div>
+                  </v-expand-transition>
+                </v-img>
+              </v-card>
+            </v-hover>
+          </v-col>
+        </v-row>
         <!-- <router-link class="black--text" v-bind:to="{name:constants.URL_TYPE.POST.INTRODUCE}">더 알아보기</router-link> -->
       </div>
     </section>
@@ -133,103 +144,88 @@ import img3 from "../../assets/img/developer3.jpg";
 import img4 from "../../assets/img/developer4.jpg";
 import img5 from "../../assets/img/developer5.jpg";
 import img6 from "../../assets/img/developer6.jpg";
-import { onMounted, onUnmounted } from "vue";
+import example1 from "../../assets/img/example1.png";
+import example2 from "../../assets/img/example2.png";
+
 export default {
   components: { LoginModal, Login },
 
   data: () => ({
-    channels: [],
     isLoggin: false,
+    items: [
+      {
+        src: example1,
+      },
+      {
+        src: example2,
+      },
+    ],
     slides: [
       {
         name: "Choi Munkyung",
         src: img1,
-        text:"1일 1즐거움~"
+        text: "1일 1즐거움~",
       },
       {
         name: "Jeong Yongwoo",
         src: img2,
-        text:"콘솔불바다.... 내가 책임질게...... 시켜줘.. 얼리버드 명예소방관.."
+        text:
+          "비상벨? 콘솔에 불났을 때 울리는 그건가? 시켜줘.. 얼리버드 명예소방관..",
       },
       {
-        name:"Bae Jaewon",
+        name: "Bae Jaewon",
         src: img3,
-        text:"문경아.. 이거 인증이 안되는거같아..."
+        text: "문경아.. 이거 인증이 안되는거같아...",
       },
       {
-        name:"Kim Kanghyeon",
+        name: "Kim Kanghyeon",
         src: img4,
-        text:"배포 그만해.. 그게 뭔데.. 배포 그만하라구.. 그거 어떻게 하는건데..."
+        text:
+          "배포 그만해.. 그게 뭔데...... 배포 그만하라구.. 그거 어떻게 하는건데...",
       },
       {
-        name:"Kim Dongryul",
+        name: "Kim Dongryul",
         src: img5,
-        text: "내 얼굴 짜릿해... 늘 새로워.. 잘생긴게 최고야..."
+        text: "내 얼굴 짜릿해... 늘 새로워.. 잘생긴게 최고야...",
       },
       {
-        name:"Bae Minkyu",
+        name: "Bae Minkyu",
         src: img6,
-        text: "돈뺏기는거 아님"
+        text: "돈뺏기는거 아님",
       },
     ],
     constants,
   }),
   created() {
     console.log(this.$store.state.userData.email);
-    this.findAllChannel();
-    this.ScrollAll();
+
+    console.log(document.querySelector("#First"));
   },
   methods: {
     hi: function () {
       scroll.animateScroll(0);
     },
-    findAllChannel: function () {
-      http.get("/board/channels").then((response) => {
-        // prevent html, allow json array
-        if (Object.prototype.toString.call(response.data) === "[object Array]")
-          this.channels = response.data;
-      });
-    },
-    getRandomImage(idString) {
-      return `https://picsum.photos/seed/${idString}/200/300`;
-    },
-    NeedLogin() {
-      this.isLoggin = true;
-    },
-    ScrollDown() {
-      $("a[href*=#]").on("click", function (e) {
-        e.preventDefault();
-        $("div").animate(
-          { scrollTop: $($(this).attr("href")).offset().top,  },
-          500,
-          "smooth"
-        );
-      });
-    },
-    ScrollAll() {
+
+    ScrollDown1() {
       var Flocation = document.querySelector("#First").offsetHeight;
       var Slocation = document.querySelector("#Second").offsetTop;
       var Tlocation = document.querySelector("#Third").offsetTop;
-      window.scrollTo({top:Slocation - Flocation, behavior:'smooth'});
-      // const _width = window.innerWidth;
-      // const _height = window.innerHeight;
-      // const boxArr = document.getElementsByTagName("section");
-      // console.log(boxArr)
-      // for (let i = 0; i < boxArr.length; i++) {
-      //   boxArr[i].style.width = _width + "px";
-      //   boxArr[i].style.height = _height + "px";
-      // }
-
-      // window.addEventListener("mousewheel", function (e) {
-      //   e.preventDefault();
-      //   if (e.wheelDeltaY > 0) {
-      //     console.log("업");
-      //     window.scrollTo(0, window.scrollY - _height - e.deltaY);
-      //   } else {
-      //     console.log("다운");
-      //     window.scrollTo(0, window.scrollY + _height - e.deltaY);
-      //   }
-      // });
+      window.scrollTo({ top: Slocation - Flocation, behavior: "smooth" });
+    },
+    ScrollDown2() {
+      var Flocation = document.querySelector("#First").offsetHeight;
+      var Slocation = document.querySelector("#Second").offsetTop;
+      var Tlocation = document.querySelector("#Third").offsetTop;
+      window.scrollTo({
+        top: Tlocation - Slocation - Slocation,
+        behavior: "smooth",
+      });
+    },
+    ScrollDown3() {
+      var Flocation = document.querySelector("#First").offsetHeight;
+      var Slocation = document.querySelector("#Second").offsetTop;
+      var Tlocation = document.querySelector("#Third").offsetTop;
+      window.scrollTo({ top: Tlocation, behavior: "smooth" });
     },
   },
 };
