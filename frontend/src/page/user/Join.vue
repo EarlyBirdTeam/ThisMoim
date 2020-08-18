@@ -53,53 +53,78 @@
                 <i class="fas fa-eye"></i>
               </span>
             </div>
-             <div style="margin:auto">
-            <label class="middle" style="text-align:center">
-              <v-dialog v-model="dialog" width="600px" style="text-align:center">
-                <template v-slot:activator="{ on, attrs }" style="text-align:center">
-                  <div style="width:400px">
-                    <div
-                      d-flex
-                      v-bind="attrs"
-                      class="btn"
-                      v-on="on"
-                      style=" width:100px"
-                    >Term of Use</div>
-
-                    <p d-flex>Please check the terms and conditions</p>
-                  </div>
-                </template>
-                <v-card>
-                  <v-card-title>
-                    <span class="headline">회원가입 약관</span>
-                  </v-card-title>
-                  <v-card-text>
-                    제1장 총 칙
-                    <br /><strong>제1조(목적)</strong>
-                    <br />이 약관은 이거모임(http://i3a510.p.ssafy.io/)이 온라인으로 제공하는 각종 서비스의 이용과 관련하여 이거모임과 이용자의 권리, 의무 및 책임사항 등을 규정함을 목적으로 합니다.
-                    <br /><br /><strong>제2조(정의)</strong>
-                    <br />이 약관에서 사용하는 용어의 정의는 다음과 같습니다.
-                    <br />1. "이거모임회원(이하 "회원"이라 합니다)"이라 함은 회원 아이디(ID)를 부여받은 이용자로서 이거모임에서 제공하는 서비스를 지속적으로 이용할 수 있는 자를 말합니다.
-                    <br />2. "아이디(ID)"라 함은 회원의 식별과 서비스 이용을 위하여 회원이 정하고 연수원이 승인하는 문자 또는 숫자의 조합을 말합니다.
-                    <br />3. "비밀번호(PASSWORD)"라 함은 회원이 부여받은 아이디와 일치되는 회원임을 확인하고 비밀보호를 위해 회원 자신이 정한 문자 또는 숫자의 조합을 말합니다.
-                  </v-card-text>
-                  <v-checkbox v-model="checkbox1" :label="`약관에 동의합니다`"></v-checkbox>
-                </v-card>
-              </v-dialog>
-              <br />
-            </label>
+            <div style="margin:auto">
+              <label class="middle" style="text-align:center">
+                <v-dialog v-model="dialog" width="600px" style="text-align:center">
+                  <template v-slot:activator="{ on, attrs }" style="text-align:center">
+                    <div class="d-flex" style="width:400px">
+                      <v-checkbox class="d-flex" style="margin:0" v-model="checkbox1" />
+                      <div class="d-flex" style="margin-right:5px">Agree to the</div>
+                      <p
+                        class="d-flex"
+                        v-bind="attrs"
+                        style="text-decoration:underline"
+                        v-on="on"
+                      >Privacy Policy</p>
+                    </div>
+                  </template>
+                  <v-card>
+                    <v-card-title>
+                      <span class="headline">개인정보처리방침</span>
+                    </v-card-title>
+                    <v-card-text>
+                      '(주)얼리버드'는 (이하 '회사'는) 고객님의 개인정보를 중요시하며, "정보통신망 이용촉진 및 정보보호"에 관한 법률을 준수하고 있습니다. 회사는 개인정보취급방침을 통하여 고객님께서 제공하시는 개인정보가 어떠한 용도와 방식으로 이용되고 있으며, 개인정보보호를 위해 어떠한 조치가 취해지고 있는지 알려드립니다.
+                      <br />
+                      <br />■ 수집하는 개인정보 항목
+                      <br />수집항목 : 이름, 닉네임, 비밀번호, 이메일, , 서비스 이용기록, 접속 로그, 접속 IP 정보
+                      <br />ο개인정보 수집방법 : 홈페이지(회원가입)
+                      <br />
+                      <br />■ 개인정보의 수집 및 이용목적
+                      <br />회사는 수집한 개인정보를 다음의 목적을 위해 활용합니다.
+                      <br />1.회원 관리
+                      <br />- 회원제 서비스 이용에 따른 본인확인 , 개인 식별 , 가입 의사 확인 , 고지사항 전달
+                      <br />
+                      <br />■ 개인정보의 보유 및 이용기간
+                      <br />1.홈페이지 회원가입 후 탈퇴시 까지
+                      <br />
+                      <br />■ 개인정보의 파기절차 및 방법
+                      <br />회사는 원칙적으로 개인정보 수집 및 이용목적이 달성된 후에는 해당 정보를 지체없이 파기합니다. 파기절차 및 방법은 다음과 같습니다.
+                      <br />1.파기절차 : 회원님이 회원가입 등을 위해 입력하신 정보는 목적이 달성된 후 별도의 DB로 옮겨져(종이의 경우 별도의 서류함) 내부 방침 및 기타 관련 법령에 의한 정보보호 사유에 따라(보유 및 이용기간 참조) 일정 기간 저장된 후 파기되어집니다.별도 DB로 옮겨진 개인정보는 법률에 의한 경우가 아니고서는 보유되어지는 이외의 다른 목적으로 이용되지 않습니다.
+                      <br />2.파기방법 : 전자적 파일형태로 저장된 개인정보는 즉각 삭제하도록 하겠습니다.
+                      <br />
+                      <br />■ 개인정보 제공
+                      <br />회사는 이용자의 개인정보를 원칙적으로 외부에 제공하지 않습니다. 다만, 아래의 경우에는 예외로 합니다.
+                      <br />법령의 규정에 의거하거나, 수사 목적으로 법령에 정해진 절차와 방법에 따라 수사기관의 요구가 있는 경우
+                      <br />
+                      <br />■ 개인정보에 관한 민원서비스
+                      <br />회사는 고객의 개인정보를 보호하고 개인정보와 관련한 불만을 처리하기 위하여 아래와 같이 개인정보관리책임자를 지정하고 있습니다.
+                      <br />개인정보관리 책임자
+                      <br />성명 : 최문경
+                      <br />전화번호 : 010-8535-3684
+                      <br />이메일 : 최문경@naver.com
+                    </v-card-text>
+                  </v-card>
+                </v-dialog>
+                <br />
+              </label>
+            </div>
+            <div class="right">
+              <button
+                style="width:70px; margin:5px; background-color:rgb(128,128,128); border:solid 0px;"
+                @click="createUserRequest"
+                class="btn"
+              >
+                <span>확인</span>
+              </button>
+              <router-link
+                to="/"
+                style="width:70px; margin:5px; background-color:rgb(128,128,128); border:solid 0px;"
+                class="btn"
+              >
+                <span>취소</span>
+              </router-link>
+            </div>
           </div>
-          <div class="right">
-          <button style="width:70px; margin:5px; background-color:#d9d9d9; border:solid 0px;" @click="createUserRequest" class="btn">
-            <span>확인</span>
-          </button>
-          <router-link to= "/" style="width:70px; margin:5px; background-color:#d9d9d9; border:solid 0px;" class="btn" >
-            <span>취소</span>
-          </router-link>
-          </div>
-          </div>
-         
-          
         </v-card>
         <!-- <router-link v-bind:to="{name:constants.URL_TYPE.USER.JOINDONE}" @click="createUserRequest" class="btn">
                 작성완료 
@@ -171,5 +196,3 @@ export default {
   },
 };
 </script>
-
-

@@ -13,10 +13,10 @@
         </div>
       </div>
 
-      <v-btn icon color="#515ada" @click="showAlbum">
+      <v-btn icon  @click="showAlbum">
         <v-icon>mdi-view-module</v-icon>
       </v-btn>
-      <v-btn icon color="#515ada" @click="showList">
+      <v-btn icon  @click="showList">
         <v-icon>mdi-view-list</v-icon>
       </v-btn>
 
@@ -154,6 +154,7 @@ export default {
       console.log(this.$store.state.userData);
     },
   },
+  
   computed: {
     listChannels() {
       return _.orderBy(this.channels, "channelName", "asc");
