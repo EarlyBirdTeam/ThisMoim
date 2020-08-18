@@ -82,10 +82,18 @@ public class ChannelController {
         }
     }
 
-    @GetMapping("/channel/{channelId}")
+//    @GetMapping("/channel/{channelId}")
+//    @ResponseBody
+//    public Channel channelInfo(@PathVariable String channelId) {
+//        return channelRedisRepository.findChannelById(channelId);
+//    }
+
+    @DeleteMapping("/channel/withdrawal")
     @ResponseBody
-    public Channel channelInfo(@PathVariable String channelId) {
-        return channelRedisRepository.findChannelById(channelId);
+    public WithdrawalResponse channelInfo(@RequestBody WithdrawalRequest request) {
+        //channelRedisRepository.removeUserEnterInfo(request.getChannelId());
+        channelService.withdrawalChannel(request);
+        return new WithdrawalResponse().builder().message("Success Withdrawal Channel").success(true).build();
     }
 
     @GetMapping("/user")
