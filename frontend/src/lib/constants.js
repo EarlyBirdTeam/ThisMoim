@@ -20,7 +20,9 @@ export default {
             DELETEUSER: 'deleteUser',
         },
         POST: {
+            ENTER : "enter",
             MAIN : "main",
+            INTRODUCE : "introduce"
         },
     },
     METHODS:{

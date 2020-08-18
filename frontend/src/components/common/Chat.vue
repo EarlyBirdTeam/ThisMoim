@@ -5,7 +5,7 @@
  <div class="chat-container" id="chatContainer">
    <div id="chattingBox" v-show="chattingBox">
         <div class="chat-header" id="chatHeader">
-          <div id="clientList" v-if="isList">
+          <div id="clientList" v-show="isList">
             <ul>
                 <li id="user"
                   v-for="(user, index) in clientList"
@@ -36,8 +36,8 @@
         <form>
         <div class="text-box" id="textBox">
           <textarea v-model="chatlog.message" id="msgForm" placeholder="메시지를 입력해주세요 :)" @keyup="enter" ></textarea>
-          <button id="sendChat" @click="sendChat" v-show="chatlog.message != ''">전송</button>
-          <button id="sendChat_disable" disabled="true" v-show="chatlog.message == ''">전송</button>
+          <button id="sendChat" @click=sendChat>전송</button>
+          <button id="sendToBoard" @click=sendToBoard>보드로</button>
           <div class="clearfix"></div>
         </div>
        </form>
@@ -90,6 +90,9 @@ import ChatlogDataService from "../../services/ChatlogDataService"
  
 export default {
   name: "Chat",
+  components:{
+    Moveable,
+  },
   created() {
     //console.log("chanelName : "+ localStorage.getItem("wsboard.channelName")); 채널 이름 가져오는 부분
     // var myname = this.makeRandomName();
@@ -167,6 +170,15 @@ export default {
                     $('.chatbox').scrollTop($('.chatbox').prop('scrollHeight'));
                 }, 50);
     });
+
+    this.$socket.on("s2c text", (data) => {
+      var name = data.from.name;
+      var msg = data.msg;
+
+      $('.textBoard').append('<h3><span>'+msg+'</span></h3>');
+
+    });
+
     this.$socket.on("s2c chat me", (data) => {
       var name = data.from.name;
       var msg = data.msg;
@@ -254,6 +266,51 @@ export default {
       $('#msgForm').val("");
 
 
+      this.saveChatlog();
+    },
+
+    sendToBoard() {
+      event.preventDefault(); // 줄바꿈 방지?
+      event.stopPropagation();
+      var $msgForm = $('#msgForm').val();
+      // console.log("msgForm : "+$msgForm);
+      // console.log("channel : "+this.Channel);
+
+
+      this.$socket.emit("text", {msg: $msgForm});
+      $('#msgForm').val("");
+
+
+      //this.saveChatlog();
+    },
+
+
+     enter() { // 엔터 처리
+       var code = event.keyCode;
+        if(code==13){
+
+          if(event.shiftKey === true){ // Shift + Enter 처리
+            //console.log("Shift도 눌러짐");
+          
+          }
+          else{
+             this.sendChat();
+             //this.saveChatlog();
+          }
+        }
+
+    sendChat() {
+      event.preventDefault(); // 줄바꿈 방지?
+      event.stopPropagation();
+      var $msgForm = $('#msgForm').val();
+      console.log("msgForm : "+$msgForm);
+      console.log("channel : "+this.Channel);
+
+
+      this.$socket.emit("chat", {msg: $msgForm});
+      $('#msgForm').val("");
+
+
         this.saveChatlog();
     },
 
@@ -282,6 +339,15 @@ export default {
       this.notread = 0;
     },
 
+    minimize(){
+      this.chattingBox = false;
+      //alert("최소화");
+    },
+    maximize(){
+      this.chattingBox = true;
+      this.notread = 0;
+    },
+
     makeRandomName() {
       var name = "";
       var possible = "abcdefghijklmnopqrstuvwxyz";
@@ -294,8 +360,10 @@ export default {
     },
 
     showList(){
+      
       if(this.isList) this.isList=false;
       else this.isList=true;
+//       $('#msgForm').val("안녕");
     },
 
     retrieveChatlogs(){
@@ -462,7 +530,7 @@ export default {
     
     left: 75%;
     width: 25%;
-    bottom: 0%;
+    top: 92%;
 
   }
   
@@ -532,7 +600,7 @@ export default {
   .text-box textarea {
     height: 60px;
     float: left;
-    width: calc(100% - 70px);
+    width: calc(100% - 140px);
     border-radius: 3px;
     background-color: #ffffff;
     border: solid 0.5px #d7d7d7;
@@ -545,7 +613,7 @@ export default {
     background-color: orange;
     width: 60px;
     height: 60px;
-    color: black;
+    color: white;
     border: none;
     border-radius: 3px;
     cursor: pointer;
@@ -553,18 +621,18 @@ export default {
     float: left;
   }
 
-  #sendChat_disable {
-    background-color: orange;
-    color: gray;
+   #sendToBoard {
+    background-color:skyblue;
     width: 60px;
     height: 60px;
+    color: white;
     border: none;
     border-radius: 3px;
-    cursor: initial;
+    cursor: pointer;
     margin-left: 10px;
     float: left;
   }
-
+  
   .clearfix {
     clear: both;
   }

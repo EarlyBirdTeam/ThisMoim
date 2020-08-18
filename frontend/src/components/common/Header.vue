@@ -1,17 +1,16 @@
 <template>
-    <div id="header" v-if="isHeader">
+    <div id="header" style="background: linear-gradient(90deg, #efd5ff 0%, #515ada 100%); border:solid 0px;
+">
         <h1>
-            <router-link v-bind:to="{name:constants.URL_TYPE.POST.MAIN}">
-                SS_log
+            <router-link class="white--text" style="font-size:20px" v-bind:to="{name:constants.URL_TYPE.POST.ENTER}">
+                이거모임
             </router-link>
         </h1>
         <div class="right">
             <!-- <template v-if="this.$store.state.email == ''"> -->
             <template v-if="this.$store.getters.accessToken == ''">
-                <div class="headBox">
-                    <button @click="openModal">
-                        로그인
-                    </button>
+                <div class="headBox" style="height:35px; font-size:20px;c padding-top:5px; padding-bottom:12px; ">
+                    <LoginModal/>
                 </div>
             </template>
 
@@ -35,44 +34,20 @@
 
         </div>  
         
-        
-            <loginModal @close="closeModal" v-if="this.$store.getters.modal">
-                
-                
-                <div class="input-wrap">
-                        <input v-model="email"
-                        id="email" 
-                        placeholder="이메일을 입력해주세요"
-                        type="text"/>
-                    </div>
-                    <div class="input-wrap">
-                        <input v-model="password" type="password"
-                        id="password"
-                        placeholder="비밀번호를 입력해주세요"/>
-                    </div>
-                
-                
-                <template slot="footer">
-                                <button class="btn btn--back btn--login" v-on:click="testMethod(email, password)">
-                                    로그인 하기
-                                </button>
-                                
-                </template>
 
-            </loginModal>
         
     </div>
 </template>   
 
 <script> 
-    import loginModal from '../../page/user/Login.vue'
+    import LoginModal from './LoginModal'
     import constants from '../../lib/constants'
     import cookies from 'vue-cookie'
 
     export default {
         name: 'Header',
         components: { 
-            loginModal
+            LoginModal
         },
         props: ['isHeader'],
         watch: {
@@ -103,10 +78,10 @@
             
         },
         methods : {
-            openModal(){
-                this.modal = true;
-                this.$store.commit("toggleModal");
-            },
+            // openModal(){
+            //     this.modal = true;
+            //     this.$store.commit("toggleModal");
+            // },
             closeModal(){
                 this.modal = false;
                 this.$store.commit("toggleModal");

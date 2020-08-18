@@ -8,6 +8,10 @@ import constants from '../lib/constants'
 import ChannelDetail from '../page/post/channelDetail.vue'
 import Server from '../page/post/server.vue'
 
+
+import Enter from '../page/post/Enter.vue'
+import Introduce from '../page/post/IntroDev.vue'
+
 // 유저
 import Login from '../page/user/Login.vue'
 import Join from '../page/user/Join.vue'
@@ -94,11 +98,21 @@ export default new Router({
     // 포스트
     { 
       path: '/',
+      name: constants.URL_TYPE.POST.ENTER,
+      component: Enter,
+    },
+    { 
+      path: '/introduce',
+      name: constants.URL_TYPE.POST.INTRODUCE,
+      component: Introduce,
+    },
+    { 
+      path: '/main',
       name: constants.URL_TYPE.POST.MAIN,
       component: List,
     },
     { 
-      path: '/board',
+      path: '/main/board',
       name: constants.URL_TYPE.POST.TEST_BOARD,
       component: Board,
     },

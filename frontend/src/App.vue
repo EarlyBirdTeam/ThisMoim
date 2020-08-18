@@ -12,7 +12,6 @@
 <script>
 import './assets/css/style.scss' 
 import Header from './components/common/Header.vue'
-import Sidebar from './components/common/Sidebar.vue'
 import constants from './lib/constants' 
 import axios from 'axios'
 
@@ -20,7 +19,7 @@ export default {
   name: 'App',
   components: { 
     Header,
-    Sidebar
+    
   },
   created() {
       let url = this.$route.name;
@@ -111,6 +110,7 @@ export default {
   #bg{
     background-color: rgba(180, 179, 179, 0.26);
   }
+  
 </style>
 
 <style>
