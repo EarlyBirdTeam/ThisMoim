@@ -260,12 +260,14 @@ export default {
       console.log("msgForm : "+$msgForm);
       console.log("channel : "+this.Channel);
 
-
+      if($msgForm==='') alert("메시지를 입력해주세요");
+      else{
       this.$socket.emit("chat", {msg: $msgForm});
       $('#msgForm').val("");
 
 
       this.saveChatlog();
+      }
     },
 
     sendToBoard() {
@@ -287,16 +289,19 @@ export default {
      enter() { // 엔터 처리
        var code = event.keyCode;
         if(code==13){
-
+          
           if(event.shiftKey === true){ // Shift + Enter 처리
             //console.log("Shift도 눌러짐");
           
           }
           else{
-             this.sendChat();
+              
+              this.sendChat();
              //this.saveChatlog();
-          }
+          
+         }
         }
+       
     },
 
     minimize(){
@@ -387,7 +392,7 @@ export default {
     
     left: 75%;
     width: 25%;
-    top: 38%;
+    top: 58%;
 
   }
   
@@ -605,4 +610,22 @@ export default {
   .clearfix {
     clear: both;
   }
+
+  
+h3 {
+  /* margin: 20px; */
+  font-family: "Paytone One";
+  color: #202020;
+  text-transform: uppercase;
+  letter-spacing: -2px;
+}
+h3 span {
+  display: block;
+  margin: 11px 0 17px 0;
+  font-size: 80px;
+  line-height: 80px;
+  color: orange;
+  text-shadow: 0 13.36px 8.896px #c4b59d,0 -2px 1px #fff;
+  letter-spacing: -4px;
+}
 </style>
