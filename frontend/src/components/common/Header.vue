@@ -2,7 +2,8 @@
   <div id="header" style="background: rgb(0,0,0); border:solid 0px;
 ">
     <h1>
-      <router-link
+      <router-link 
+        v-if="this.$store.getters.accessToken != ''"
         class="white--text"
         style="color:rgb(0,0,0);"
         v-if="this.$store.getters.accessToken != ''"
@@ -26,16 +27,6 @@
       </router-link>
     </h1>
     <div class="right">
-      <!-- <template v-if="this.$store.state.email == ''"> -->
-      <!-- <template v-if="this.$store.getters.accessToken == ''">
-        <div
-          class="headBox"
-          style="height:35px; font-size:20px;c padding-top:5px; padding-bottom:12px; "
-        >
-          <LoginModal/>
-        </div>
-      </template> -->
-
       <template v-if="this.$store.getters.accessToken != ''">
         <div class="headBox">
           환영합니다!

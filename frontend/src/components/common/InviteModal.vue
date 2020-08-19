@@ -77,7 +77,7 @@ export default {
   methods: {
     submit() {
       console.log('auth에 보내기')
-      const url = "/api/auth/login";
+      const url = "/api/auth/invite";
       const mydata = {
         data: {
           "channelId": localStorage.getItem("wsboard.channelId"),
@@ -85,7 +85,7 @@ export default {
         }
       }
       console.log(mydata);
-      httpAuth.post("http://localhost:9004/api/auth/invite", mydata)
+      httpAuth.post(url, mydata)
       this.$store.state.inviteModal = false;
     },
     append(valid) {
