@@ -79,10 +79,8 @@ export default {
       console.log('auth에 보내기')
       const url = "/api/auth/invite";
       const mydata = {
-        data: {
           "channelId": localStorage.getItem("wsboard.channelId"),
           "email": this.memberList,
-        }
       }
       console.log(mydata);
       httpAuth.post(url, mydata)
