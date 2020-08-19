@@ -1,6 +1,6 @@
 <template>
   <div class="Pollx MoveableBox shadow-lg">
-    <div class="poll-container" v-if="!poll[idx].isSetAll & !poll[idx].isEnd ">
+    <div class="poll-container" v-if="!poll[idx].setAll & !poll[idx].end ">
       <div>
         <div class="poll-title" >
           <div class="d-flex">
@@ -40,7 +40,7 @@
       </div>
     </div>
 
-    <div class="poll-container" v-if="poll[idx].isSetAll & !poll[idx].isEnd">
+    <div class="poll-container" v-if="poll[idx].setAll & !poll[idx].end">
       <div>
         <div class="poll-title">
           <strong>Q. {{poll[idx].question}} </strong>
@@ -79,7 +79,7 @@
     </div>
 
 
-    <div class="poll-container" v-if="poll[idx].isSetAll & poll[idx].isEnd">
+    <div class="poll-container" v-if="poll[idx].setAll & poll[idx].end">
       <div>
         <div class="poll-title">
           <strong>Q.{{ poll[idx].question }}</strong><hr />
@@ -94,14 +94,7 @@
             style="margin-bottom: 10px;"
           >
             <div class="d-flex justify-content-between">
-              <div>{{ answer.answer }}
-                <v-progress-linear
-                  v-model="knowledge"
-                  height="25"
-                >
-                  <strong>{{ Math.ceil(knowledge) }}%</strong>
-                </v-progress-linear>
-              </div>
+              <div>{{ answer.answer }}</div>
               <div>
                 <v-icon>mdi-account</v-icon>
                 {{ answer.voted }}
@@ -148,13 +141,13 @@ export default {
   },
   methods: {
     createNewInput() {
-      if (this.poll.answers.length > 10) {
+      if (this.poll[this.idx].answers.length > 10) {
         alert('투표 문항은 10개까지 생성 가능합니다.')
       } else this.poll[this.idx].answers.push({answer: "", voted: 0});
     },
     deleteInput(index) {
-      if (index > 0 || this.poll.answers.length > 1) {
-        this.poll[idx].answers.splice(index, 1);
+      if (index > 0 || this.poll[this.idx].answers.length > 1) {
+        this.poll[this.idx].answers.splice(index, 1);
       }
     },
     reset() {
@@ -163,18 +156,19 @@ export default {
     },
     save() {
       //서버로 보내서 투표 저장
-      console.log(this.poll);
-      this.poll[this.idx].isSetAll = true;
+      this.poll[this.idx].setAll = true;
+      console.log(this.poll[this.idx].setAll);
     },
     vote() {
       if(this.didYou) {return;}
+      if(this.poll[this.idx].userVoted.includes(this.$store.state.userData.email)) {return;}
       this.poll[this.idx].answers[this.voted].voted++;
-      this.poll[this.idx].userVoted.push({user: this.$store.state.email, voted:this.voted});
-      // console.log(this.$store.state.email);
+      this.poll[this.idx].userVoted.push(this.$store.state.userData.email);
+      console.log(this.$store.state.userData.email)
       this.didYou = true;
     },
     isEnd(){
-      this.poll[this.idx].isEnd = true;
+      this.poll[this.idx].end = true;
       let base = 0;
       let list = this.poll.answers
 

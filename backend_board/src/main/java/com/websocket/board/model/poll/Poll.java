@@ -42,10 +42,12 @@ public class Poll implements Serializable {
     private boolean multipleVotes;
     private int totalVotes;
 
-//    @OneToMany(mappedBy = "poll")
-//    @JsonManagedReference
-//    @Builder.Default
-//    private List<String> userVoted = new ArrayList<>();
+    //@OneToMany(mappedBy = "poll")
+    //@JsonManagedReference
+    //@Builder.Default
+    @Transient
+    private List<String> userVoted = new ArrayList<>();
+
     private boolean isSetAll;
     private boolean isEnd;
 

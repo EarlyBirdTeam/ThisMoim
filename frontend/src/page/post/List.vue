@@ -3,16 +3,10 @@
     <v-container fluid>
       <div class="d-flex justify-space-between head">
         <div class="head-title">나의 모임목록 </div>
-        <div class="d-flex">
-          <button class="circleScaleBtn" @click="openModal"><span>모임 생성</span></button>
-          <!-- <v-text-field @keyup.enter="createChannel" placeholder="채널 제목" v-model="channel_name"></v-text-field>
-          <button @click="createChannel" class="circleScaleBtn"><span>채널 생성</span></button> -->
-        </div>
       </div>
       <v-row>
         <div class="p-3" v-if="channels.length === 0">
-          <span>생성하거나 가입된 모임이 없습니다 🤦‍♀️🤦‍♂️      </span>
-          <a @click="openModal">만들기</a>
+          <span>생성하거나 가입된 모임이 없습니다 🤦‍♀️🤦‍♂️</span>
         </div>
       </v-row>
       <v-btn icon @click="showAlbum">
@@ -165,9 +159,9 @@ export default {
       return `https://picsum.photos/seed/${idString}/200/300`;
     },
    findAllChannel: function () {
-      if(this.$cookie.get('AccessToken') === null){
-        return
-      }
+      // if(this.$cookie.get('AccessToken') === null){
+      //   return
+      // }
       http.post("/board/channels", {email: this.$store.state.userData.email}, {
           headers: {
             "Authorization" : "Bearer " + this.$store.getters.accessToken
@@ -221,12 +215,15 @@ export default {
       localStorage.setItem("wsboard.channelName", channelName);
       location.href = "/channel/" + channelId;
     },
-    openModal() {
+    
+    openModal() { // 모임생성 모달
+        // 로그인 되어있지 않은 사용자 -> 로그인 모달띄우기 
       if(this.$cookie.get('AccessToken') === null){
-        // 로그인 되어있지 않은 사용자 -> 로그인 모달 
+        console.log('openMODAL');
         this.$store.commit("toggleModal");
-        this.modal = true;
         return
+      } else { // 로그인 되어있는 사용자 -> 모임 생성 모달 띄우기
+        this.modal = true;
       }
     },
     close() {

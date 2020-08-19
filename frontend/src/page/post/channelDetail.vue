@@ -192,7 +192,7 @@
           class="postit"
           v-for="(pi, idx) in this.board.postitList"
           :key="pi.frontPostitId"
-          @click.right="deleteTargetAction(idx, $event)"
+          @click.right="deleteTargetAction(idx, 'postit', $event)"
         >
           <Postit :id="pi.frontPostitId" :postit="pi" :style="{left: pi.left, top: pi.top}" />
         </div>
@@ -213,15 +213,14 @@
           />
         </div>
 
-        <div class="Poll" @click.right="deleteAction('poll', $event)">
-          <div 
-            v-for="(poll, idx) in this.board.poll"
-            :key="idx">
-            <Poll
-              :id="poll.pollId" :ppoll="poll" :idx="idx"
-              :style="{left: poll.left, top: poll.top}"
-            />
-          </div>
+        <div 
+          v-for="(poll, idx) in this.board.poll"
+          :key="idx"
+          class="Poll" @click.right="deleteTargetAction(idx, 'poll', $event)">
+          <Poll
+            :id="poll.pollId" :ppoll="poll" :idx="idx"
+            :style="{left: poll.left, top: poll.top}"
+          />
         </div>
         
         <div class="textBoard">
@@ -238,6 +237,7 @@
         {{$store.state.userData }}
         <InviteModal v-model="$store.state.inviteModal"/>
         <WithdrawalModal v-model="$store.state.withdrawalModal"/>
+        {{ testPage }}
       </div>
 
       <!-- <Postit :id="pi.id" :postit="pi" style="position: relative; display: inline-block"/> -->
@@ -336,6 +336,7 @@ export default {
       memberView: false,
       idc: 0,
       isPoll: false,
+      testPage: false,
     };
   },
   created() {
@@ -344,6 +345,9 @@ export default {
       // 우클릭 default이벤트 차단
       return false;
     };
+    if(localStorage.getItem("wsboard.channelName") === '12341234') {
+      this.testPage = true;
+    }
     this.initRecv();
 
   },
@@ -376,13 +380,13 @@ export default {
             y: event.pageY
         });
     });
-    container.addEventListener("dblclick", () => {
-        instance.panTo({
-            originX: 0,
-            originY: 0,
-            scale: 1,
-        });
-    });
+    // container.addEventListener("dblclick", () => {
+    //     instance.panTo({
+    //         originX: 0,
+    //         originY: 0,
+    //         scale: 1,
+    //     });
+    // });
   },
   methods: {
     init() {
@@ -418,9 +422,16 @@ export default {
     },
     initRecv() {
       // 접속시 처음 값을 받아오도록 하기
+      // 테스트 페이지인 경우와 아닌 경우로 분기
+      if(this.testPage) {
+        const url = "/board/earlyBird10TeamTestChannel1"
+      } else {
+        const url = `/board/${this.board.channelId}`
+      }
+     
       const config = {headers: {"Authorization" : "Bearer " + this.$store.getters.accessToken}}
       http
-        .get(`/board/${this.board.channelId}`, config)
+        .get(url, config)
         .then((response) => {
           console.log("initRecv@@@@");
           console.log(response.data);
@@ -438,7 +449,7 @@ export default {
           }
           if (!response.data.poll) {
             this.board.poll = []
-          }
+          } else this.$store.state.poll = this.board.poll;
           // this.board.Kanban.columns = response.data.kanban.columns;
         })
         .catch((e) => {
@@ -587,8 +598,8 @@ export default {
           multipleVotes: false,
           totalVotes: 0,
           userVoted: [ ],
-          isSetAll: false,
-          isEnd: false,
+          setAll: false,
+          end: false,
         };
         // const newPoll = this.$store.state.poll;
         // newPoll.frontId = idc;
@@ -596,7 +607,7 @@ export default {
         // newPoll.top = this.moduleYP + "px";
         console.log(newPoll);
         this.board.poll.push(newPoll);
-        this.$store.state.poll.push(newPoll);
+        // this.$store.state.poll.push(newPoll);
         // this.board.poll = this.$store.state.poll;
         // this.board.poll.left = this.moduleXP + "px";
         // this.board.poll.top = this.moduleYP + "px";
@@ -632,8 +643,14 @@ export default {
             this.board.scheduler.left = `${left}px`;
             this.board.scheduler.top = `${top}px`;
           } else if (clas[cla] == "Pollx") {
-            // this.board.poll.left = `${left}px`
-            // this.board.poll.top = `${top}px`
+            this.board.poll.map((pol) => {
+              if (pol.pollId == target.id) {
+                (pol.left = `${left}px`), (pol.top = `${top}px`);
+              }
+            //   return {
+            //     ...poll,
+            //   };
+            });
           } else if (clas[cla] == "kanban") {
           this.board.kanban.left = `${left}px`;
           this.board.kanban.top = `${top}px`;
@@ -789,14 +806,21 @@ export default {
         }
       }
     },
-    deleteTargetAction(idx, { target }) {
+    deleteTargetAction(idx, moduleName, { target }) {
       if (confirm("요소를 삭제하시겠습니까?") === true) {
-        target.remove();
         this.board.isDelete = true;
-        this.board.delete.moduleName = "postit";
-        this.board.delete.id = this.board.postitList[idx].frontPostitId;
-        this.crudMethod("POSTIT", "DELETE", this.board.postitList[idx]);
-        this.board.postitList.splice(idx, 1);
+        if (moduleName = "postit") {
+          this.board.delete.moduleName = "postit";
+          this.board.delete.id = this.board.postitList[idx].frontPostitId;
+          this.crudMethod("POSTIT", "DELETE", this.board.postitList[idx]);
+          this.board.postitList.splice(idx, 1);
+        }else if (moduleName = "poll") {
+          this.board.delete.moduleName = "poll";
+          this.board.delete.id = this.board.poll[idx].pollId;
+          this.crudMethod("POLL", "DELETE", this.board.poll[idx]);
+          this.board.poll.splice(idx, 1);
+        }
+        target.remove();
         this.sendMessage();
         this.cloakMoveable();
       }
@@ -873,10 +897,6 @@ export default {
         if (moduleName == "scheduler") {
           this.crudMethod("SCHEDULER", "DELETE", this.board.scheduler);
           this.board.scheduler = { "id": null, "left": null, "top": null };
-        } else if (moduleName == "poll") {
-          console.log("delete POLLLLLLLLLL");
-          this.crudMethod("POLL", "DELETE", this.board.poll);
-          this.board.poll = [];
         } else if (moduleName == "kanban") {
           this.crudMethod("KANBAN", "DELETE", this.board.kanban);
           this.board.isKanban = false;

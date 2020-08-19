@@ -220,8 +220,8 @@ export const store = new Vuex.Store({
         store.commit(constants.METHODS.EMAILCHECK, "reset");
         const url = 'api/auth/register';
         const data = {
-            "email": payload.email.value,
-            "password": payload.password.value,
+            "email": payload.email[0].value,
+            "password": payload.password[0].value,
             "registerAsAdmin": false,
             "username": payload.realName.value,
             "nickname": payload.nickName.value,
@@ -270,7 +270,7 @@ export const store = new Vuex.Store({
             store.commit(constants.METHODS.EMAILCHECK, "nothing");
             return;
         }
-        var exptext = /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-Za-z0-9\-]+/;
+        var exptext =/^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-Za-z0-9\-]+/;
         if(exptext.test(checkEmail)==false){
             //이메일 형식이 알파벳+숫자@알파벳+숫자.알파벳+숫자 형식이 아닐경우            
             store.commit(constants.METHODS.EMAILCHECK, "invaild");
