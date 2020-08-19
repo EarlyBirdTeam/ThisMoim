@@ -48,7 +48,7 @@
          
            
           <br/>
-             <router-link to="main" style="background-color:rgba(0,0,0,1); border:solid 0px" class="btn  white--text">
+             <router-link to="channel/earlyBird10TeamTestChannel1" style="background-color:rgba(0,0,0,1); border:solid 0px" class="btn  white--text">
               Try It!
              
             </router-link>
