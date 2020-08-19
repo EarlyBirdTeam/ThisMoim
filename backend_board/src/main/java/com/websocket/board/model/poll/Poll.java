@@ -1,14 +1,13 @@
 package com.websocket.board.model.poll;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.websocket.board.model.Channel;
 import com.websocket.board.model.postit.Postit;
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +18,7 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
-@JsonIgnoreProperties("answers")
+//@JsonIgnoreProperties("answers")
 public class Poll implements Serializable {
 
     @Id
@@ -34,6 +33,11 @@ public class Poll implements Serializable {
     @JsonManagedReference
     @Builder.Default
     private List<Answer> answers = new ArrayList<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "channel_id")
+    @JsonBackReference
+    private Channel channel;
 
     private boolean multipleVotes;
     private int totalVotes;
