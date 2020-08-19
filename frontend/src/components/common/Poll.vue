@@ -1,6 +1,5 @@
 <template>
   <div class="Pollx MoveableBox shadow-lg">
-    {{ ppoll }} {{ idx }}
     <div class="poll-container" v-if="!poll[idx].isSetAll & !poll[idx].isEnd ">
       <div>
         <div class="poll-title" >
