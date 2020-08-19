@@ -46,7 +46,7 @@ public class ChannelController {
         List<Channel> channels = channelService.getMyChannels(userInfoRequest.getEmail());
         //List<Channel> channels = channelRedisRepository.findAllChannel();
         // 현재 채널에 접속해 있는 인원을 가져오는 부분
-        //channels.stream().forEach(channel -> channel.setUserCount(channelRedisRepository.getUserCount(channel.getChannelId())));
+        // channels.stream().forEach(channel -> channel.setUserCount(channelRedisRepository.getUserCount(channel.getChannelId())));
         return channels;
     }
 
@@ -65,9 +65,7 @@ public class ChannelController {
             // save channel in redis
             channelRedisRepository.createChannel(createChannelRequest.getChannelName(), channel.getChannelId());
         }
-        
-        // 인증 서버에서 토큰 검증 api 완성되기 전 테스트
-        //channelService.saveChannel(createChannelRequest, channelId);
+
         return channel;
     }
 
@@ -85,12 +83,6 @@ public class ChannelController {
             return new InviteChannelResponse().builder().message("Fail Invitation").success(false).build();
         }
     }
-
-//    @GetMapping("/channel/{channelId}")
-//    @ResponseBody
-//    public Channel channelInfo(@PathVariable String channelId) {
-//        return channelRedisRepository.findChannelById(channelId);
-//    }
 
     @DeleteMapping("/channel/withdrawal")
     @ResponseBody
