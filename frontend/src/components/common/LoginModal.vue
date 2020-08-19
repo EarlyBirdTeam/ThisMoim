@@ -13,7 +13,7 @@
           Login
         </button>
       </template>
-      <v-card style="width:350px; height:220px">
+      <v-card style="width:350px; height:280px">
         <v-card-title>로그인</v-card-title>
         <v-card-text style=" background-color:white; height:90px; padding-bottom:0"><Login style="height:120px;padding-bottom:0"/></v-card-text>
         

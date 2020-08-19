@@ -5,7 +5,19 @@
       <router-link
         class="white--text"
         style="color:rgb(0,0,0);"
+        v-if="this.$store.getters.accessToken != ''"
         v-bind:to="{name:constants.URL_TYPE.POST.MAIN}"
+      >
+        <img
+          style="position:absolute;top:0px;  margin-top:7px; width:auto;height:50px;"
+          src="../../assets/img/Logo.png"
+        />
+      </router-link>
+      <router-link
+        class="white--text"
+        style="color:rgb(0,0,0);"
+        v-if="this.$store.getters.accessToken == ''"
+        v-bind:to="{name:constants.URL_TYPE.POST.ENTER}"
       >
         <img
           style="position:absolute;top:0px;  margin-top:7px; width:auto;height:50px;"

@@ -19,7 +19,7 @@
         position: relative;
         input {
             @include wrap;
-            border:1px solid #000;
+            border:1px solid #dadada;
             padding: 7px 15px;
             box-sizing: border-box;
         }
@@ -61,11 +61,14 @@
 
     .myBox{
         margin:0 auto;
-        width: 60vw;
+        // width: 60vw;
     }
 
     .form-wrap{
         margin-top: 5%;
+    }
+    #container{
+        background-color:"#f2f2f2";
     }
 }  
 .headBox{
