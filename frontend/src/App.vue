@@ -70,7 +70,7 @@ export default {
   methods: {
 
     checkBoard(url) {
-      let array = ["enter"];
+      let array = ["enter","join"];
       console.log(url);
       let isBoard = false;
       array.map((path) => {

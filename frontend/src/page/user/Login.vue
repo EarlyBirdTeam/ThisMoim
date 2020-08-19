@@ -8,13 +8,13 @@
             id="email"
             placeholder="이메일을 입력해주세요"
             type="text"
-            style="width:100%"
+            style="width:100%; margin-bottom:0px"
           />
         </div>
         <div class="input-wrap">
-          <input v-model="password" type="password" id="password" placeholder="영문, 숫자 혼용 8자 이상" />
+          <input v-model="password" type="password" style="margin-bottom:0px" id="password" placeholder="영문, 숫자 혼용 8자 이상" />
         </div>
-        <button @click="testMethod(email, password)" class="btn--login">로그인 하기</button>
+       
 
         <div class="add-option">
           <div class="wrap" style="height:0px">
@@ -23,10 +23,11 @@
               @click="this.$router.go(0)"
               v-bind:to="{name:constants.URL_TYPE.USER.JOIN}"
               class="btn--text"
+              style="color:black; margin-top:0"
             >회원가입</router-link>
           </div>
         </div>
-        
+         <button @click="testMethod(email, password)" style="margin-top:20px; font-size:15px " class="btn">로그인 하기</button>
       </div>
     </div>
   </div>

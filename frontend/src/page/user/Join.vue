@@ -1,22 +1,34 @@
 <template>
-  <div class="user" id="join">
+  <div class="user" id="join" style="background-color:#f2f2f2">
     <div class="wrapC table">
-      <div class="middle">
-        <v-card
-          class="d-inline-block px-auto mx-auto"
-          style=" width:70em;  background-color:#f2f2f2"
-        >
-          <div class="form-wrap" style="width:90%; margin:auto">
+    
+       
+   
+    
+      <div style="text-align: center;">
+        <router-link
+       
+        v-bind:to="{name:constants.URL_TYPE.POST.ENTER}"
+      >
+        <img
+          src="../../assets/img/Logo3.png"
+          style="margin-top:20px; margin-right:5px;   width:50%; height:auto;"
+        /></router-link>
+          </div>
+
+
+          <div class="form-wrap" style="width:90%; padding-top:20px; margin:auto">
             <div class="input-wrap">
-              <p style="text-align: left">Name</p>
-              <input v-model="realName" id="realName" placeholder="Enter your name" type="text" />
+              <p style="text-align: left; margin-bottom:4px">이름</p>
+              <input v-model="realName" id="realName" style="border:solid 1px #dadada;height:50px; background-color:white;" placeholder="이름을 입력해주세요" type="text" />
             </div>
             <div class="input-wrap">
-              <p style="text-align: left">Email</p>
+              <p style="text-align: left; margin-bottom:4px">이메일</p>
               <input
                 v-model.lazy="email"
                 id="email"
-                placeholder="Enter your email"
+                placeholder="이메일을 입력해주세요"
+                style="border:solid 1px #dadada;height:50px; background-color:white;"
                 type="text"
                 @change="emailCheck"
               />
@@ -24,17 +36,18 @@
               {{this.$store.getters.canIUseIt}}
             </div>
             <div class="input-wrap">
-              <p style="text-align: left">닉네임</p>
-              <input v-model="nickName" id="nickName" placeholder="Enter your nickname" type="text" />
+              <p style="text-align: left; margin-bottom:4px">닉네임</p>
+              <input v-model="nickName" id="nickName" style="border:solid 1px #dadada;height:50px; background-color:white;" placeholder="닉네임을 입력해주세요" type="text" />
             </div>
 
             <div class="input-wrap password-wrap">
-              <p style="text-align: left">Password</p>
+              <p style="text-align: left; margin-bottom:4px">비밀번호</p>
               <input
                 v-model="password"
                 id="password"
                 :type="passwordType"
-                placeholder="Make sure it's at least 8 characters"
+                placeholder="최소 8자 이상으로 입력해주세요"
+                style="border:solid 1px #dadada;height:50px; background-color:white;"
               />
               <span :class="{active : passwordType==='text'}">
                 <i class="fas fa-eye"></i>
@@ -42,30 +55,32 @@
             </div>
 
             <div class="input-wrap password-wrap">
-              <p style="text-align: left">Password Confirm</p>
+              <p style="text-align: left; margin-bottom:4px">비밀번호 확인</p>
               <input
                 v-model="passwordConfirm"
                 id="passwordConfirm"
+                style="border:solid 1px #dadada;height:50px; background-color:white;"
                 :type="passwordConfirmType"
-                placeholder="Please enter your password again"
+                placeholder="비밀번호를 다시 한 번 입력해주세요"
               />
               <span :class="{active : passwordConfirmType==='text'}">
                 <i class="fas fa-eye"></i>
               </span>
             </div>
-            <div style="margin:auto">
-              <label class="middle" style="text-align:center">
+            <div style="height:30px; width:100% margin:auto">
+         
                 <v-dialog width="600px" style="text-align:center">
                   <template v-slot:activator="{ on, attrs }" style="text-align:center">
                     <div class="d-flex" style="width:400px">
                       <v-checkbox class="d-flex" style="margin:0" v-model="isTerm" />
-                      <div class="d-flex" style="margin-right:5px">Agree to the</div>
+                      
                       <p
                         class="d-flex"
                         v-bind="attrs"
                         style="text-decoration:underline"
                         v-on="on"
-                      >Privacy Policy</p>
+                      >개인정보처리방침</p>
+                      <div class="d-flex" style="margin-right:5px">에 동의</div>
                     </div>
                   </template>
                   <v-card>
@@ -105,33 +120,25 @@
                     </v-card-text>
                   </v-card>
                 </v-dialog>
-                <br />
-              </label>
+              
             </div>
-            <div class="right">
+      
               <button
-                style="width:70px; margin:5px; background-color:rgb(128,128,128); border:solid 0px;"
+                style="margin-top:40px; background-color:rgb(128,128,128); border:solid 0px;"
                 @click="createUserRequest"
                 class="btn"
               >
                 <span>확인</span>
               </button>
-              <router-link
-                to="/"
-                style="width:70px; margin:5px; background-color:rgb(128,128,128); border:solid 0px;"
-                class="btn"
-              >
-                <span>취소</span>
-              </router-link>
+            
             </div>
           </div>
-        </v-card>
+       
         <!-- <router-link v-bind:to="{name:constants.URL_TYPE.USER.JOINDONE}" @click="createUserRequest" class="btn">
                 작성완료 
         </router-link>-->
       </div>
-    </div>
-  </div>
+    
 </template>
 
 <script>
