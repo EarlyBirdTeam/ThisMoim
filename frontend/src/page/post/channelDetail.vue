@@ -84,7 +84,7 @@
                 <v-btn
                   icon
                   color="#FF5722"
-                  @click="$store.state.inviteModal = !$store.state.inviteModal"
+                  @click="openInviteModal"
                   draggable="true"
                 >
                   <v-icon>mdi-account-supervisor-outline</v-icon>
@@ -100,7 +100,7 @@
                 <v-btn
                   icon
                   color="#FF5722"
-                  @click="$store.state.withdrawalModal = !$store.state.withdrawalModal"
+                  @click="openWithdrawalModal"
                   draggable="true"
                 >
                   <v-icon>mdi-close-circle</v-icon>
@@ -228,12 +228,12 @@
         {{ board }}
         <br />
         <br />
-        board : {{ board.poll }}
+        board : {{ board.scheduler.events }}
         <br />
         <br />
         <br />
 
-        store : {{ $store.state.poll }}<br><br>
+        store : {{ $store.state.scheduler.events }}<br><br>
         {{$store.state.userData }}
         <InviteModal v-model="$store.state.inviteModal"/>
         <WithdrawalModal v-model="$store.state.withdrawalModal"/>
@@ -275,11 +275,11 @@ export default {
         channelId: "",
         idCount: 1,
         memberList: [],
-        crudModule: {
-          modulType: "",
-          crudType: "",
-          moduleObject: Object,
-        },
+        // crudModule: {
+        //   modulType: "",
+        //   crudType: "",
+        //   moduleObject: Object,
+        // },
         postitList: [],
         isKanban: false,
         kanban: this.$store.state.Kanban,
@@ -373,6 +373,7 @@ export default {
         //     return;
         // }
         event.preventDefault();
+        this.cloakMoveable();
         instance.zoom({
             deltaScale: Math.sign(event.deltaY) > 0 ? -1 : 1,
             x: event.pageX,
@@ -443,6 +444,7 @@ export default {
           this.board.delete = { moduleName: "", id: -1 };
           if (response.data.kanban.left !== null) {
             this.board.kanban.states = response.data.kanban.states;
+            this.$store.state.Kanban.states = response.data.kanban.states;
           }
           else {
             this.board.kanban.states = this.$store.state.Kanban.states;
@@ -450,7 +452,10 @@ export default {
           if (!response.data.poll) {
             this.board.poll = []
           } else this.$store.state.poll = this.board.poll;
-          // this.board.Kanban.columns = response.data.kanban.columns;
+          if (!!response.data.scheduler.left) {
+            this.$store.state.scheduler.events = response.data.scheduler.events;
+          }
+          // this.$store.state.scheduler.events = response.data.scheduler.events;
         })
         .catch((e) => {
           console.log("initRecv 실패");
@@ -474,6 +479,8 @@ export default {
       this.createSnackbar("수정되었습니다", 1000, "warning");
     },
     recvMessage: function (recv) {
+      console.log('recv; kanban; states;')
+      console.log(recv.kanban.states);
       this.userCount = recv.userCount;
       this.board.idCount = recv.idCount;
       this.board.postitList = recv.postitList;
@@ -486,13 +493,14 @@ export default {
       this.$store.state.poll = recv.poll;
       this.board.isKanban = recv.isKanban;
       this.board.kanban = recv.kanban;
-      this.$store.state.Kanban = recv.kanban;
+      this.$store.state.Kanban.states = recv.kanban.states;
+      // this.$store.state.Kanban = recv.kanban;
       //crudModule 초기화
-      this.board.crudModule = {
-        modulType: "",
-        crudType: "",
-        moduleObject: null,
-      };
+      // this.board.crudModule = {
+      //   modulType: "",
+      //   crudType: "",
+      //   moduleObject: null,
+      // };
       this.board.memberList = recv.memberList;
       // this.board.memberList = ["김강현","ㅁㄴㅇㄹ","정용우","최문경","배미이규"];
       console.log("memberList[] : "+this.board.memberList);
@@ -514,7 +522,7 @@ export default {
         channel: this.board.channelId,
       };
       this.board.postitList.push(newPostit);
-      this.crudMethod("POSTIT", "CREATE", newPostit);
+      // this.crudMethod("POSTIT", "CREATE", newPostit);
       this.sendMessage();
       // snackbar
       this.createSnackbar("포스트잇이 생성되었습니다!", 1500, "success");
@@ -530,7 +538,7 @@ export default {
       this.board.kanban.left = this.moduleXP + "px";
       this.board.kanban.top = this.moduleYP + "px";
       console.log(this.$store.state.Kanban);
-      this.crudMethod("KANBAN", "CREATE", this.board.kanban);
+      // this.crudMethod("KANBAN", "CREATE", this.board.kanban);
       this.sendMessage();
       this.createSnackbar("보드가 생성되었습니다", 1500, "success");
     },
@@ -541,7 +549,7 @@ export default {
         target.remove();
         this.cloakMoveable();
         this.board.isKanban = false;
-        this.crudMethod("KANBAN", "DELETE", this.board.kanban);
+        // this.crudMethod("KANBAN", "DELETE", this.board.kanban);
         this.$store.state.Kanban.states = [
           {
             columnTitle: "TO DO",
@@ -577,7 +585,7 @@ export default {
           events: this.$store.state.scheduler.events,
         };
         console.log("create Scheduler");
-        this.crudMethod("SCHEDULER", "CREATE", this.board.scheduler);
+        // this.crudMethod("SCHEDULER", "CREATE", this.board.scheduler);
         this.sendMessage();
         // snackbar
         this.createSnackbar("달력이 생성되었습니다!", 1500, "success");
@@ -611,7 +619,7 @@ export default {
         // this.board.poll = this.$store.state.poll;
         // this.board.poll.left = this.moduleXP + "px";
         // this.board.poll.top = this.moduleYP + "px";
-        this.crudMethod("POLL", "CREATE", this.board.newPoll);
+        // this.crudMethod("POLL", "CREATE", this.board.newPoll);
         this.sendMessage();
         // snackbar
         this.createSnackbar("투표가 생성되었습니다!", 1500, "success");
@@ -701,20 +709,23 @@ export default {
       }
     },
     handleDragEnd({ target }) {
-      var moduleObj = null;
-      switch (target.nodeName) {
-        case "POSTIT":
-          moduleObj = this.board.postitList.find(
-            (postit) => postit.frontPostitId == target.id
-          );
-          break;
-        case "SCHEDULER":
-          break;
-        case "DIV":
-          return;
+      // var moduleObj = null;
+      // switch (target.nodeName) {
+      //   case "POSTIT":
+      //     moduleObj = this.board.postitList.find(
+      //       (postit) => postit.frontPostitId == target.id
+      //     );
+      //     break;
+      //   case "SCHEDULER":
+      //     break;
+      //   case "DIV":
+      //     break;
         
-      }
-      this.crudMethod(target.nodeName, "UPDATE", moduleObj);
+      // }
+      // this.crudMethod(target.nodeName, "UPDATE", moduleObj);
+      
+      if(target === this.$refs.realBoard)  // 보드의 경우를 제외하고 sendMessage
+        return
       this.sendMessage();
 
       if (target.getAttribute("class") != null) {
@@ -747,9 +758,9 @@ export default {
             document.querySelector(".testerDot").style.left =
               event.offsetX + "px";
             //  target.style.transformOrigin = `${event.offsetX}px ${event.offsetY}px`
-            this.crudMethod(target.nodeName, "UPDATE", moduleObj);
+            // this.crudMethod(target.nodeName, "UPDATE", moduleObj);
             this.sendMessage();
-            this.crudMethod("", "", null);
+            // this.crudMethod("", "", null);
             console.log("ltp : ", this.lp, ",", this.tp);
             console.log(
               "bodyBox wh : ",
@@ -812,15 +823,14 @@ export default {
         if (moduleName = "postit") {
           this.board.delete.moduleName = "postit";
           this.board.delete.id = this.board.postitList[idx].frontPostitId;
-          this.crudMethod("POSTIT", "DELETE", this.board.postitList[idx]);
+          // this.crudMethod("POSTIT", "DELETE", this.board.postitList[idx]);
           this.board.postitList.splice(idx, 1);
         }else if (moduleName = "poll") {
           this.board.delete.moduleName = "poll";
           this.board.delete.id = this.board.poll[idx].pollId;
-          this.crudMethod("POLL", "DELETE", this.board.poll[idx]);
+          // this.crudMethod("POLL", "DELETE", this.board.poll[idx]);
           this.board.poll.splice(idx, 1);
         }
-        target.remove();
         this.sendMessage();
         this.cloakMoveable();
       }
@@ -895,10 +905,10 @@ export default {
     deleteAction(moduleName, { target }) {
       if (confirm("요소를 삭제하시겠습니까?") === true) {
         if (moduleName == "scheduler") {
-          this.crudMethod("SCHEDULER", "DELETE", this.board.scheduler);
+          // this.crudMethod("SCHEDULER", "DELETE", this.board.scheduler);
           this.board.scheduler = { "id": null, "left": null, "top": null };
         } else if (moduleName == "kanban") {
-          this.crudMethod("KANBAN", "DELETE", this.board.kanban);
+          // this.crudMethod("KANBAN", "DELETE", this.board.kanban);
           this.board.isKanban = false;
           this.$store.state.Kanban.states = [
             {
@@ -1039,6 +1049,22 @@ export default {
       // ).style.top =  `-435px`;
       //-435px
 
+    },
+    openInviteModal() {
+      //테스트 페이지면 접근안됨
+      if(this.testPage) {
+        this.createSnackbar('테스트 페이지에선 멤버 초대가 불가능합니다.', 2000, 'error');
+        return
+      }
+      this.$store.state.inviteModal = !this.$store.state.inviteModal
+    },
+     openWithdrawalModal() {
+      //테스트 페이지면 접근안됨
+      if(this.testPage) {
+        this.createSnackbar('테스트 페이지에선 모임 탈퇴가 불가능합니다.', 2000, 'error');
+        return
+      }
+      this.$store.state.withdrawalModal = !this.$store.state.withdrawalModal
     },
   },
   components: {
