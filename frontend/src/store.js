@@ -189,7 +189,9 @@ export const store = new Vuex.Store({
                     const userDataString = _store.userData
                     cookies.set('AccessData', _store.getters.userDataStr);
                     store.commit('toggleLogin');
-                    router.go(0);
+                    
+                    router.push("/main");
+                    // router.go(0);
                     return true;
                 }
             })
