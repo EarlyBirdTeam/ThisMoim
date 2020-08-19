@@ -170,7 +170,7 @@ export default {
     isEnd(){
       this.poll[this.idx].end = true;
       let base = 0;
-      let list = this.poll.answers
+      let list = this.poll[this.idx].answers
 
       for(var i=0; i<list.length; i++) {
         if(list[i].voted > base) {

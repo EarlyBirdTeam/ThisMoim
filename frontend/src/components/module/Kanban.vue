@@ -123,6 +123,7 @@ export default {
       this.newColumnTitle = columnTitle;
     },
     deleteTask(columnTitle, task) {
+      event.stopPropagation();
       var index = this.states
         .find((column) => column.columnTitle === columnTitle)
         .tasks.indexOf(task);

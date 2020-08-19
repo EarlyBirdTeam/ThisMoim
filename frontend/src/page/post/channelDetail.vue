@@ -237,7 +237,6 @@
         {{$store.state.userData }}
         <InviteModal v-model="$store.state.inviteModal"/>
         <WithdrawalModal v-model="$store.state.withdrawalModal"/>
-        {{ testPage }}
       </div>
 
       <!-- <Postit :id="pi.id" :postit="pi" style="position: relative; display: inline-block"/> -->
@@ -345,7 +344,7 @@ export default {
       // 우클릭 default이벤트 차단
       return false;
     };
-    if(localStorage.getItem("wsboard.channelName") === '12341234') {
+    if(this.$route.params.channelId === 'earlyBird10TeamTestChannel1') {
       this.testPage = true;
     }
     this.initRecv();
@@ -423,10 +422,11 @@ export default {
     initRecv() {
       // 접속시 처음 값을 받아오도록 하기
       // 테스트 페이지인 경우와 아닌 경우로 분기
+      let url = ''
       if(this.testPage) {
-        const url = "/board/earlyBird10TeamTestChannel1"
+        url = "/board/tutorial/earlyBird10TeamTestChannel1"
       } else {
-        const url = `/board/${this.board.channelId}`
+        url = `/board/${this.board.channelId}`
       }
      
       const config = {headers: {"Authorization" : "Bearer " + this.$store.getters.accessToken}}
@@ -436,7 +436,7 @@ export default {
           console.log("initRecv@@@@");
           console.log(response.data);
           // this.board.postitList = response.data.postitList;
-          // this.board.idCount = response.data.idCount;
+          this.board.idCount = response.data.idCount;
           if (!!response.data) {
             this.board = response.data;
           }
