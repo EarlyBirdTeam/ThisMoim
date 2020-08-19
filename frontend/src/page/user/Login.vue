@@ -27,7 +27,7 @@
             >회원가입</router-link>
           </div>
         </div>
-         <button @click="testMethod(email, password)" style="margin-top:20px; font-size:15px " class="btn">로그인 하기</button>
+         <button @click="login(email, password)" style="margin-top:20px; font-size:15px " class="btn">로그인 하기</button>
       </div>
     </div>
   </div>
@@ -47,7 +47,7 @@ export default {
     newnew() {
       this.$router.go(0);
     },
-    testMethod(email, password) {
+    login(email, password) {
       console.log(email, password);
 
       var exptext = /^[A-Za-z0-9_\.\-]+@[A-Za-z0-9\-]+\.[A-Za-z0-9\-]+/;
@@ -63,7 +63,6 @@ export default {
         });
         console.log(this.userData);
         this.modal = !this.modal;
-        this.$router.push("/main");
       }
 
       // this.email = '';
