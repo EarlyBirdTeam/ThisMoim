@@ -5,6 +5,8 @@
       <br />
       <a class="white--text" @click="ScrollDown2">About</a>
       <br />
+      <a class="white--text" @click="ScrollDown4">Technique</a>
+      <br />
       <a class="white--text" @click="ScrollDown3">Developers</a>
     </div>
     <div style="position:fixed; top:30px; right:30px">
@@ -41,10 +43,11 @@
     >
       <div
         class="d-flex"
-        style="width:50%; text-align: center; margin-top: 100px padding:20vh; padding:10vw "
+        style="width:50%; text-align: center; margin-top: 100px padding:20vh; padding:5vw "
       >
-        <h4 style=" font-size:30px; ">
-          ㅇㄱㅁㅇ은 포스트잇, 캘린더, 칸반보드 등의 다양한 모듈을 제공하여 다양한 사람들과의 협업을 도와드립니다
+        <h4 style=" font-size:30px; line-height:150%; margin-top:170px">
+         이거모임은 온라인 및 오프라인 모임을 지원하는 협업툴 플랫폼입니다
+       
          
            
           <br/>
@@ -67,8 +70,8 @@
       style="width: 100vw;
             height: 100vh; background: linear-gradient(90deg, rgba(33,33,33,1) 50%, rgba(37,37,37,1) 50%);"
     >
-      <div style="width:50%; padding:20vh; padding:10vw; text-align: center;  ">
-        <h4 class="white--text" style=" font-size:30px;">ㅇㄱㅁㅇ은 다양한 기술스택을 사용하여 여러분들이 최상의 서비스를 제공하기 위해 노력하였습니다</h4>
+      <div style="width:50%; text-align: center; margin-top: 100px padding:20vh; padding:5vw ">
+        <h4 class="white--text" style=" font-size:30px;  line-height:150%; margin-top:170px">이거모임은 다양한 기술을 탐구하고 적용하여 사용자들이 최상의 서비스를 경험할 수 있도록 노력하고 있습니다</h4>
       </div>
       <div style="width:50%;  padding:20vh; padding:10vw">
         <img style="width:100% " src="../../assets/img/Used.png" />
@@ -146,6 +149,8 @@ import img5 from "../../assets/img/developer5.jpg";
 import img6 from "../../assets/img/developer6.jpg";
 import example1 from "../../assets/img/example1.png";
 import example2 from "../../assets/img/example2.png";
+import example3 from "../../assets/img/example3.png";
+import example4 from "../../assets/img/example4.png";
 
 export default {
   components: { LoginModal, Login },
@@ -158,6 +163,12 @@ export default {
       },
       {
         src: example2,
+      },
+      {
+        src: example3,
+      },
+      {
+        src: example4,
       },
     ],
     slides: [
@@ -226,6 +237,12 @@ export default {
       var Slocation = document.querySelector("#Second").offsetTop;
       var Tlocation = document.querySelector("#Third").offsetTop;
       window.scrollTo({ top: Tlocation, behavior: "smooth" });
+    },
+    ScrollDown4() {
+      var Flocation = document.querySelector("#First").offsetHeight;
+      var Slocation = document.querySelector("#Second").offsetTop;
+      var Tlocation = document.querySelector("#Third").offsetTop;
+      window.scrollTo({ top: Tlocation- Slocation , behavior: "smooth" });
     },
   },
 };

@@ -15,19 +15,19 @@
     </h1>
     <div class="right">
       <!-- <template v-if="this.$store.state.email == ''"> -->
-      <template v-if="this.$store.getters.accessToken == ''">
+      <!-- <template v-if="this.$store.getters.accessToken == ''">
         <div
           class="headBox"
           style="height:35px; font-size:20px;c padding-top:5px; padding-bottom:12px; "
         >
           <LoginModal/>
         </div>
-      </template>
+      </template> -->
 
-      <template v-else>
+      <template v-if="this.$store.getters.accessToken != ''">
         <div class="headBox">
           환영합니다!
-          <router-link style="margin-left: 20px;"
+          <router-link style="margin-left: 20px; padding-top:5px"
             v-bind:to="{name:constants.URL_TYPE.USER.MYPAGE}"
             class="btn--text"
           >{{ decodeURI(this.$store.state.userData.nickname)}}</router-link>
