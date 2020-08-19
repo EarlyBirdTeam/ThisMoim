@@ -20,5 +20,7 @@ db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
 db.chatlogs = require("./chatlog.model.js")(sequelize, Sequelize);
+db.texts = require("./text.model.js")(sequelize, Sequelize);
+
 
 module.exports = db;

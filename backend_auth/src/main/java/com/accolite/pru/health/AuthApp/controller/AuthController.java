@@ -48,11 +48,11 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.StringTokenizer;
 
-//@RestController
+//@RestControllers
 @Controller
 @RequestMapping("/api/auth")
 @Api(value = "Authorization Rest API", description = "Defines endpoints that can be hit only when the user is not logged in. It's not secured by default.")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:8081")
 public class AuthController {
 
     private static final Logger logger = Logger.getLogger(AuthController.class);
@@ -128,8 +128,8 @@ public class AuthController {
 
     @PostMapping("/invite")
     @ApiOperation(value = "invite member to channel")
-    public ResponseEntity inviteUser(@ApiParam(value = "invitation payload") @Valid @RequestBody MailSendRequest mailSendRequest) {
-
+    public ResponseEntity inviteUser(@ApiParam(value = "mailSendRequest") @Valid @RequestBody MailSendRequest mailSendRequest) {
+        System.out.println("------"+mailSendRequest.getEmail()+"--------");
         List<Member> m = authService.inviteUser(mailSendRequest).orElse(null);
         return authService.inviteUser(mailSendRequest)
                 .map(member -> {
@@ -255,9 +255,9 @@ public class AuthController {
     public String confirmRegistration(@ApiParam(value = "the token that was sent to the user email") @RequestParam("token") String token) {
         if(authService.confirmEmailRegistration(token)!=null){
 //            return "redirect:http://i3a510.p.ssafy.io:3000/user/signup/done/registrationConfirmation";
-            return "redirect:http://localhost:3000/user/signup/done/registrationConfirmation";
+            return "redirect:http://localhost:8081/mains";
         }else{
-            return "redirect:http://localhost:3000/error";
+            return "redirect:http://localhost:8081/error";
         }
     }
 

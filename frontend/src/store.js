@@ -4,7 +4,7 @@ import cookies from 'vue-cookie';
 import constants from './lib/constants.js'
 import router from './router/index.js'
 import http from './http-common.js';
-import authConnect from './auth-connector';
+import httpAuth from './http-common-auth.js';
 import * as Cookies from 'js-cookie'
 import createPersistedState from 'vuex-persistedstate';
 
@@ -149,7 +149,7 @@ export const store = new Vuex.Store({
         [constants.METHODS.DELETE_USER] : (store, payload) =>{
             const url = `/api/user/delete?email=${payload.email.trim()}&password=${payload.password.trim()}`;
             console.log(store.getters.accessToken);
-            authConnect.delete(url,{
+            httpAuth.delete(url,{
                     headers: {
                         Authorization: 'Bearer ' + store.getters.accessToken
                     }
@@ -239,7 +239,7 @@ export const store = new Vuex.Store({
         console.log(data);
         // console.log(data);
        
-        authConnect.post(url, data)
+        httpAuth.post(url, data)
         .then(() => console.log("create req success"))
         .catch(exp => {
             store.dispatch("throwError", exp);
@@ -288,7 +288,7 @@ export const store = new Vuex.Store({
         }
 
         const url = `/api/auth/checkEmailInUse?email=${checkEmail}`;
-        authConnect.get(url)
+        httpAuth.get(url)
             .then(res => {
                 console.log(res.data.data);
                 store.commit(constants.METHODS.EMAILCHECK, res.data.data);
@@ -305,7 +305,7 @@ export const store = new Vuex.Store({
     [constants.METHODS.RESETMYPASSWORDREQ] : (store, payload) =>{
         const url = "/api/auth/password/resetlink"
         const data = payload;
-        authConnect.post(url, {
+        httpAuth.post(url, {
             "email":data,
         })
         .then(res => {
@@ -331,7 +331,7 @@ export const store = new Vuex.Store({
     [constants.METHODS.RESETMYPASSWORD] : (store, payload) =>{
         const url = "/api/auth/password/reset";
         const data = payload;
-        authConnect.post(url, {
+        httpAuth.post(url, {
             "password": data.password,
             "confirmPassword": data.passwordConfirm,
             "token": data.token,

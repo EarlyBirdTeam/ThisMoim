@@ -2,6 +2,7 @@ module.exports = {
     HOST: "localhost",
     USER: "root",
     PASSWORD: "mariadb",
+    // djfflqjem1!
     DB: "ssafy",
     dialect: "mariadb",
     pool: {

@@ -31,7 +31,7 @@
               <div class="member" 
               v-for="(member, idx) in memberList" 
               :key="idx"
-              :style="{backgroundColor: rndColor(event)}"
+              :style="{backgroundColor: rndColor()}"
               >
                 <div>{{ member }}
                   <v-icon @click="deleteMember(idx)" color="rgba(0,0,0,0.7)">mdi-close</v-icon>
@@ -50,6 +50,8 @@
 </template>
 
 <script>
+import httpAuth from '../../http-common-auth';
+
 export default {
   data() {
     return {
@@ -75,6 +77,14 @@ export default {
   methods: {
     submit() {
       console.log('auth에 보내기')
+      const url = "/api/auth/invite";
+      const mydata = {
+            "channelId": localStorage.getItem("wsboard.channelId"),
+            "email": this.memberList
+      }
+      console.log(mydata);
+      // httpAuth.post("http://localhost:9004/api/auth/invite", mydata)
+      httpAuth.post(url, mydata)
       this.$store.state.inviteModal = false;
     },
     append(valid) {

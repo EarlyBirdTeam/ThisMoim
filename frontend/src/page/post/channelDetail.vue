@@ -223,8 +223,12 @@
           </div>
         </div>
         
+        <!-- <div class="textBoard">
+        </div> -->
         <div class="textBoard">
+         
         </div>
+
         {{ board }}
         <br />
         <br />
@@ -259,6 +263,7 @@ import Kanban from "../../components/module/Kanban";
 import InviteModal from "../../components/common/InviteModal"
 import WithdrawalModal from "../../components/common/WithdrawalModal"
 import { renderer } from './renderer';
+// import httpAuth from '../../auth-connector';
 
 export default {
   computed: {

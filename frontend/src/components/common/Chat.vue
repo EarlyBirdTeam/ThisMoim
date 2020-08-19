@@ -89,6 +89,7 @@
       // })
 
 import ChatlogDataService from "../../services/ChatlogDataService"
+import TextDataService from "../../services/TextDataService"
  
 export default {
   name: "Chat",
@@ -98,6 +99,7 @@ export default {
     //console.log("chanelName : "+ localStorage.getItem("wsboard.channelName")); 채널 이름 가져오는 부분
     // var myname = this.makeRandomName();
     var myname = this.$store.getters.userData.nickname;
+    //var myname = "동률";
     if(this.$store.getters.userData.nickname == ""){
       myname = "Unknown_"+this.makeRandomName();
     }
@@ -175,9 +177,12 @@ export default {
     this.$socket.on("s2c text", (data) => {
       var name = data.from.name;
       var msg = data.msg;
-
-      $('.textBoard').append('<h3><span>'+msg+'</span></h3>');
-
+      var jbRandom = Math.floor(Math.random() * 4); // 0부터 3
+      console.log("jbRandom : " + jbRandom);
+      if(jbRandom == 0) $('.textBoard').append('<div class="moving s1 MoveableBox Moveable" style="left:300px" ><h3><span>'+msg+'</span></h3></div>');
+      else if (jbRandom == 1) $('.textBoard').append('<div class="moving s2 MoveableBox Moveable" style="left:300px"><h3><span>'+msg+'</span></h3></div>');
+      //else if (jbRandom == 2) $('.textBoard').append('<div class="s3 MoveableBox Moveable"><h3><span>'+msg+'</span></h3></div>');
+      else $('.textBoard').append('<div class="moving s4 MoveableBox Moveable" style="left:'+800+'px"><h3><span>'+msg+'</span></h3></div>');
     });
 
     this.$socket.on("s2c chat me", (data) => {
@@ -210,6 +215,7 @@ export default {
       chattingBox: true,
       isList: false,
       clientList: [],
+      textList: [],
       textarea: "",
       message: "",
       chatmem: [],
@@ -245,7 +251,7 @@ export default {
 
 
       ChatlogDataService.create(data)
-        .then(response => { 
+        .then(response => {
           this.chatlog.id = response.data.id;
           console.log(response.data);
         })
@@ -369,10 +375,55 @@ export default {
           console.log(e);
         });
     },
+
+    retrieveTexts(){
+      console.log("텍스트 불러오기 함수")
+      TextDataService.getAll()
+        .then(response =>{
+          var Logs = response.data;
+          console.log("텍스트(보드) 정보 불러오기");
+          // console.log("Logtype : "+Logs[0].type);
+          // console.log("LogMessage : "+Logs[0].message);
+          //console.log(Logs[0]);
+          // console.log("logsname : "+Logs[0].userid);
+          // console.log("myname : "+this.naname);
+          
+      //  if(jbRandom == 0) $('.textBoard').append('<div class="moving s1 MoveableBox Moveable" style="left:300px" ><h3><span>'+msg+'</span></h3></div>');
+      // else if (jbRandom == 1) $('.textBoard').append('<div class="moving s2 MoveableBox Moveable" style="left:300px"><h3><span>'+msg+'</span></h3></div>');
+      // //else if (jbRandom == 2) $('.textBoard').append('<div class="s3 MoveableBox Moveable"><h3><span>'+msg+'</span></h3></div>');
+      // else $('.textBoard').append('<div class="moving s4 MoveableBox Moveable" style="left:'+800+'px"><h3><span>'+msg+'</span></h3></div>');
+
+          for(var i=0; i<Logs.length; i++){
+            console.log("Logs[i].type : "+Logs[i].type);
+            console.log("Logs[i].L : "+Logs[i].L);
+            console.log("Logs[i].T : "+Logs[i].T);
+            if(Logs[i].type === 2) $('.textBoard').append('<div class="moving s1 MoveableBox Moveable" style="left:'+Logs[i].L+'px; top:'+Logs[i].T+'px;"><h3><span>'+Logs[i].message+'</span></h3></div>');
+            else if(Logs[i].type === 3) $('.textBoard').append('<div class="s3 MoveableBox Moveable" style="left:'+Logs[i].L+'px; top:'+Logs[i].T+'px;"><h3><span>'+Logs[i].message+'</span></h3></div>');
+            else $('.textBoard').append('<div class="moving s4 MoveableBox Moveable" style="left:'+Logs[i].L+'px; top:'+Logs[i].T+'px;"><h3><span>'+Logs[i].message+'</span></h3></div>');
+          }
+          // for(var i=0; i<Logs.length; i++){
+          //   if(Logs[i].roomid === this.Channel){
+          //     //console.log(Logs[i].message);
+          //     //this.chatlogs.push(Logs[i]);
+          //     if(Logs[i].userid === this.naname) $('.chatbox').append('<div class="my-bubble bubble">'+Logs[i].message+'</div>');
+          //     else $('.chatbox').append('<div class="friend-bubble bubble">('+Logs[i].userid+'님) '+Logs[i].message+'</div>');
+          //   }
+          // }
+
+
+          console.log(Logs);
+
+          
+        })
+        .catch(e =>{
+          console.log(e);
+        });
+    },
   },
 
   mounted(){
     this.retrieveChatlogs();
+    this.retrieveTexts();
   }
 };
 </script>
@@ -630,7 +681,6 @@ export default {
 h3 {
   /* margin: 20px; */
   font-family: "Paytone One";
-  color: #202020;
   text-transform: uppercase;
   letter-spacing: -2px;
 }
@@ -639,8 +689,47 @@ h3 span {
   margin: 11px 0 17px 0;
   font-size: 80px;
   line-height: 80px;
-  color: orange;
-  text-shadow: 0 13.36px 8.896px #c4b59d,0 -2px 1px #fff;
   letter-spacing: -4px;
 }
+
+.s1 { 
+  color: orange;
+  text-shadow: 6px 2px 2px yellow;
+}
+.s2 { 
+  color: blue;
+  text-shadow: 6px 2px 2px skyblue;
+  background-color: white;
+  border-radius: 15%; 
+   }
+.s3 { 
+  color: black;
+  text-shadow: 6px 2px 2px gray;
+   background-color: white;
+   border-radius: 15%;
+   }
+.s4 {
+  color: yellowgreen;
+  text-shadow: 6px 2px 2px white;
+ 
+  }
+
+.moving {
+ 
+
+}
+
+  /* h1 {
+	display: inline;
+	position: relative;
+	font: 200px Helvetica, Sans-Serif;
+	letter-spacing: -5px;
+	color: rgba(0,0,255,0.5); 
+}
+
+h1:after {
+	content: "Hello";
+	position: absolute; left: 10px; top: 5px;
+	color: rgba(255,0,0,0.5);   
+} */
 </style>
