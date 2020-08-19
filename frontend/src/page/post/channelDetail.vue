@@ -263,6 +263,7 @@ import Kanban from "../../components/module/Kanban";
 import InviteModal from "../../components/common/InviteModal"
 import WithdrawalModal from "../../components/common/WithdrawalModal"
 import { renderer } from './renderer';
+import TextDataService from "../../services/TextDataService"
 // import httpAuth from '../../auth-connector';
 
 export default {
@@ -679,6 +680,30 @@ export default {
         case "SCHEDULER":
           break;
         case "DIV":
+          if(target.id === "asd") {
+            console.log("textBoard 이동");
+            console.log("이동된 left : "+target.style.left);
+            console.log("이동된 top : "+target.style.top);
+            console.log("target.value : " +target.getAttribute("value"));
+            var left = target.style.left.substring(0, target.style.left.length-2); // px 단위 빼기
+            var top = target.style.top.substring(0, target.style.top.length-2);
+            console.log("left : "+left);
+            var data = {
+
+              // T: target.style.top,
+              // L: target.style.left,
+              T: top,
+              L: left,
+           };
+
+            TextDataService.update(target.getAttribute("value"), data)
+            .then(response => {
+            console.log("업데이트 성공");
+             })
+            .catch(e => {
+            console.log(e);
+          });
+          }
           return;
         
       }

@@ -13,9 +13,9 @@ class TextDataService{
         return http.post("/texts", data);
     }
 
-    // update(id, data){
-    //     return http.put(`/tutorials/${id}`, data);
-    // }
+    update(id, data){
+        return http.put(`/texts/${id}`, data);
+    }
 
     // delete(id){
     //     return http.delete(`/tutorials/${id}`);

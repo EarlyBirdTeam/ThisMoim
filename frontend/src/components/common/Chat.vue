@@ -179,10 +179,11 @@ export default {
       var msg = data.msg;
       var jbRandom = Math.floor(Math.random() * 4); // 0부터 3
       console.log("jbRandom : " + jbRandom);
-      if(jbRandom == 0) $('.textBoard').append('<div class="moving s1 MoveableBox Moveable" style="left:300px" ><h3><span>'+msg+'</span></h3></div>');
-      else if (jbRandom == 1) $('.textBoard').append('<div class="moving s2 MoveableBox Moveable" style="left:300px"><h3><span>'+msg+'</span></h3></div>');
+      this.type = jbRandom;
+      if(jbRandom == 0) $('.textBoard').append('<div class="moving s1 MoveableBox Moveable" style="left:300px;" ><h3><span>'+msg+'</span></h3></div>');
+      else if (jbRandom == 1) $('.textBoard').append('<div class="moving s2 MoveableBox Moveable" style="left:300px;"><h3><span>'+msg+'</span></h3></div>');
       //else if (jbRandom == 2) $('.textBoard').append('<div class="s3 MoveableBox Moveable"><h3><span>'+msg+'</span></h3></div>');
-      else $('.textBoard').append('<div class="moving s4 MoveableBox Moveable" style="left:'+800+'px"><h3><span>'+msg+'</span></h3></div>');
+      else $('.textBoard').append('<div class="moving s4 MoveableBox Moveable" style="left: 300px;"><h3><span>'+msg+'</span></h3></div>');
     });
 
     this.$socket.on("s2c chat me", (data) => {
@@ -216,6 +217,9 @@ export default {
       isList: false,
       clientList: [],
       textList: [],
+      type: 1,
+      L: 300,
+      T: 300,
       textarea: "",
       message: "",
       chatmem: [],
@@ -259,7 +263,27 @@ export default {
           console.log(e);
         });
     },
+    
+    saveText(){
+      event.preventDefault(); // 줄바꿈 방지?
+      event.stopPropagation();
 
+      var data = {
+        message: this.chatlog.message,
+        type: this.type,
+        T: this.T,
+        L:  this.L,
+      };
+
+      console.log("saveText ! 텍스트 보드로 디비 저장")
+      TextDataService.create(data)
+        .then(response => {
+          console.log(response.data);
+        })
+        .catch(e => {
+          console.log(e);
+        });
+    },
 
     sendChat() {
       event.preventDefault(); // 줄바꿈 방지?
@@ -290,7 +314,7 @@ export default {
       $('#msgForm').val("");
 
 
-      //this.saveChatlog();
+      this.saveText();
     },
 
 
@@ -397,9 +421,9 @@ export default {
             console.log("Logs[i].type : "+Logs[i].type);
             console.log("Logs[i].L : "+Logs[i].L);
             console.log("Logs[i].T : "+Logs[i].T);
-            if(Logs[i].type === 2) $('.textBoard').append('<div class="moving s1 MoveableBox Moveable" style="left:'+Logs[i].L+'px; top:'+Logs[i].T+'px;"><h3><span>'+Logs[i].message+'</span></h3></div>');
-            else if(Logs[i].type === 3) $('.textBoard').append('<div class="s3 MoveableBox Moveable" style="left:'+Logs[i].L+'px; top:'+Logs[i].T+'px;"><h3><span>'+Logs[i].message+'</span></h3></div>');
-            else $('.textBoard').append('<div class="moving s4 MoveableBox Moveable" style="left:'+Logs[i].L+'px; top:'+Logs[i].T+'px;"><h3><span>'+Logs[i].message+'</span></h3></div>');
+            if(Logs[i].type === 2) $('.textBoard').append('<div value="'+Logs[i].id+'" id="asd" class="moving s1 MoveableBox Moveable" style="left:'+Logs[i].L+'px; top:'+Logs[i].T+'px;"><h3><span>'+Logs[i].message+'</span></h3></div>');
+            else if(Logs[i].type === 3) $('.textBoard').append('<div value="'+Logs[i].id+'" id="asd" class="moving s3 MoveableBox Moveable" style="left:'+Logs[i].L+'px; top:'+Logs[i].T+'px;"><h3><span>'+Logs[i].message+'</span></h3></div>');
+            else $('.textBoard').append('<div value="'+Logs[i].id+'" id="asd" class="moving s4 MoveableBox Moveable" style="left:'+Logs[i].L+'px; top:'+Logs[i].T+'px;"><h3><span>'+Logs[i].message+'</span></h3></div>');
           }
           // for(var i=0; i<Logs.length; i++){
           //   if(Logs[i].roomid === this.Channel){
