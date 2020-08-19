@@ -21,7 +21,7 @@ public class ChannelRedisRepository {
     private static final String CHANNEL = "CHANNEL"; // 채널 저장
     private static final String USER_COUNT = "USER_COUNT"; // 채널에 입장한 클라이언트 수 저장
     private static final String ENTER_INFO = "ENTER_INFO"; // 채널에 입장한 클라이언트의 sessionId와 채널 id를 맵핑한 정보 저장
-    private static final String USER_INFO = "USER_INFO"; // 채널에 입장한 멤버들의 정보를 채널 id와 매핑하여 저장
+    //private static final String USER_INFO = "USER_INFO"; // 채널에 입장한 멤버들의 정보를 채널 id와 매핑하여 저장
     private static final String BOARD = "BOARD"; // 채널이 가지고 있는 보드의 상태 저장
 
     @Resource(name = "redisTemplate")
@@ -36,9 +36,9 @@ public class ChannelRedisRepository {
 //    private HashOperations<String, String, User> hashOpsMember;
 
     // 모든 채널 조회
-    public List<Channel> findAllChannel() {
-        return hashOpsChannel.values(CHANNEL);
-    }
+//    public List<Channel> findAllChannel() {
+//        return hashOpsChannel.values(CHANNEL);
+//    }
 
     // 채널 생성 : 서버간? 채널 공유를 위해 redis hash에 저장한다.
     // -> 현 단계에서는 굳이 채널의 부하를 줄이기 위해 서버를 나누어 채널 정보를 공유하는 것이 중요하지 않은 작업이므로 보류
@@ -86,6 +86,12 @@ public class ChannelRedisRepository {
     public SocketBoardMessage findBoardByChannelId(String channelId) {
         SocketBoardMessage socketBoardMessage = hashOpsBoard.get(BOARD, channelId);
         return socketBoardMessage;
+    }
+
+    // 레디스에서 채널 삭제
+    public void deleteChannel(String channelId) {
+        hashOpsBoard.delete(BOARD, channelId);
+        hashOpsChannel.delete(CHANNEL, channelId);
     }
 
     // 유저가 입장한 채널ID와 유저 세션ID 맵핑 정보 저장

@@ -96,6 +96,11 @@ public class ChannelController {
     @ResponseBody
     public WithdrawalResponse channelInfo(@RequestBody WithdrawalRequest request) {
         //channelRedisRepository.removeUserEnterInfo(request.getChannelId());
+
+        // 채널에 남아있는 사용자가 없으면 레디스에서 채널 삭제 -> 레디스 부하를 줄이기 위함
+        if(channelService.getChannelMember(request.getChannelId()).size() == 0) {
+            channelRedisRepository.deleteChannel(request.getChannelId());
+        }
         channelService.withdrawalChannel(request);
         return new WithdrawalResponse().builder().message("Success Withdrawal Channel").success(true).build();
     }
