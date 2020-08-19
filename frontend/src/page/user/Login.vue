@@ -17,16 +17,27 @@
        
 
         <div class="add-option">
-          <div class="wrap" style="height:0px">
-            <p>아직 회원이 아니신가요?</p>
+          <div class="wrap" >
+            <p style="margin-bottom:0%">아직 회원이 아니신가요?</p>
             <router-link 
               @click="this.$router.go(0)"
               v-bind:to="{name:constants.URL_TYPE.USER.JOIN}"
               class="btn--text"
               style="color:black; margin-top:0"
             >회원가입</router-link>
+            <br>
+
+            <router-link 
+              @click="this.$router.go(0)"
+              v-bind:to="{name:constants.URL_TYPE.USER.PASSWORDFIND}"
+              class="btn--text"
+              style="color:black; margin-top:0"
+            >비밀번호 재설정</router-link>
+            
+            <p style="margin-bottom:0%">비밀번호를 잊으셨나요?</p>
           </div>
         </div>
+        
          <button @click="login(email, password)" style="margin-top:20px; font-size:15px " class="btn">로그인 하기</button>
       </div>
     </div>
