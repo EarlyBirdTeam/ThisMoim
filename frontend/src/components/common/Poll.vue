@@ -1,26 +1,27 @@
 <template>
   <div class="Pollx MoveableBox shadow-lg">
-    <div class="poll-container" v-if="!poll.isSetAll & !poll.isEnd ">
+    {{ ppoll }} {{ idx }}
+    <div class="poll-container" v-if="!poll[idx].isSetAll & !poll[idx].isEnd ">
       <div>
         <div class="poll-title" >
           <div class="d-flex">
             <v-icon large class="mr-2">mdi-vote</v-icon>
-            <v-text-field single-line height=36 placeholder="투표 제목" v-model="poll.question" style="font-size:1.5rem"></v-text-field>
+            <v-text-field single-line height=36 placeholder="투표 제목" v-model="poll[idx].question" style="font-size:1.5rem"></v-text-field>
           </div>
         </div>
         <div class="poll-contents">
-          <label class="label-25" for="poll-content">투표 항목</label>
+          <label class="label-25" for="poll-content">투표 항목 </label>
           <div
-            v-for="(answer, index) in poll.answers"
+            v-for="(answer, index) in poll[idx].answers"
             :key="index"
             class="answer"
-            :style="{zIndex: poll.answers.length - index}"
+            :style="{zIndex: poll[idx].answers.length - index}"
           >
           
             <div class="poll-content d-flex justify-content-between form-control">
               <input
                 placeholder="항목 입력"
-                v-model="poll.answers[index].answer"
+                v-model="poll[idx].answers[index].answer"
                 type="text"
               />
               <div class="d-flex" @click="deleteInput(index)">
@@ -30,7 +31,7 @@
           </div>
           <button class="pressDownButton" @click="createNewInput()">
             <v-icon>mdi-plus-circle-outline</v-icon>
-            <h3>항목 추가</h3>
+            <span>항목 추가</span>
           </button><hr>
         </div>
         <div class="poll-footer">
@@ -40,17 +41,17 @@
       </div>
     </div>
 
-    <div class="poll-container" v-if="poll.isSetAll & !poll.isEnd">
+    <div class="poll-container" v-if="poll[idx].isSetAll & !poll[idx].isEnd">
       <div>
         <div class="poll-title">
-          <strong>Q. {{poll.question}} </strong>
+          <strong>Q. {{poll[idx].question}} </strong>
           <hr />
         </div>
         <div class="poll-contents">
           
           <v-radio-group v-model="voted" v-if="!didYou">
             <v-radio
-              v-for="(answer, index) in poll.answers"
+              v-for="(answer, index) in poll[idx].answers"
               :key="index"
               :label="`${answer.answer}`"
               :value="index"
@@ -60,7 +61,7 @@
 
           <v-radio-group v-model="voted" v-if="didYou">
             <v-radio
-              v-for="(answer, index) in poll.answers"
+              v-for="(answer, index) in poll[idx].answers"
               :key="index"
               :label="`${answer.answer}`"
               :value="index"
@@ -79,18 +80,18 @@
     </div>
 
 
-    <div class="poll-container" v-if="poll.isSetAll & poll.isEnd">
+    <div class="poll-container" v-if="poll[idx].isSetAll & poll[idx].isEnd">
       <div>
         <div class="poll-title">
-          <strong>Q.{{ poll.question }}</strong><hr />
+          <strong>Q.{{ poll[idx].question }}</strong><hr />
         </div>
         
         <div class="poll-contents">
           <div
-            v-for="(answer, index) in poll.answers"
+            v-for="(answer, index) in poll[idx].answers"
             :key="index"
             class="answer form-control"
-            :style="{zIndex: poll.answers.length - index}"
+            :style="{zIndex: poll[idx].answers.length - index}"
             style="margin-bottom: 10px;"
           >
             <div class="d-flex justify-content-between">
@@ -128,13 +129,14 @@
 
 <script>
 export default {
-  props:{
-    
-  },
   computed: {
     poll() {
       return this.$store.state.poll
     }
+  },
+  props: {
+    ppoll: Object,
+    idx: Number,
   },
   data() {
     return {
@@ -149,30 +151,31 @@ export default {
     createNewInput() {
       if (this.poll.answers.length > 10) {
         alert('투표 문항은 10개까지 생성 가능합니다.')
-      } else this.poll.answers.push({answer: "", voted: 0});
+      } else this.poll[this.idx].answers.push({answer: "", voted: 0});
     },
     deleteInput(index) {
       if (index > 0 || this.poll.answers.length > 1) {
-        this.poll.answers.splice(index, 1);
+        this.poll[idx].answers.splice(index, 1);
       }
     },
     reset() {
-      this.$store.state.poll.quest = ""
-      this.$store.state.poll.answers = [{answer: "", voted: 0}]
+      this.$store.state.poll[this.idx].quest = ""
+      this.$store.state.poll[this.idx].answers = [{answer: "", voted: 0}]
     },
     save() {
       //서버로 보내서 투표 저장
-      this.poll.isSetAll = true;
+      console.log(this.poll);
+      this.poll[this.idx].isSetAll = true;
     },
     vote() {
       if(this.didYou) {return;}
-      this.poll.answers[this.voted].voted++;
-      this.poll.userVoted.push({user: this.$store.state.email, voted:this.voted});
+      this.poll[this.idx].answers[this.voted].voted++;
+      this.poll[this.idx].userVoted.push({user: this.$store.state.email, voted:this.voted});
       // console.log(this.$store.state.email);
       this.didYou = true;
     },
     isEnd(){
-      this.poll.isEnd = true;
+      this.poll[this.idx].isEnd = true;
       let base = 0;
       let list = this.poll.answers
 
