@@ -218,7 +218,8 @@
             v-for="(poll, idx) in this.board.poll"
             :key="idx">
             <Poll
-              :style="{left: $store.state.poll.left, top: $store.state.poll.top}"
+              :id="poll.pollId" :ppoll="poll" :idx="idx"
+              :style="{left: poll.left, top: poll.top}"
             />
           </div>
         </div>
@@ -228,12 +229,12 @@
         {{ board }}
         <br />
         <br />
-        board : {{ board.kanban }}
+        board : {{ board.poll }}
         <br />
         <br />
         <br />
 
-        store : {{ $store.state.Kanban }}<br><br>
+        store : {{ $store.state.poll }}<br><br>
         {{$store.state.userData }}
         <InviteModal v-model="$store.state.inviteModal"/>
         <WithdrawalModal v-model="$store.state.withdrawalModal"/>
@@ -284,7 +285,7 @@ export default {
         isKanban: false,
         kanban: this.$store.state.Kanban,
         scheduler: { "id": null, "left": null, "top": null },
-        // poll: {},
+        poll: [],
         isDelete: false,
         delete: {
           moduleName: "",
@@ -435,8 +436,8 @@ export default {
           else {
             this.board.kanban.states = this.$store.state.Kanban.states;
           }
-          if (response.data.poll === []) {
-
+          if (!response.data.poll) {
+            this.board.poll = []
           }
           // this.board.Kanban.columns = response.data.kanban.columns;
         })
@@ -451,6 +452,9 @@ export default {
       );
     },
     sendMessage: function (type) {
+      if(this.board.isKanban == true) { //칸반 상태 동기화
+        this.board.kanban.states = this.$store.state.Kanban.states;
+      }
       this.ws.send(
         "/pub/board/message",
         { token: this.token },
@@ -469,8 +473,9 @@ export default {
       }
       this.board.poll = recv.poll;
       this.$store.state.poll = recv.poll;
+      this.board.isKanban = recv.isKanban;
       this.board.kanban = recv.kanban;
-      // this.$store.state.Kanban = recv.kanban;
+      this.$store.state.Kanban = recv.kanban;
       //crudModule 초기화
       this.board.crudModule = {
         modulType: "",
@@ -569,14 +574,29 @@ export default {
     },
 
     createPoll(left = "500px", top = "170px") {
-      if (this.board.poll.length >= 1) {
+      if (this.board.poll.length >= 3) {
         this.createSnackbar("이미 투표가 있습니다!", 3000, "error");
       } else {
         const idc = this.board.idCount++;
-        const newPoll = this.$store.state.poll;
-        newPoll.left = this.moduleXP + "px";
-        newPoll.top = this.moduleYP + "px";
+        const newPoll = {
+          pollId: idc,
+          left: this.moduleXP + "px",
+          top: this.moduleYP + "px",
+          question: "",
+          answers: [ {answer: "", voted: 0}, {answer: "", voted: 0},],
+          multipleVotes: false,
+          totalVotes: 0,
+          userVoted: [ ],
+          isSetAll: false,
+          isEnd: false,
+        };
+        // const newPoll = this.$store.state.poll;
+        // newPoll.frontId = idc;
+        // newPoll.left = this.moduleXP + "px";
+        // newPoll.top = this.moduleYP + "px";
+        console.log(newPoll);
         this.board.poll.push(newPoll);
+        this.$store.state.poll.push(newPoll);
         // this.board.poll = this.$store.state.poll;
         // this.board.poll.left = this.moduleXP + "px";
         // this.board.poll.top = this.moduleYP + "px";

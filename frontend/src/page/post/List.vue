@@ -60,6 +60,37 @@
             </v-card>
           </v-hover>
         </v-col>
+        <!-- 새로운 모임 -->
+        <v-col
+          cols="4"
+          md="4"
+          @click="openModal"
+        >
+          <v-hover v-slot:default="{ hover }">
+            <v-card class="card-channel">
+              <v-img
+                class="white--text align-end"
+                gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
+                height="300px"
+              >
+                <v-expand-transition>
+                  <div
+                    v-if="hover"
+                    flex
+                    class="d-flex transition-fast-in-fast-out black darken-2 v-card--reveal display-3 white--text"
+                    style="height: 100%; align-items: center; bottom: 0; justify-content: center; opacity: .5; position: absolute; width: 100%; ">
+                    <br />
+                    <br />
+                    <span class="hover">생성하기</span>
+                  </div>
+                </v-expand-transition>
+                <v-card-title >
+                  <v-icon size="x-large" class="mr-2">mdi-expand-all</v-icon>
+                  새로운 모임</v-card-title>
+              </v-img>
+            </v-card>
+          </v-hover>
+        </v-col>
       </v-row>
       <ul style="width:80%; margin:auto;" class="list-group" v-if="!howto">
         <li
@@ -194,9 +225,9 @@ export default {
       if(this.$cookie.get('AccessToken') === null){
         // 로그인 되어있지 않은 사용자 -> 로그인 모달 
         this.$store.commit("toggleModal");
+        this.modal = true;
         return
       }
-      this.modal = true;
     },
     close() {
       this.modal = false;
@@ -219,11 +250,12 @@ export default {
   cursor: pointer;
   transition: opacity 2s ease-in-out;
 }
-.card-channel :hover {
-  opacity: 0.6;
-}
 .head-title {
   font-size: 1.875em;
   font-weight: 600;
+}
+.hover {
+  font-size: 1.5rem;
+  color: white;
 }
 </style>
