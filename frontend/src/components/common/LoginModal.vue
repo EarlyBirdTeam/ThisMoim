@@ -9,8 +9,20 @@
           v-bind="attrs"
           v-on="on"
           color="rgb(223, 223, 223)"
+          v-if="$store.getters.accessToken == ''"
         >
           Login
+        </button>
+        <button
+          class="white--text"
+          style="float:right"
+          v-bind="attrs"
+          v-on="on"
+          color="rgb(223, 223, 223)"
+          v-if="$store.getters.accessToken !== ''"
+          @click="checkLogin"
+        >
+          Go to Main
         </button>
       </template>
       <v-card style="width:350px; height:280px">
@@ -26,7 +38,15 @@
         components: {
             Login,
         },
+        methods: {
+          checkLogin() {
+            if(this.$store.getters.accessToken !== ''){
+              this.$router.push('/main')
+            }
+          },
+        }
     }
+   
 </script>
 
 <style>
