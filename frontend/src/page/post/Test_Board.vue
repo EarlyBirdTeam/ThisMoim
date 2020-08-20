@@ -89,7 +89,7 @@ import SockJS from 'sockjs-client';
 import Stomp from 'stomp-websocket';
 import http from '../../http-common.js';
 
-import Canvas from "../../components/common/Canvas";
+// import Canvas from "../../components/common/Canvas";
 import Moveable from 'vue-moveable';
 import Postit from '../../components/module/Postit';
 import Poll from '../../components/common/Poll';
@@ -108,7 +108,7 @@ export default {
   name: "app",
   components: {
     Moveable,
-    Canvas,
+    // Canvas,
     Postit,
     Poll,
     Map,
@@ -157,7 +157,7 @@ export default {
     text: "",
     counter: {
       textC: [],
-      canvasC: [],
+      // canvasC: [],
       mapC: [],
       pollC: [],
     },
@@ -389,10 +389,10 @@ export default {
         "point":null,
       });
     },
-    createCanvas() {
-      event.stopPropagation();
-      this.counter.canvasC.push(this.counter.canvasC.length);
-    },
+    // createCanvas() {
+    //   event.stopPropagation();
+    //   this.counter.canvasC.push(this.counter.canvasC.length);
+    // },
     createPoll() {
       event.stopPropagation();
       this.counter.pollC.push(this.counter.pollC.length);
