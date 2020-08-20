@@ -23,8 +23,12 @@
 
             <div v-for="(task,idx) in column.tasks"
              :key="idx" class="cursor-move mb-3">
-              <div @click="showTask(column.columnTitle, task)" class="bg-white shadow rounded px-3 pt-3 pb-5 border border-white" style="cursor: pointer;">
-                <div class="d-flex justify-space-between ">
+              <div 
+              @click="showTask(column.columnTitle, task)" 
+              @dragend="$store.commit('toggleUpdate')"
+              class="bg-white shadow rounded px-3 pt-3 pb-5 border border-white" 
+              style="cursor: pointer;">
+                <div class="kanban-task d-flex justify-space-between ">
                   <p
                     class="text-truncate text-gray-700 font-semibold font-sans text-sm word-break:keep-all;"
                     style="word-break:keep-all; "
@@ -136,6 +140,7 @@ export default {
       this.$store.state.Kanban.states
         .find((column) => column.columnTitle === columnTitle)
         .tasks.splice(index, 1);
+      this.$store.commit('toggleUpdate');
     },
     showTask(columnTitle, task) {
        var index = this.states
@@ -155,6 +160,7 @@ export default {
         taskContents : "",
         taskAssigner : "",
       }
+      this.$store.commit('toggleUpdate');
     },
     close() {
       this.dialog = false; 
@@ -167,7 +173,7 @@ export default {
     kanbanClickEvent({target}){
       console.log(target);
       target.focus();
-    }
+    },
   },
 };
 </script>

@@ -40,7 +40,7 @@
       </div>
     </div>
 
-    <div class="poll-container" v-if="poll[idx].setAll & !poll[idx].end">
+    <div class="poll-container" v-if="poll[idx].setAll & !poll[idx].end & !showResult">
       <div>
         <div class="poll-title">
           <strong>Q. {{poll[idx].question}} </strong>
@@ -73,13 +73,13 @@
         </div>
         <div class="poll-footer">
           <button class="circleScaleBtn" @click="vote"><span>투표</span></button>
-          <button class="circleScaleBtn" @click="isEnd"><span>투표종료</span></button>
+          <button class="circleScaleBtn" @click="showResultMethod"><span>결과보기</span></button>
         </div>
       </div>
     </div>
 
 
-    <div class="poll-container" v-if="poll[idx].setAll & poll[idx].end">
+    <div class="poll-container" v-if=" showResult | (poll[idx].setAll & poll[idx].end)">
       <div>
         <div class="poll-title">
           <strong>Q.{{ poll[idx].question }}</strong><hr />
@@ -109,10 +109,14 @@
             <strong>A. </strong> 
             <h3 v-for="(answer, index) in result" 
             :key="index">
-              <strong>{{answer.answer}} </strong>
+              <strong>{{answer.answer}} 
+                <div @click="showVote" class="float-right" style="cursor:pointer; padding-right:20px; line-height:25px">
+                  <v-icon>mdi-refresh</v-icon>
+                </div>
+              </strong> 
+              
             </h3>
           </h3>
-          
         </div>
       </div>
     </div> 
@@ -137,6 +141,7 @@ export default {
       voted: '',
       didYou: false,
       result: [],
+      showResult: false,
     };
   },
   methods: {
@@ -156,16 +161,24 @@ export default {
     },
     save() {
       //서버로 보내서 투표 저장
+      event.stopPropagation();
       this.poll[this.idx].setAll = true;
+      this.$store.state.updateOccur = true;
+      this.$store.commit('toggleUpdate');
       console.log(this.poll[this.idx].setAll);
+
     },
     vote() {
       if(this.didYou) {return;}
-      if(this.poll[this.idx].userVoted.includes(this.$store.state.userData.email)) {return;}
+      if(this.poll[this.idx].userVoted.includes(this.$store.state.userData.email)) {
+        alert('이미 투표를 하셨습니다')
+        return;
+      }
       this.poll[this.idx].answers[this.voted].voted++;
       this.poll[this.idx].userVoted.push(this.$store.state.userData.email);
       console.log(this.$store.state.userData.email)
       this.didYou = true;
+      this.$store.commit('toggleUpdate');
     },
     isEnd(){
       this.poll[this.idx].end = true;
@@ -178,8 +191,23 @@ export default {
           this.result.push(list[i]); 
         }
       }
-
     },
+    showResultMethod() {
+      this.showResult = true;
+      let base = 0;
+      let list = this.poll[this.idx].answers
+      this.result = []
+      for(var i=0; i<list.length; i++) {
+        if(list[i].voted > base) {
+          base = list[i].voted;
+          this.result.push(list[i]); 
+        }
+      }
+    },
+    showVote() {
+      event.stopPropagation();
+      this.showResult = false;
+    }
   },
 };
 </script>
@@ -242,4 +270,44 @@ h3{
   font-size: 25px; 
   margin-bottom: 5px;
 }
+
+.circleScaleBtn {
+    padding: 12px 24px;
+    background-color: hsl(222, 100%, 95%);
+    color: hsl(243, 80%, 62%);
+    position: relative;
+    border-radius: 6px;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.circleScaleBtn span {
+    z-index: 1;
+    position: relative;
+}
+
+.circleScaleBtn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    transform: translate3d(-50%,-50%,0) scale3d(0,0,0);
+    transition: opacity .4s cubic-bezier(.19,1,.22,1),transform .75s cubic-bezier(.19,1,.22,1);
+    background-color: hsl(243, 80%, 62%);
+    opacity: 0;
+}
+
+.circleScaleBtn:hover span {
+    color: hsl(222, 100%, 95%);
+}
+
+.circleScaleBtn:hover::before {
+    opacity: 1;
+    transition-duration: .85s;
+    transform: translate3d(-50%,-50%,0) scale3d(1,1,1)
+}
+
 </style>

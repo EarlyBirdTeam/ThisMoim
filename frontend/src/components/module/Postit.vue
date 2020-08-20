@@ -1,11 +1,12 @@
 <template>
-    <postit class="MoveableBox paper">
+    <div class="MoveableBox paper">
         <textarea 
         name=""
         class="notMoveBox paperTitle"
         cols="30" rows="1"
         v-model="postit.title"
         @click.prevent.self
+        @keyup.tab="$store.commit('toggleUpdate')"
         placeholder="title here"
         ></textarea>
 
@@ -14,9 +15,10 @@
         class="notMoveBox paperContent"
         cols="30" rows="5"
         v-model="postit.contents"
+        @keyup.tab="$store.commit('toggleUpdate')"
         placeholder="content here.."
         ></textarea>
-    </postit>
+    </div>
 </template>
 
 <script>

@@ -117,6 +117,7 @@ export default {
       if (this.$refs.form.validate()) {
           this.$store.dispatch('REQUEST_ADD_EVENT', this.scheduler.event);
       }
+      this.$store.commit('toggleUpdate');
     },
     // submit() {
     //     if (this.event.title === '' || this.event.endDate === '') {
