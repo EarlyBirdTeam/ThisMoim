@@ -27,7 +27,7 @@
     </h1>
     <div class="right">
       <template v-if="this.$store.getters.accessToken != ''">
-        <div class="headBox">
+        <div class="headBox mt-1">
           환영합니다!
           <router-link style="margin-left: 20px; padding-top:5px"
             v-bind:to="{name:constants.URL_TYPE.USER.MYPAGE}"
