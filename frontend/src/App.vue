@@ -23,7 +23,7 @@ export default {
   },
   created() {
     let url = this.$route.name;
- console.log(url);
+    console.log(url);
     this.checkBoard(url);
    
     
@@ -49,7 +49,7 @@ export default {
         logInfo.AccessData = {
           email: unescape(a[0].split("%3A")[1]),
           name: decodeURI(a[1].split("%3A")[1]),
-          nickname: unescape(a[2].split("%3A")[1]),
+          nickname: decodeURI(a[2].split("%3A")[1]),
         };
         // logInfo.AccessData = unescape(element.split('=')[1]);
       }
