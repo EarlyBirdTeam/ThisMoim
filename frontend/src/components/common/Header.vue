@@ -3,7 +3,6 @@
 ">
     <h1>
       <router-link 
-        v-if="this.$store.getters.accessToken != ''"
         class="white--text"
         style="color:rgb(0,0,0);"
         v-if="this.$store.getters.accessToken != ''"
@@ -135,6 +134,12 @@ export default {
   },
 };
 </script>
+<style>
+.headBox{
+  color:rgba(255, 255, 255, 0.75);
+  line-height: 25px;
+}
+</style>
 
 
 

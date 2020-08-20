@@ -225,16 +225,6 @@
         
         <div class="textBoard">
         </div>
-        {{ board }}
-        <br />
-        <br />
-        board : {{ board.scheduler.events }}
-        <br />
-        <br />
-        <br />
-
-        store : {{ $store.state.scheduler.events }}<br><br>
-        {{$store.state.userData }}
         <InviteModal v-model="$store.state.inviteModal"/>
         <WithdrawalModal v-model="$store.state.withdrawalModal"/>
       </div>
@@ -265,6 +255,14 @@ export default {
     poll() {
       return this.$store.state.poll;
     },
+    updateOccur() {
+      return this.$store.state.updateOccur
+    }
+  },
+  watch: {
+    updateOccur: function () {
+      this.sendMessage();
+    }
   },
   data() {
     return {
@@ -479,8 +477,6 @@ export default {
       this.createSnackbar("수정되었습니다", 1000, "warning");
     },
     recvMessage: function (recv) {
-      console.log('recv; kanban; states;')
-      console.log(recv.kanban.states);
       this.userCount = recv.userCount;
       this.board.idCount = recv.idCount;
       this.board.postitList = recv.postitList;
@@ -799,20 +795,22 @@ export default {
 
       if (target.getAttribute("class") != null) {
         var clas = target.getAttribute("class").split(" ");
-
+        console.log(clas);
         for (var cla in clas) {
           // console.log(clas[cla]);
           if (clas[cla] == "MoveableBox") {
-            event.stopPropagation();
             target.blur();
+            event.stopPropagation();
+            target.focus();
             this.$refs.moveable.moveable.target = target;
-          }
-
-          if (clas[cla] == "realBoard" || clas[cla] == "bodyBox") {
+          } else if (clas[cla] == "realBoard" || clas[cla] == "bodyBox") {
             // event.stopPropagation();
             // target.blur();
             // this.$refs.moveable.moveable.target = target;
             this.cloakMoveable();
+          } else if (clas[cla] == "kanban-task") {
+            
+            this.$refs.moveable.moveable.target = null;
           }
         }
       }
@@ -820,12 +818,12 @@ export default {
     deleteTargetAction(idx, moduleName, { target }) {
       if (confirm("요소를 삭제하시겠습니까?") === true) {
         this.board.isDelete = true;
-        if (moduleName = "postit") {
+        if (moduleName === "postit") {
           this.board.delete.moduleName = "postit";
           this.board.delete.id = this.board.postitList[idx].frontPostitId;
           // this.crudMethod("POSTIT", "DELETE", this.board.postitList[idx]);
           this.board.postitList.splice(idx, 1);
-        }else if (moduleName = "poll") {
+        }else if (moduleName === "poll") {
           this.board.delete.moduleName = "poll";
           this.board.delete.id = this.board.poll[idx].pollId;
           // this.crudMethod("POLL", "DELETE", this.board.poll[idx]);

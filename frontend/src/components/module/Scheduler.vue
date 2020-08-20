@@ -1,5 +1,5 @@
 <template>
-  <scheduler class="MoveableBox scheduler pa-5">
+  <div class="MoveableBox scheduler pa-5">
     <v-row>
       <v-col cols="12">
         <v-row>
@@ -59,7 +59,7 @@
     <Dialog v-if="$store.state.scheduler.dialog" />
     <EventDetail v-if="$store.state.scheduler.eventDetail" />
     <!-- <v-footer absolute>{{ $store.state.scheduler }}</v-footer> -->
-  </scheduler>
+  </div>
 </template>
 
 <script>
@@ -102,7 +102,6 @@ export default {
       this.$store.commit("OPEN_SCHEDULER_DIALOG", date);
     },
     showEvent(event) {
-      console.log(event);
       this.$store.commit("OPEN_SCHEDULER_EVENT", event);
     },
   },

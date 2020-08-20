@@ -23,7 +23,7 @@
       <div style="text-align: center;">
         <img
           src="../../assets/img/Logo.png"
-          style="  margin:20vh; margin:20vw ; width:30%; height:auto;"
+          style="margin:20vw; margin-top:40vh; width:30%; height:auto;"
         />
         <footer
           class="white--text"
@@ -43,23 +43,17 @@
     >
       <div
         class="d-flex"
-        style="width:50%; text-align: center; margin-top: 100px padding:20vh; padding:5vw "
+        style="width:50%; text-align: center; margin-top: auto; margin-bottom:auto; padding:20vh; padding:5vw "
       >
-        <h4 style=" font-size:30px; line-height:150%; margin-top:170px">
-         이거모임은 온라인 및 오프라인 모임을 지원하는 협업툴 플랫폼입니다
-       
-         
-           
-          <br/>
-             <router-link to="channel/earlyBird10TeamTestChannel1" style="background-color:rgba(0,0,0,1); border:solid 0px" class="btn  white--text">
-              Try It!
-             
-            </router-link>
-             
+        <h4 style=" font-size:30px; line-height:150%;">
+          이거모임은 온라인 및 오프라인 모임을 지원하는 협업툴 플랫폼입니다 <br/>
+          <router-link to="channel/earlyBird10TeamTestChannel1" style="background-color:rgba(0,0,0,1); border:solid 0px; margin-top: 40px" class="btn white--text px-5 py-2">
+            Try It!
+          </router-link>
         </h4>
       </div>
-      <div class style="width:50%; padding:20vh; padding:10vw ">
-        <v-carousel style="width:100%; height:100%" hide-delimiters>
+      <div class style="width:50%; padding:20vh; padding:10vw; margin-top: auto; margin-bottom:auto; ">
+        <v-carousel style="width:100%; height:100% " hide-delimiters>
           <v-carousel-item v-for="(item,i) in items" :key="i" :src="item.src"></v-carousel-item>
         </v-carousel>
       </div>
@@ -67,13 +61,12 @@
     <section
       id="Second2"
       class="d-flex"
-      style="width: 100vw;
-            height: 100vh; background: linear-gradient(90deg, rgba(33,33,33,1) 50%, rgba(37,37,37,1) 50%);"
+      style="width: 100vw; height: 100vh; background: linear-gradient(90deg, rgba(33,33,33,1) 50%, rgba(37,37,37,1) 50%);"
     >
-      <div style="width:50%; text-align: center; margin-top: 100px padding:20vh; padding:5vw ">
-        <h4 class="white--text" style=" font-size:30px;  line-height:150%; margin-top:170px">이거모임은 다양한 기술을 탐구하고 적용하여 사용자들이 최상의 서비스를 경험할 수 있도록 노력하고 있습니다</h4>
+      <div style="width:50%; text-align: center; margin-top: 100px padding:20vh; padding:5vw; margin-top: auto; margin-bottom:auto; ">
+        <h4 class="white--text" style=" font-size:30px;  line-height:150%;">이거모임은 다양한 기술을 탐구하고 적용하여 사용자들이 최상의 서비스를 경험할 수 있도록 노력하고 있습니다</h4>
       </div>
-      <div style="width:50%;  padding:20vh; padding:10vw">
+      <div style="width:50%;  padding:20vh; padding:10vw; margin-top: auto; margin-bottom:auto; ">
         <img style="width:100% " src="../../assets/img/Used.png" />
       </div>
     </section>
@@ -81,26 +74,20 @@
     <section
       id="Third"
       class="box3 d-flex black--text"
-      style="width: 100vw;
-            height: 100vh;
-
- "
+      style="width: 100vw; height: 100vh;"
     >
       <div
         class="white--text"
-        style="width:40%; padding:10vw; padding-top: 50px; background:rgb(33,33,33);"
+        style="width:40%; padding:10vw; padding-top: 15vh; background:rgb(33,33,33); "
       >
-        <h2>
-          TEAM
-          <br />Early Bird
-        </h2>
+        <h2>TEAM<br />Early Bird</h2>
       </div>
-      <div style="width:100%; margin-left:10vw; padding:60px; padding-top:90px;">
+      <div style="width:60%; margin-left:10vw; padding:60px; padding-top:15vh;">
         열정적인 이거모임!
         <p />
         <h4 style=" font-size:30px;">이거모임은 열정적인 개발자들과 함께 하고 있습니다</h4>
-        <v-row style="width:50%">
-          <v-col v-for="(slide, i) in slides" :key="i" md="4">
+        <v-row>
+          <v-col v-for="(slide, i) in slides" :key="i" cols="6" md="4">
             <v-hover v-slot:default="{ hover }">
               <v-card>
                 <v-img

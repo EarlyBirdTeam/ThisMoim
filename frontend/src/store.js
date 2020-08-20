@@ -100,6 +100,7 @@ export const store = new Vuex.Store({
         poll: [],
         inviteModal: false,
         withdrawalModal: false,
+        updateOccur: false,
     },
     actions: {
         async REQUEST_ADD_EVENT(context, event) {
@@ -485,6 +486,10 @@ export const store = new Vuex.Store({
         },
         toggleLogin : (state) => {
             state.isLogged = !state.isLogged;
+        },
+        toggleUpdate : (state) => {
+          console.log('update Occured')
+          state.updateOccur = !state.updateOccur;
         }
     },
     getters:{
