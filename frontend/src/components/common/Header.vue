@@ -42,7 +42,7 @@
           <router-link style="margin-left: 20px; padding-top:5px"
             v-bind:to="{name:constants.URL_TYPE.USER.MYPAGE}"
             class="btn--text"
-          >{{ decodeURI(this.$store.state.userData.nickname)}}</router-link>
+          >{{(this.$store.getters.userData.nickname)}}</router-link>
 
           <button @click="logout">로그아웃</button>
         </div>
@@ -67,23 +67,24 @@ export default {
   },
   props: ["isHeader"],
   watch: {
-    modal: function (val) {
-      console.log(val);
-    },
+    // modal: function (val) {
+    //   console.log(val);
+    // },
   },
   created() {
     const arr = document.cookie.split(";");
-    console.log(this.$store.getters.userData);
+    // console.log("nickname is : ",
+    // decodeURI(this.$store.getters.userData.nickname));
     // console.log("arr is ");
-    // console.log(arr);
-    arr.forEach((element) => {
-      if (element.split("=")[0] == "AccessToken") {
-        this.userinfo = element.split("=")[1];
-      }
-    });
+    // console.log("arr is : ",arr);
+    // arr.forEach((element) => {
+    //   if (element.split("=")[0] == "AccessData") {
+    //     this.userinfo = element.split("=")[1];
+    //     console.log(this.userinfo);  
+    //   }
+    // });
 
     // if(document.cookie.split(";")[0].split('=')[0])
-    // console.log();
   },
   computed: {},
   methods: {

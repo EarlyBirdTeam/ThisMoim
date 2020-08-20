@@ -196,7 +196,7 @@ export const store = new Vuex.Store({
                     });
                     //store.dispatch(constants.METHODS.GET_USER, data.email);
                     console.log("In store, state is : ", store.state);
-                    const userDataString = _store.userData
+                    // const userDataString = _store.userData
                     cookies.set('AccessData', _store.getters.userDataStr);
                     store.commit('toggleLogin');
                     
@@ -503,7 +503,8 @@ export const store = new Vuex.Store({
         },
         userDataStr: function(state){
           const dataStr = `email:${state.userData.email},name:${state.userData.name},nickname:${state.userData.nickname}`
-          console.log(dataStr);
+        //   console.log("In store, userDataStr is : ",
+        //   dataStr);
           return dataStr;
         },
         accessToken: function(state){
@@ -521,5 +522,6 @@ export const store = new Vuex.Store({
         isLogged: function(state) {
           return state.isLogged;
         },
-    }
+    },
 });
+
